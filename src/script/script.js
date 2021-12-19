@@ -34,9 +34,10 @@ for (let i = 0; i < developersControlButton.length; i++) {
 function loadDevelopersInfo(pos) {
     xhr.open('GET', './data/developers.json')
     xhr.addEventListener('load', () => {
-        let data = JSON.parse(xhr.responseText)
-        fillDevelopersInfo(data, pos)
-        console.log(data)
+        if (xhr.status === 200 && xhr.readyState === 4) {
+            let data = JSON.parse(xhr.responseText)
+            fillDevelopersInfo(data, pos)
+        }
     })
     xhr.send()
 }
