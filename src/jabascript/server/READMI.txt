@@ -1,0 +1,14 @@
+1. Install python 3.*
+2. Enable option "Add python to path" !!!!
+3.1 Start start_server.bat
+OR
+3.2.1 Launch cmd in the project directory
+3.2.2 Enter command "python simple-cors-http-server.py"
+
+//----------------------------------------//
+1. Устанавливаем Python 3.*
+2. Включаем опцию "Add python to path" ВАЖНО
+З.1 Запускаем start_server.bat
+ИЛИ
+3.2.1 Запускаем командную строку в директории проекта
+3.2.2 Вводим команду "python simple-cors-http-server.py"
