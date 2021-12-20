@@ -138,7 +138,7 @@ async function save(data) {
 }
 
 async function goToHome() {
-    fileHandle = null;
+    [fileHandle] = await window.showOpenFilePicker();
     developersControl.classList.remove('disabled');
     developersInfo.classList.remove('disabled');
     developersEdit.classList.add('disabled');
