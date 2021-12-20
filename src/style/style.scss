@@ -1,3 +1,5 @@
+$mainColor: #7B9E87;
+
 *, *:before, *:after {
   box-sizing: border-box;
 }
@@ -41,7 +43,7 @@ section {
 }
 
 .header {
-  background-color: #7B9E87;
+  background-color: $mainColor;
   padding: 20px 20px;
   display: flex;
   justify-content: space-between;
@@ -117,11 +119,11 @@ section {
     background-size: cover;
     background-position: 50% 50%;
     transition: all 0.3s;
-    border-bottom: solid 10px #7B9E87;
+    border-bottom: solid 10px $mainColor;
 
 
     &:hover {
-      border-color: #7B9E87;
+      border-color: $mainColor;
     }
 
     &.active {
@@ -169,7 +171,7 @@ section {
         font-weight: 400;
         letter-spacing: 3px;
         text-transform: uppercase;
-        color: #7B9E87;
+        color: $mainColor;
       }
 
       p:nth-child(2) {
@@ -191,8 +193,8 @@ section {
 
   .profile__edit-button {
     padding: 10px 60px;
-    background-color: #7B9E87;
-    border: solid 2px #7B9E87;
+    background-color: $mainColor;
+    border: solid 2px $mainColor;
     font-size: 30px;
     transition: all 0.3s;
     cursor: pointer;
@@ -202,7 +204,7 @@ section {
 
     &:hover {
       background-color: #ffffff;
-      color: #7B9E87;
+      color: $mainColor;
     }
   }
 }
@@ -238,22 +240,37 @@ section {
 
   }
 
-  .developers__submit-button {
-    padding: 10px 60px;
-    background-color: #7B9E87;
-    border: solid 2px #7B9E87;
-    font-size: 30px;
-    transition: all 0.3s;
-    cursor: pointer;
-    color: #ffffff;
-    text-transform: uppercase;
-    font-weight: 300;
+  .developers__edit-submit {
+    .button {
+      padding: 10px 30px;
+      background-color: $mainColor;
+      border: solid 2px $mainColor;
+      min-width: 200px;
+      font-size: 30px;
+      transition: all 0.3s;
+      cursor: pointer;
+      color: #ffffff;
+      text-transform: uppercase;
+      font-weight: 300;
+      margin: 0 20px;
 
-    &:hover {
-      background-color: #ffffff;
-      color: #7B9E87;
+      &:hover {
+        background-color: #ffffff;
+        color: $mainColor;
+      }
+    }
+
+    .developers__cancel-button {
+      background-color: #d95555;
+      border: solid 2px #d95555;
+
+      &:hover {
+        background-color: #ffffff;
+        color: #d95555;
+      }
     }
   }
+
 }
 
 

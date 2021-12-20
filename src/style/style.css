@@ -209,20 +209,30 @@ section {
   width: 300px;
   height: 30px;
 }
-.developers__edit-window .developers__submit-button {
-  padding: 10px 60px;
+.developers__edit-window .developers__edit-submit .button {
+  padding: 10px 30px;
   background-color: #7B9E87;
   border: solid 2px #7B9E87;
+  min-width: 200px;
   font-size: 30px;
   transition: all 0.3s;
   cursor: pointer;
   color: #ffffff;
   text-transform: uppercase;
   font-weight: 300;
+  margin: 0 20px;
 }
-.developers__edit-window .developers__submit-button:hover {
+.developers__edit-window .developers__edit-submit .button:hover {
   background-color: #ffffff;
   color: #7B9E87;
+}
+.developers__edit-window .developers__edit-submit .developers__cancel-button {
+  background-color: #d95555;
+  border: solid 2px #d95555;
+}
+.developers__edit-window .developers__edit-submit .developers__cancel-button:hover {
+  background-color: #ffffff;
+  color: #d95555;
 }
 
 /*# sourceMappingURL=style.css.map */
