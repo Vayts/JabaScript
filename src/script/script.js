@@ -71,6 +71,8 @@ let langInput = document.querySelector('.developers__language-input')
 let placeOfBirthInput = document.querySelector('.developers__place-of-birth-input')
 let hobbyInput = document.querySelector('.developers__hobby-input')
 let fileHandle;
+
+
 editButton.onclick = function () {
     for (let i = 0; i < developersControlButton.length; i++) {
         if(developersControlButton[i].classList.contains('active')) {
@@ -83,7 +85,7 @@ editButton.onclick = function () {
     }
 };
 
-// edit save
+// edit saveр
 
 
 function fillInput(pos) {
@@ -99,7 +101,8 @@ function fillInput(pos) {
 }
 
 submitEditButton.onclick = function () {
-    xhr.open('GET', '../data/developers.json')
+    console.log('b')
+    xhr.open('GET', './data/developers.json')
     xhr.addEventListener('load', () => {
         let data = JSON.parse(xhr.responseText)
         data[currentProfile].name = nameInput.value;
@@ -113,21 +116,31 @@ submitEditButton.onclick = function () {
         data[currentProfile].hobby = hobbyInput.value;
         data = JSON.stringify(data)
         if (xhr.status === 200 && xhr.readyState === 4) {
-            getDevelopersFile(data)
+            save(data)
         }
     })
     xhr.send()
 }
 
-async function getDevelopersFile(data) {
-    [fileHandle] = await window.showOpenFilePicker();
-    let fileData = await fileHandle.getFile()
-    let result = await fileData.text();
-    await save(data)
-}
+// async function getDevelopersFile(data) {
+//     [fileHandle] = await window.showOpenFilePicker();
+//     let fileData = await fileHandle.getFile()
+//     let result = await fileData.text();
+//     await save(data)
+//     console.log('a')
+// }
 
 async function save(data) {
+    [fileHandle] = await window.showOpenFilePicker();
    let stream = await fileHandle.createWritable();
    await stream.write(data);
    await stream.close()
+}
+
+async function goToHome() {
+    fileHandle = null;
+    developersControl.classList.remove('disabled');
+    developersInfo.classList.remove('disabled');
+    developersEdit.classList.add('disabled');
+    return
 }
