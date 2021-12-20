@@ -129,9 +129,7 @@ async function save(data) {
                 'developers/*': ['.json']
             }
         },
-        ],
-        excludeAcceptAllOption: true,
-        multiple: false
+        ]
     };
     let [fileHandle] = await window.showOpenFilePicker(options);
    let stream = await fileHandle.createWritable();
