@@ -5,165 +5,241 @@
     <title>Title</title>
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/questions.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
 </head>
 <body>
-    <main>
-        <div class="container">
-            <div class="content">
-                <div class="header">
-                    <div class="logo">
-                        <a href="" class="logo__link">
-                            <div class="logo__img-wrapper">logo</div>
-                            <div class="logo__text-wrapper">
-                                <p class="logo__text">Script</p>
-                            </div>
-                        </a>
-                    </div>
-                    <ul class="header__list">
-                        <li class="header__list-item"><a class="header__list-link" href="">Home</a></li>
-                        <li class="header__list-item"><a class="header__list-link" href="">Questions</a></li>
-                        <li class="header__list-item"><a class="header__list-link" href="">About</a></li>
-                    </ul>
+<main>
+    <div class="container">
+        <div class="content">
+            <div class="header">
+                <div class="logo">
+                    <a href="" class="logo__link">
+                        <div class="logo__img-wrapper">logo</div>
+                        <div class="logo__text-wrapper">
+                            <p class="logo__text">Script</p>
+                        </div>
+                    </a>
                 </div>
-                <section class="home-section">
-                    <div class="developers">
-                        <div class="developers__control">
-                            <ul class="developers__control-list">
-                                <li class="developers__control-item">
-                                    <div class="developers__img-wrapper active"></div>
-                                    <p class="developers__position">Team Lead</p>
-                                </li>
-                                <li class="developers__control-item">
-                                    <div class="developers__img-wrapper"></div>
-                                    <p class="developers__position">Tech Lead</p>
-                                </li>
-                                <li class="developers__control-item">
-                                    <div class="developers__img-wrapper"></div>
-                                    <p class="developers__position">UI designer</p>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="developers__info">
-                            <div class="profile">
-                                <div class="profile__name">
-                                    <p class="profile__name-text">Test Testovich</p>
-                                </div>
-                                <div class="profile__stats">
-                                    <ul class="profile__stats-list">
-                                        <li class="profile__stats-item">
-                                            <p>Height</p>
-                                            <p class="profile__height"></p>
-                                        </li>
-                                        <li class="profile__stats-item">
-                                            <p>Age</p>
-                                            <p class="profile__age">Test</p>
-                                        </li>
-                                        <li class="profile__stats-item">
-                                            <p>Eye color</p>
-                                            <p class="profile__eye-color">Test</p>
-                                        </li>
-                                        <li class="profile__stats-item">
-                                            <p>Experience</p>
-                                            <p class="profile__experience">Test</p>
-                                        </li>
-                                        <li class="profile__stats-item">
-                                            <p>Mother tongue</p>
-                                            <p class="profile__language">Test</p>
-                                        </li>
-                                        <li class="profile__stats-item">
-                                            <p>Place of birth</p>
-                                            <p class="profile__place-of-birth">Test</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="profile__hobby">
-                                    <p>Hobby</p>
-                                    <p class="profile__hobby-text">
-                                        My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness
-                                    </p>
-                                </div>
-                                <div class="profile__edit">
-                                    <button class="profile__edit-button">Edit</button>
-                                </div>
+                <ul class="header__list">
+                    <li class="header__list-item"><a class="header__list-link" href="">Home</a></li>
+                    <li class="header__list-item"><a class="header__list-link" href="">Questions</a></li>
+                    <li class="header__list-item"><a class="header__list-link" href="">About</a></li>
+                </ul>
+            </div>
+            <section class="home-section disabled">
+                <div class="developers">
+                    <div class="developers__control">
+                        <ul class="developers__control-list">
+                            <li class="developers__control-item">
+                                <div class="developers__img-wrapper active"></div>
+                                <p class="developers__position">Team Lead</p>
+                            </li>
+                            <li class="developers__control-item">
+                                <div class="developers__img-wrapper"></div>
+                                <p class="developers__position">Tech Lead</p>
+                            </li>
+                            <li class="developers__control-item">
+                                <div class="developers__img-wrapper"></div>
+                                <p class="developers__position">UI designer</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="developers__info">
+                        <div class="profile">
+                            <div class="profile__name">
+                                <p class="profile__name-text">Test Testovich</p>
                             </div>
-                        </div>
-                        <div class="developers__edit-window disabled">
-                            <ul class="developers__edit-list">
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Photo</span>
-                                        <input class="developers__photo-input" type="file">
-                                    </label>
-
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Name</span>
-                                        <input class="developers__name-input" type="text">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Position</span>
-                                        <input class="developers__position-input" type="text">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Height</span>
-                                        <input class="developers__height-input" type="number">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Age</span>
-                                        <input class="developers__age-input" type="number">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Eye color</span>
-                                        <input class="developers__eye-input" type="text">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Experience</span>
-                                        <input class="developers__exp-input" type="number">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Mother tongue</span>
-                                        <input class="developers__language-input" type="text">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Place of Birth</span>
-                                        <input class="developers__place-of-birth-input" type="text">
-                                    </label>
-                                </li>
-                                <li class="developers__edit-item">
-                                    <label>
-                                        <span>Hobby</span>
-                                        <input class="developers__hobby-input" type="text">
-                                    </label>
-                                </li>
-                            </ul>
-                            <div class="developers__edit-submit">
-                                <button class="button developers__submit-button">Submit</button>
-                                <button class="button developers__return-button">Cancel</button>
+                            <div class="profile__stats">
+                                <ul class="profile__stats-list">
+                                    <li class="profile__stats-item">
+                                        <p>Height</p>
+                                        <p class="profile__height"></p>
+                                    </li>
+                                    <li class="profile__stats-item">
+                                        <p>Age</p>
+                                        <p class="profile__age">Test</p>
+                                    </li>
+                                    <li class="profile__stats-item">
+                                        <p>Eye color</p>
+                                        <p class="profile__eye-color">Test</p>
+                                    </li>
+                                    <li class="profile__stats-item">
+                                        <p>Experience</p>
+                                        <p class="profile__experience">Test</p>
+                                    </li>
+                                    <li class="profile__stats-item">
+                                        <p>Mother tongue</p>
+                                        <p class="profile__language">Test</p>
+                                    </li>
+                                    <li class="profile__stats-item">
+                                        <p>Place of birth</p>
+                                        <p class="profile__place-of-birth">Test</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="profile__hobby">
+                                <p>Hobby</p>
+                                <p class="profile__hobby-text">
+                                    My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it
+                                    gives me joy and happiness
+                                </p>
+                            </div>
+                            <div class="profile__edit">
+                                <button class="profile__edit-button">Edit</button>
                             </div>
                         </div>
                     </div>
-                </section>
-                <section class="questions-section"></section>
-                <section class="about-section"></section>
-            </div>
+                    <div class="developers__edit-window disabled">
+                        <ul class="developers__edit-list">
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Photo</span>
+                                    <input class="developers__photo-input" type="file">
+                                </label>
+
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Name</span>
+                                    <input class="developers__name-input" type="text">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Position</span>
+                                    <input class="developers__position-input" type="text">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Height</span>
+                                    <input class="developers__height-input" type="number">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Age</span>
+                                    <input class="developers__age-input" type="number">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Eye color</span>
+                                    <input class="developers__eye-input" type="text">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Experience</span>
+                                    <input class="developers__exp-input" type="number">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Mother tongue</span>
+                                    <input class="developers__language-input" type="text">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Place of Birth</span>
+                                    <input class="developers__place-of-birth-input" type="text">
+                                </label>
+                            </li>
+                            <li class="developers__edit-item">
+                                <label>
+                                    <span>Hobby</span>
+                                    <input class="developers__hobby-input" type="text">
+                                </label>
+                            </li>
+                        </ul>
+                        <div class="developers__edit-submit">
+                            <button class="button developers__submit-button">Submit</button>
+                            <button class="button developers__return-button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="questions-section">
+                <main class="wrapper">
+                    <div class="wrapper__filter">
+                        <section class="wrapper__filter--select">
+                            <select class="select">
+                                <option class="select__option" disabled selected>Select file system</option>
+                                <option class="select__option">CSV</option>
+                                <option class="select__option">JSON</option>
+                                <option class="select__option">XML</option>
+                                <option class="select__option">YAML</option>
+                                <option class="select__option">all</option>
+                            </select>
+                            <select class="select">
+                                <option class="select__option" disabled selected>Select questions theme</option>
+                            </select>
+                        </section>
+                        <a class="wrapper__href--button element--href element__href--button" href="#openModal"
+                           aria-label="Add">+</a>
+                        <!-- <button>+</button> -->
+                    </div>
+                    <article class="text-block wrapper__text-block" id="list-questions-add">
+                        <section class="wrapper__text-block--item"><p>dsds</p></section>
+                        <section class="wrapper__text-block--item"><p>dsds</p></section>
+                        <section class="wrapper__text-block--item"><p>dsds</p></section>
+                    </article>
+                </main>
+
+                <div id="openModal" class="modal">
+                    <div class="modal__dialog">
+                        <div class="modal__content">
+                            <div class="modal__header">
+                                <h3 class="modal__title">ADD QUESTION</h3>
+                                <a href="#close" title="Close" class="modal__close">×</a>
+                            </div>
+                            <div class="modal__body">
+                                <p>QUESTION:</p>
+                                <input class="modal__body--input" type="text">
+                                <p>THEME:</p>
+                                <select class="modal__body--select">
+                                    <option disabled selected>Select one theme</option>
+                                </select>
+                                <div class="modal__body--answer">
+                                    <p>ANSWER:</p>
+                                    <input type="radio" class="custom-checkbox" id="checkboxTrue" name="answer" value="True">
+                                    <label for="checkboxTrue">True</label>
+                                    <input type="radio" class="custom-checkbox" id="checkboxFalse" name="answer" value="False">
+                                    <label for="checkboxFalse">False</label>
+                                </div>
+                                <div class="modal__body--format">
+                                    <p>FORMAT:</p>
+                                    <input class="custom-radio" type="checkbox" id="radioCSV"
+                                           value="CSV">
+                                    <label for="radioCSV">CSV</label>
+                                    <input class="custom-radio" type="checkbox" id="radioJSON"
+                                           value="JSON" checked>
+                                    <label for="radioJSON">JSON</label>
+                                    <input class="custom-radio" type="checkbox" id="radioXML"
+                                           value="XML">
+                                    <label for="radioXML">XML</label>
+                                    <input class="custom-radio" type="checkbox" id="radioYAML"
+                                           value="YAML">
+                                    <label for="radioYAML">YAML</label>
+                                    <div class="modal__body--button body__button">
+                                        <button class="body__button--item"
+                                                onclick="window.location.href='#close'">CANCEL
+                                        </button>
+                                        <button class="body__button--item" disabled>CREATE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="about-section"></section>
         </div>
-    </main>
-    <script src="script/script.js"></script>
+    </div>
+</main>
+<script src="script/script.js"></script>
 </body>
 </html>
