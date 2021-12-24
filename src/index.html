@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/style.css">
@@ -166,19 +167,26 @@
                 <main class="wrapper">
                     <div class="wrapper__filter">
                         <section class="wrapper__filter--select">
-                            <select class="select">
-                                <option class="select__option" disabled selected>Select file system</option>
-                                <option class="select__option">CSV</option>
-                                <option class="select__option">JSON</option>
-                                <option class="select__option">XML</option>
-                                <option class="select__option">YAML</option>
-                                <option class="select__option">all</option>
-                            </select>
-                            <select class="select">
-                                <option class="select__option" disabled selected>Select questions theme</option>
-                            </select>
+
+                            <div class="wrapper__select select-custom">
+                                <select class="select select-custom__item">
+                                    <option class="select__option" disabled selected>Select file system</option>
+                                    <option class="select__option">CSV</option>
+                                    <option class="select__option">JSON</option>
+                                    <option class="select__option">XML</option>
+                                    <option class="select__option">YAML</option>
+                                    <option class="select__option">all</option>
+                                </select>
+                            </div>
+
+                            <div class="wrapper__select select-custom">
+                                <select class="select select-custom__item">
+                                    <option class="select__option" disabled selected>Select questions theme</option>
+                                </select>
+                            </div>
+
                         </section>
-                        <a class="wrapper__href--button element--href element__href--button" href="#openModal"
+                        <a class="wrapper__href" href="#openModal"
                            aria-label="Add">+</a>
                         <!-- <button>+</button> -->
                     </div>
@@ -198,20 +206,26 @@
                             </div>
                             <div class="modal__body">
                                 <p>QUESTION:</p>
-                                <input class="modal__body--input" type="text">
+                                <div class="modal__body--input input-custom">
+                                    <input class="input-custom__item" type="text">
+                                </div>
                                 <p>THEME:</p>
-                                <select class="modal__body--select">
-                                    <option disabled selected>Select one theme</option>
-                                </select>
+                                <div class="modal__body--input select-custom ">
+                                    <select class="modal__body--select select-custom__item">
+                                        <option disabled selected>Select one theme</option>
+                                    </select>
+                                </div>
                                 <div class="modal__body--answer">
-                                    <p>ANSWER:</p>
-                                    <input type="radio" class="custom-checkbox" id="checkboxTrue" name="answer" value="True">
+                                    <span>ANSWER:</span>
+                                    <input type="radio" class="custom-checkbox" id="checkboxTrue" name="answer"
+                                           value="True">
                                     <label for="checkboxTrue">True</label>
-                                    <input type="radio" class="custom-checkbox" id="checkboxFalse" name="answer" value="False">
+                                    <input type="radio" class="custom-checkbox" id="checkboxFalse" name="answer"
+                                           value="False">
                                     <label for="checkboxFalse">False</label>
                                 </div>
+                                <p>FORMAT:</p>
                                 <div class="modal__body--format">
-                                    <p>FORMAT:</p>
                                     <input class="custom-radio" type="checkbox" id="radioCSV"
                                            value="CSV">
                                     <label for="radioCSV">CSV</label>
@@ -224,12 +238,14 @@
                                     <input class="custom-radio" type="checkbox" id="radioYAML"
                                            value="YAML">
                                     <label for="radioYAML">YAML</label>
-                                    <div class="modal__body--button body__button">
-                                        <button class="body__button--item"
-                                                onclick="window.location.href='#close'">CANCEL
-                                        </button>
-                                        <button class="body__button--item" disabled>CREATE</button>
-                                    </div>
+                                </div>
+                                <div class="modal__body--button button-custom">
+                                    <button class="button-custom__item"
+                                            onclick="window.location.href='#close'" type="button">CANCEL
+                                    </button>
+                                    <button class="button-custom__item--disabled button-custom__item" type="button">
+                                        CREATE
+                                    </button>
                                 </div>
                             </div>
                         </div>
