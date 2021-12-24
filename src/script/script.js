@@ -1,9 +1,9 @@
-let xhr = new XMLHttpRequest()
+// router
 
 
 //
 
-// section content
+// home-page content
 
 let developersControl = document.querySelector('.developers__control')
 let developersInfo = document.querySelector('.developers__info')
@@ -25,9 +25,9 @@ let hobby = document.querySelector('.profile__hobby-text')
 
 window.onload = function () {
     loadDevelopersInfo(0)
+    addDevelopersControl()
     fillDevelopersControlButtons()
 }
-
 
 function fillDevelopersControlButtons() {
     fetch('http://localhost:3000/developers')
@@ -63,13 +63,15 @@ function fillDeveloperProfile(profileNum, data) {
 
 // Переключение между профилями девелоперов
 
-for (let i = 0; i < developersControlButtons.length; i++) {
-    developersControlButtons[i].addEventListener('click', () => {
-        developersControlButtons.forEach((el) => el.classList.remove('active'))
-        developersControlButtons[i].classList.add('active')
-        loadDevelopersInfo(i)
-        currentProfile = i;
-    })
+function addDevelopersControl() {
+    for (let i = 0; i < developersControlButtons.length; i++) {
+        developersControlButtons[i].addEventListener('click', () => {
+            developersControlButtons.forEach((el) => el.classList.remove('active'))
+            developersControlButtons[i].classList.add('active')
+            loadDevelopersInfo(i)
+            currentProfile = i;
+        })
+    }
 }
 
 
