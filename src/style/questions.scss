@@ -1,8 +1,4 @@
-$main-color: #7B9E87;
-$light-main-color: #90ba9e;
-$dark-main-color: #405246;
-$transparent-main-color: rgba(144, 186, 158, 0.44);
-$font-family: "Roboto", sans-serif;
+@import "variables";
 html {
   font-size: 14px;
 }
