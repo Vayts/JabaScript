@@ -19,18 +19,26 @@ section {
   padding: 20px;
   height: 100%;
 }
+
+// class sections
+
+//padding content
+
 .disabled {
   display: none !important;
 }
 
+// z-index?
+
 .container {
-  width: 1300px;
+  width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
   height: 100vh;
   display: flex;
   align-items: center;
 }
+
+// 1200
 
 .content {
   height: 90%;
@@ -42,11 +50,11 @@ section {
 
 .header {
   background-color: #7B9E87;
-  padding: 20px 20px;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  // отэта изменить
   .header__list {
     flex-basis: 40%;
     display: flex;
@@ -61,7 +69,6 @@ section {
       text-transform: uppercase;
       transition: all 0.2s;
 
-
       &:hover {
         color: #bead3c;
       }
@@ -73,6 +80,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
+
   .logo__img-wrapper {
     background-color: #B6BE9C;
     width: 60px;
@@ -83,6 +91,7 @@ section {
     border-radius: 50%;
     margin-right: 10px;
   }
+
   .logo__img {
     width: 80px;
   }
@@ -120,14 +129,15 @@ section {
     transition: all 0.3s;
     border-bottom: solid 10px #7B9E87;
 
+    &.active {
+      border-color: #90b99e;
+    }
 
     &:hover {
       border-color: #7B9E87;
     }
 
-    &.active {
-      border-color: #90b99e;
-    }
+    // сначала классы
   }
 
   .developers__position {
@@ -163,7 +173,7 @@ section {
     .profile__stats-item {
       flex-basis: 50%;
       text-align: center;
-
+      // лучше к классу обращаться
       p:first-child {
         margin: 10px 0;
         font-size: 20px;
@@ -173,14 +183,12 @@ section {
         color: #7B9E87;
       }
 
-      p:nth-child(2) {
-
-      }
     }
   }
 
   .profile__hobby {
     height: 170px;
+    //// лучше к классу обращаться
     p:first-child {
       font-size: 30px;
       text-align: center;

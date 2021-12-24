@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const del = require('del');
+const path = require("path");
 
 gulp.task('clean', function(cb) {
     del(['./dist/*']);
@@ -9,6 +10,7 @@ gulp.task('clean', function(cb) {
 
 gulp.task('sass', function(cb) {
     gulp.src('./src/**/*.scss')
+
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('dist'));
     cb();

@@ -1,6 +1,7 @@
 const port = 3000;
 const hostname = '127.0.0.1'
-const fs = require('fs')
+const fs = require('fs:node') // Обратить внимание на :
+const CORS = require('cors')
 
 // multer
 
