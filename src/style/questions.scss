@@ -32,8 +32,10 @@ html {
   &__text-block {
     margin: 10px;
     border: 1px solid $main-color;
-
+    overflow: auto;
+    height: inherit;
     &--item {
+      height: fit-content;
       padding: 5px;
       margin: 5px;
       border: 1px solid $main-color;
@@ -387,3 +389,32 @@ html {
   }
 }
 
+.scrollbar {
+  &::-webkit-scrollbar { /* 1 - скроллбар */
+    width: 6px;
+    height: 4px;
+    background-color: $light-main-color;
+  }
+
+  &::-webkit-scrollbar-button { /* 2 - кнопка */
+
+  }
+
+  &::-webkit-scrollbar-track { /* 3 - трек */
+  }
+
+  &::-webkit-scrollbar-track-piece { /* 4 - видимая часть трека */
+  }
+
+  &::-webkit-scrollbar-thumb { /* 5 - ползунок */
+    border-radius: 2px;
+    background-color: $dark-main-color;
+  }
+
+  &::-webkit-scrollbar-corner { /* 6 - уголок */
+  }
+
+  &::-webkit-resizer { /* 7 - изменение размеров */
+  }
+
+}
