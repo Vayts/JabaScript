@@ -214,11 +214,22 @@
 // }
 
 let cards = document.querySelectorAll('.profile')
-const profile = document.querySelectorAll('.profile__img')
+const profile = document.querySelectorAll('.info-buttons__more')
 
 for (let i = 0; i < cards.length; i++) {
-    cards[i].onclick = function () {
-        profile[i].classList.toggle('active')
+    profile[i].onclick = function () {
+        cards[i].classList.toggle('active')
+        if (cards[i].classList.contains('active')) {
+            profile[i].innerText = 'Hide'
+        } else {
+            profile[i].innerText = 'More info'
+        }
+        fetch('http://localhost:3000/developers')
+        .then((res)=> {
+            return res.json()
+        }).then((data) => {
+            console.log(data)
+        })
     }
 }
 //

@@ -133,17 +133,12 @@ a {
   border-radius: 20px;
   box-shadow: 4px 4px 36px -10px rgba(34, 60, 80, 0.23);
   position: relative;
+  overflow: hidden;
 
-  &__img {
-    height: 80%;
-    background-size: cover;
-    background-position: 50% 50%;
-    transition: all 0.5s;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    margin: 0 auto 10px;
+  &.active {
+    overflow: visible;
 
-    &.active {
+    .profile__img {
       width: 200px;
       height: 200px;
       position: relative;
@@ -151,6 +146,22 @@ a {
       border-radius: 50%;
       margin-bottom: -30px;
     }
+
+    .profile__info {
+      opacity: 1;
+    }
+  }
+
+  &__img {
+    height: 82%;
+    background-size: cover;
+    background-position: 50% 50%;
+    transition: all 0.5s;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin: 0 auto 10px;
+    position: relative;
+    z-index: 2;
   }
 
   &__name {
@@ -159,6 +170,7 @@ a {
     letter-spacing: 3px;
     font-weight: 700;
     margin-bottom: 10px;
+    color: $mainColor;
   }
 
   &__position {
@@ -167,18 +179,63 @@ a {
     text-transform: uppercase;
     letter-spacing: $spacing;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
-  .profile__button {
+  &__info {
+    opacity: 0;
+    transition: all 1s;
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.stats-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 10px;
+  justify-content: center;
+  &__item {
+    flex-basis: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+  }
+}
+
+.stat {
+  &__text {
+    font-weight: 600;
+  }
+}
+
+.hobby {
+  padding: 0 15px;
+  &__title {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: $spacing;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: $mainColor;
+  }
+
+  &__text {
+    text-align: left;
+    font-size: 1.1rem;
+  }
+}
+
+.info-buttons {
+  &__more {
     position: absolute;
     bottom: 2%;
     left: 50%;
     transform: translateX(-50%);
-    color: #c9c9c9;
-  }
-
-  &__more-info-button {
+    z-index: 2;
     padding: 5px 10px;
     text-transform: uppercase;
     background-color: $mainColor;
@@ -192,6 +249,24 @@ a {
     &:hover {
       background-color: transparent;
       color: $mainColor;
+    }
+  }
+
+  &__edit {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    z-index: 1;
+    text-transform: uppercase;
+    background-color: transparent;
+    border: none;
+    color: #b9b9b9;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: #969696;
     }
   }
 }
