@@ -1,7 +1,6 @@
 const port = 3000;
 const hostname = '127.0.0.1'
-const fs = require('fs:node') // Обратить внимание на :
-const CORS = require('cors')
+const fs = require('fs') // Обратить внимание на :
 
 // multer
 
@@ -84,3 +83,36 @@ function disableCORS(res) {
     res.setHeader("Access-Control-Allow-Origin", '*')// ЭТО ДЛЯ КОРС ПОЛИТИКИ!!!!!
     res.setHeader("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, DELETE, PUT')// ЭТО РЕШАЕТ КОРС ПОЛИТИКУ!!!!!
 }
+
+//получение данных из questions.json
+app.get("/questions.json", function (req, res) {
+    disableCORS(res)
+    fs.readFile("server/public/files/questions.json", (error, data) => {
+        if (error) {
+            throw error
+        } else {
+            res.end(data.toString())
+        }
+    })
+});
+
+
+app.post("/questions.json-add", function (req,res) {
+    disableCORS(res)
+    let questionsData = '';
+    req.on('data', content => {
+        questionsData += content
+    })
+    req.on('end', () => {
+        if (questionsData) {
+            fs.writeFile('server/public/files/questions.json', questionsData, function (err) {
+                if (err) {
+                    throw err
+                } else {
+                    console.log('Перезаписано')
+                }
+            })
+        }
+        res.end("Данные успешно получены");
+    })
+})
