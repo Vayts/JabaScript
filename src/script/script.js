@@ -1,8 +1,92 @@
-// // router
-//
-//
-// //
-//
+const developersList = document.getElementById('developers-cards-list');
+
+let lastDeveloperData;
+
+function loadDevelopersContent() {
+    fetch('http://localhost:3050/developers')
+        .then((res) => {
+            return res.json()
+        }).then((data) => {
+        lastDeveloperData = data;
+        fillDevelopersData(data);
+    })
+}
+
+function fillDevelopersData(data) {
+    for (let i = 0; i < data.length; i++) {
+        let developerCard = createDeveloperCard(data[i]);
+        developersList.insertAdjacentHTML('beforeend', developerCard);
+    }
+    addEventDevelopers()
+}
+
+function addEventDevelopers() {
+    const developer = document.querySelectorAll('.profile');
+    const developerMoreButton = document.querySelectorAll('.info-buttons__more');
+    for (let i = 0; i < developer.length; i++) {
+        developerMoreButton[i].onclick = function () {
+            developer[i].classList.toggle('active')
+
+            if (developer[i].classList.contains('active')) {
+                developerMoreButton[i].innerText = 'Hide';
+            } else {
+                developerMoreButton[i].innerText = 'More';
+            }
+
+        }
+    }
+}
+
+loadDevelopersContent()
+
+function createDeveloperCard(data) {
+    return '<li class="developers-list__item">' +
+        '<div class="profile">' +
+        '<div class="profile__img" style="background-image: url(' + data.photo + ')"></div>' +
+        '<p class="profile__name">' + data.name + '</p>' +
+        '<p class="profile__position">' + data.position + '</p>' +
+        '<div class="profile__info">' +
+        '<ul class="stats-list">' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Height: &nbsp;</p>' +
+        '<p class="stat__text">' + data.height + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Age: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.age + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Eye color: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.eyeColor + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Experience: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.exp + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Mother tongue: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.motherTongue + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Place of birth: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.placeOfBirth + '</p>' +
+        '</li>' +
+        '</ul>' +
+        '<div class="hobby">' +
+        '<p class="hobby__title">Hobby</p>' +
+        '<p class="hobby__text">' + data.hobby + '</p>' +
+        '</div>' +
+        '</div>' +
+        '<div class="profile__buttons info-buttons">' +
+        '<button type="button" class="info-buttons__more button">More</button>' +
+        '<button type="button" class="info-buttons__edit button">Edit</button>' +
+        '</div>' +
+        '</div>' +
+        '</li>'
+}
+
+// loadDevelopersContent()
+
 // // home-page content
 //
 // let developersControl = document.querySelector('.developers__control')
@@ -213,25 +297,6 @@
 //     developersEdit.classList.add('disabled')
 // }
 
-let cards = document.querySelectorAll('.profile')
-const profile = document.querySelectorAll('.info-buttons__more')
-
-for (let i = 0; i < cards.length; i++) {
-    profile[i].onclick = function () {
-        cards[i].classList.toggle('active')
-        if (cards[i].classList.contains('active')) {
-            profile[i].innerText = 'Hide'
-        } else {
-            profile[i].innerText = 'More info'
-        }
-        fetch('http://localhost:3000/developers')
-        .then((res)=> {
-            return res.json()
-        }).then((data) => {
-            console.log(data)
-        })
-    }
-}
 //
 //
 // data[currentProfile].name = nameInput.value;

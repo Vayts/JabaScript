@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const del = require('del');
-const path = require("path");
 
 gulp.task('clean', function(cb) {
     del(['./dist/*']);
@@ -10,9 +9,8 @@ gulp.task('clean', function(cb) {
 
 gulp.task('sass', function(cb) {
     gulp.src('./src/**/*.scss')
-
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist'))
     cb();
 })
 
@@ -34,8 +32,14 @@ gulp.task('copy:reset', function (cb) {
     cb()
 })
 
-gulp.task('watch', function () {
-    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:reset']));
+gulp.task('copy:img', function (cb) {
+    gulp.src('./src/**/*.{jpg,gif}')
+        .pipe(gulp.dest('./dist'))
+    cb()
 })
 
-gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:reset']))
+gulp.task('watch', function () {
+    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:reset','copy:img']));
+})
+
+gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:reset', 'copy:img']))

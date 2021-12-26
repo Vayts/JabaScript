@@ -2,7 +2,6 @@ const fs = require('fs') // Обратить внимание на :
 const CORS = require('cors')
 const multer = require('multer')
 const express = require("express")
-const path = require("express");
 
 const storage = multer.diskStorage({
     destination: (req,file, cb) => {
@@ -65,4 +64,4 @@ app.post('/change-photo*', upload.single('file'), function (req,res) {
 
 // Взлетаем
 
-app.listen(3000)
+app.listen(3050)

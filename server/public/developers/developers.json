@@ -1,1 +1,38 @@
-[{"id":0,"photo":"http://localhost:3000/photo/1640365370045photo_2021-01-13_10-55-42.jpg",",name":"Oleg Bezdelnikov","position":"Team lead","developerStats":{"age":"41","height":"225","eyeColor":"Blue","exp":"35","motherTongue":"Russian","placeOfBirth":"Horlivka"},"hobby":"My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness.","name":"Oleg Bezdelnikov"},{"id":1,"photo":"http://localhost:3000/photo/developerPhoto1.jpg","name":"Chou Itak-Soi-Det","position":"Tech lead","developerStats":{"age":"24","height":"185","eyeColor":"Blue","exp":"2","motherTongue":"Chinese","placeOfBirth":"Beijing"},"hobby":"My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."},{"id":2,"photo":"http://localhost:3000/photo/1640352687434Bundesarchiv_Bild_146-1972-028-14,_Anschluss_Österreich.jpg","name":"Rakhm Napoherov","position":"UI Designer","developerStats":{"age":"16","height":"188","eyeColor":"Blue","exp":"2","motherTongue":"Hindi","placeOfBirth":"Paraunkh"},"hobby":"My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."}]
+[
+  {
+    "photo": "img/developer1.jpg",
+    "name": "Nikita Bezdelnikov",
+    "position": "Team Lead",
+    "age": "28",
+    "height": "161",
+    "eyeColor": "Blue",
+    "exp": "6",
+    "motherTongue": "Russian",
+    "placeOfBirth": "Horlivka",
+    "hobby": "My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."
+  },
+  {
+    "photo": "img/developer2.jpg",
+    "name": "Chou Itak-Soi-Det",
+    "position": "Teсh Lead",
+    "age": "22",
+    "height": "171",
+    "eyeColor": "Yellow",
+    "exp": "2",
+    "motherTongue": "Russian",
+    "placeOfBirth": "Horlivka",
+    "hobby": "My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."
+  },
+  {
+    "photo": "img/developer3.jpg",
+    "name": "Rakhm Napoherov",
+    "position": "UI/UX Designer",
+    "age": "24",
+    "height": "161",
+    "eyeColor": "Green",
+    "exp": "4",
+    "motherTongue": "Russian",
+    "placeOfBirth": "Horlivka",
+    "hobby": "My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."
+  }
+]
