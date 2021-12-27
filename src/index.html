@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>JabaScript</title>
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -27,16 +27,53 @@
                 </nav>
             </header>
             <section class="content-section home-section">
-                <div class="home-section__developers">
+                <div class="home-section__developers" id="developer-info-block">
                     <div class="section-title">
                         <h1 class="section-title__text">Meet the team</h1>
                     </div>
                     <ul class="developers-list" id="developers-cards-list"></ul>
                 </div>
-                <div class="home-section__edit"></div>
+                <div class="home-section__edit  disabled" id="developer-edit-block">
+                    <div class="section-title">
+                        <h1 class="section-title__text">Edit</h1>
+                    </div>
+                    <form class="edit-form" id="edit-form">
+                        <div class="edit-window">
+                                <div class="edit-window__column">
+                                    <label class="edit-window__label">Name:<input class="edit-window__input" type="text" maxlength="25"></label>
+                                    <label class="edit-window__label">Position:<input class="edit-window__input" type="text" maxlength="25"></label>
+                                    <label class="edit-window__label">Height:<input class="edit-window__input" type="number"></label>
+                                    <label class="edit-window__label">Age:<input class="edit-window__input" type="number"></label>
+                                </div>
+                                <div class="edit-window__column">
+                                    <div class="edit-window__photo">
+                                        <div class="edit-window__img" id="img-holder" style="background-image: url(img/developer1.jpg)">
+                                            <label class="edit-window__label">
+                                                <span class="edit-window__img-button">Change</span>
+                                                <input class="edit-window__img-input edit-window__input_hidden" id="edit-img-input"  type="file">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="edit-window__column">
+                                    <label class="edit-window__label">Eye color:<input class="edit-window__input" type="text"></label>
+                                    <label class="edit-window__label">Experience:<input class="edit-window__input edit-window__input" type="number"></label>
+                                    <label class="edit-window__label">Mother tongue:<input class="edit-window__input" type="text"></label>
+                                    <label class="edit-window__label">Place of birth:<input class="edit-window__input" type="text"></label>
+                                </div>
+                                <div class="edit-window__column edit-window__column_big">
+                                    <label class="edit-window__label">Hobby<textarea class="edit-window__input edit-window__input_big" maxlength="170"></textarea></label>
+                                </div>
+                        </div>
+                        <div class="edit-buttons">
+                            <button type="button" id="submit-developer-edit" class="edit-buttons__button edit-buttons__submit">Submit</button>
+                            <button type="button" id="cancel-developer-edit" class="edit-buttons__button edit-buttons__cancel">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </section>
-<!--            <section class="content-section questions-section"></section>-->
-<!--            <section class="content-section about-section"></section>-->
+            <section class="content-section questions-section"></section>
+            <section class="content-section about-section"></section>
         </div>
     </div>
 </main>

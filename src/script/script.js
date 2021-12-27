@@ -1,6 +1,20 @@
 const developersList = document.getElementById('developers-cards-list');
+const developerInfoBlock = document.getElementById('developer-info-block');
+const developerEditBlock = document.getElementById('developer-edit-block');
+const cancelEditButton = document.getElementById('cancel-developer-edit');
+const submitEditButton = document.getElementById('submit-developer-edit');
+const editInputs = document.querySelectorAll('.edit-window__input')
+const imgInputs = document.getElementById('edit-img-input')
+const imgEditHolder = document.getElementById('img-holder')
 
 let lastDeveloperData;
+let currentProfile = 0;
+
+window.onload = function () {
+    loadDevelopersContent()
+}
+
+// Загрузка developers.json
 
 function loadDevelopersContent() {
     fetch('http://localhost:3050/developers')
@@ -12,7 +26,12 @@ function loadDevelopersContent() {
     })
 }
 
+// Отрисовка карточек девелоперов
+
 function fillDevelopersData(data) {
+    while (developersList.firstChild) {
+        developersList.removeChild(developersList.firstChild);
+    }
     for (let i = 0; i < data.length; i++) {
         let developerCard = createDeveloperCard(data[i]);
         developersList.insertAdjacentHTML('beforeend', developerCard);
@@ -20,11 +39,15 @@ function fillDevelopersData(data) {
     addEventDevelopers()
 }
 
+// Функция, которая добавляет события на кнопки в карточках девелоперов
+
 function addEventDevelopers() {
     const developer = document.querySelectorAll('.profile');
     const developerMoreButton = document.querySelectorAll('.info-buttons__more');
+    const developerEditButton = document.querySelectorAll('.info-buttons__edit')
+
     for (let i = 0; i < developer.length; i++) {
-        developerMoreButton[i].onclick = function () {
+        developerMoreButton[i].onclick = () => {
             developer[i].classList.toggle('active')
 
             if (developer[i].classList.contains('active')) {
@@ -34,10 +57,109 @@ function addEventDevelopers() {
             }
 
         }
+        developerEditButton[i].onclick = function () {
+            startEdit(i)
+        };
     }
 }
 
-loadDevelopersContent()
+// Эта функция отрабатывает при нажатии кнопки EDIT. Она заполняет инпуты и ставит фотку
+
+function startEdit(num) {
+    currentProfile = num;
+    editMenu()
+    let data = Object.values(lastDeveloperData[num])
+    imgEditHolder.style.backgroundImage = `url(${data[0]})`
+    for (let m = 1; m < data.length; m++) {
+        editInputs[m - 1].value = data[m]
+    }
+}
+
+// Включает и выключает EDIT меню
+
+function editMenu() {
+    developerInfoBlock.classList.toggle('disabled')
+    developerEditBlock.classList.toggle('disabled')
+    clearTempFiles()
+}
+
+// Кнопки для EDIT меню. Подтвердить, закрыть.
+
+cancelEditButton.onclick = editMenu;
+submitEditButton.onclick = submitDeveloperEdit;
+
+// Закрывает EDIT меню не изменяет дату
+
+imgInputs.addEventListener('change', () => {
+    clearTempFiles()
+    uploadPhoto(imgInputs.files[0], true)
+})
+
+// Загрузка картинок во временную директорию или постоянную
+
+function uploadPhoto(value, temp) {
+    const file = value;
+    const stampPath = Date.now()
+    const formData = new FormData();
+    const fileName = value.name
+    formData.append('file', value);
+    if (temp) {
+        fetch('http://127.0.0.1:3050/uploads/' + stampPath, {
+            method: 'POST',
+            body: formData
+        }).then(() => {
+            imgEditHolder.style.backgroundImage = `url(http://127.0.0.1:3050/temp/${stampPath}${fileName}`
+        })
+    } else {
+        lastDeveloperData[currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}${fileName}`
+        fetch('http://127.0.0.1:3050/change-photo/' + stampPath, {
+            method: 'POST',
+            body: formData
+        })
+    }
+}
+
+// Подтверждение сабмита
+
+function submitDeveloperEdit() {
+    clearTempFiles()
+    let data = lastDeveloperData;
+    let index = 0;
+    for (let key in data[currentProfile]) {
+
+        if (key !== 'photo') {
+            data[currentProfile][key] = editInputs[index].value
+            index++
+        }
+
+    }
+
+    if (imgInputs.value !== '') {
+        uploadPhoto(imgInputs.files[0], false)
+        postDeveloperInfo(lastDeveloperData)
+    } else {
+        postDeveloperInfo(lastDeveloperData)
+    }
+}
+
+// Отправка обновленной информации на сервер
+
+function postDeveloperInfo(data) {
+    fetch('http://localhost:3050/developers-edit', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    }).then(() => {
+        loadDevelopersContent()
+        editMenu()
+    })
+}
+
+// Очистка временной папки
+
+function clearTempFiles() {
+    console.log('aaaaaaaaa')
+    fetch('http://localhost:3050/deleteTemp').then()
+}
 
 function createDeveloperCard(data) {
     return '<li class="developers-list__item">' +
@@ -84,228 +206,3 @@ function createDeveloperCard(data) {
         '</div>' +
         '</li>'
 }
-
-// loadDevelopersContent()
-
-// // home-page content
-//
-// let developersControl = document.querySelector('.developers__control')
-// let developersInfo = document.querySelector('.developers__info')
-// let developersEdit = document.querySelector('.developers__edit-window')
-//
-// // Profile
-// let developersData;
-// let developersControlButtons = document.querySelectorAll('.developers__img-wrapper')
-// let position = document.querySelectorAll('.developers__position')
-// let name = document.querySelector('.profile-name__text')
-// let height = document.querySelector('.profile__height')
-// let age = document.querySelector('.profile__age')
-// let eyeColor = document.querySelector('.profile__eye-color')
-// let exp = document.querySelector('.profile__experience')
-// let language = document.querySelector('.profile__language')
-// let placeOfBirth = document.querySelector('.profile__place-of-birth')
-// let hobby = document.querySelector('.profile-hobby__text')
-//
-//
-// window.onload = function () {
-//     loadDevelopersInfo(0)
-//     addDevelopersControl()
-//     fillDevelopersControlButtons()
-// }
-//
-// function fillDevelopersControlButtons() {
-//     fetch('http://localhost:3000/developers')
-//         .then((res)=> {
-//             return res.json()
-//         }).then((data) => {
-//             for (let i = 0; i < developersControlButtons.length; i++) {
-//                 developersControlButtons[i].style.backgroundImage = 'url(' + data[i].photo + ')'
-//                 position[i].innerText = data[i].position
-//             }
-//         })
-// }
-//
-// function loadDevelopersInfo(profileNum) {
-//     fetch('http://localhost:3000/developers')
-//         .then((res)=> {
-//             return res.json()
-//         })
-//         .then((data) => fillDeveloperProfile(profileNum, data))
-// }
-//
-// function fillDeveloperProfile(profileNum, data) {
-//     position[profileNum].innerText = data[profileNum].position
-//     name.innerText = data[profileNum].name
-//     height.innerText = data[profileNum].developerStats.height
-//     age.innerText = data[profileNum].developerStats.age
-//     eyeColor.innerText = data[profileNum].developerStats.eyeColor
-//     exp.innerText =  data[profileNum].developerStats.exp
-//     language.innerText = data[profileNum].developerStats.motherTongue
-//     placeOfBirth.innerText = data[profileNum].developerStats.placeOfBirth
-//     hobby.innerText = data[profileNum].hobby
-// }
-//
-// // Переключение между профилями девелоперов
-//
-// function addDevelopersControl() {
-//     for (let i = 0; i < developersControlButtons.length; i++) {
-//         developersControlButtons[i].addEventListener('click', () => {
-//             developersControlButtons.forEach((el) => el.classList.remove('active'))
-//             developersControlButtons[i].classList.add('active')
-//             loadDevelopersInfo(i)
-//             currentProfile = i;
-//         })
-//     }
-// }
-//
-// // EDIT-Window
-//
-// let currentProfile = 0;
-// let profileEditButton = document.querySelector('.profile__edit-button')
-// let submitProfileEditButton = document.querySelector('.developers__submit-button')
-// let cancelProfileEditButton = document.querySelector('.developers__return-button')
-// let photoInput = document.querySelector('.developers__photo-input')
-// let nameInput = document.querySelector('.developers__name-input')
-// let posInput = document.querySelector('.developers__position-input')
-// let heightInput = document.querySelector('.developers__height-input')
-// let ageInput = document.querySelector('.developers__age-input')
-// let eyeColorInput = document.querySelector('.developers__eye-input')
-// let expInput = document.querySelector('.developers__exp-input')
-// let langInput = document.querySelector('.developers__language-input')
-// let placeOfBirthInput = document.querySelector('.developers__place-of-birth-input')
-// let hobbyInput = document.querySelector('.developers__hobby-input')
-//
-// // Open edit window
-//
-// profileEditButton.onclick = openEditWindow;
-//
-// function openEditWindow() {
-//     developersControl.classList.add('disabled')
-//     developersInfo.classList.add('disabled')
-//     developersEdit.classList.remove('disabled')
-//     fillEditInput()
-// }
-//
-// function fillEditInput() {
-//     nameInput.value = name.textContent
-//     posInput.value = position[currentProfile].textContent
-//     heightInput.value = height.textContent
-//     ageInput.value = age.textContent
-//     eyeColorInput.value = eyeColor.textContent
-//     expInput.value = exp.textContent
-//     langInput.value = language.textContent
-//     placeOfBirthInput.value = placeOfBirth.textContent
-//     hobbyInput.value = hobby.textContent
-// }
-//
-// //Submit edit
-//
-// submitProfileEditButton.onclick = getDeveloperData;
-//
-// function getDeveloperData() {
-//     fetch('http://localhost:3000/developers')
-//         .then((res)=> {
-//             return res.json()
-//         })
-//         .then((data)=> {
-//             if(photoInput.value !== '') {
-//                 let fileName = photoInput.files[0].name
-//                 let stampPath = Date.now()
-//                 console.log(fileName)
-//                 uploadDeveloperPhoto(photoInput.files, stampPath)
-//                 // let nameLength = photoInput.files[0].name.length
-//                 // let fileType = (photoInput.files[0].name).toString().slice(nameLength-4, nameLength)
-//                 // const pathToImg = `http://localhost:3000/photo/developerPhoto${currentProfile}${fileType}`
-//                 // console.log(pathToImg)
-//                 let imgPath = `http://localhost:3000/photo/${stampPath}` + fileName
-//                 changeDeveloperDataWithImg(data, imgPath)
-//                 postDeveloperInfo(data)
-//                 fillDeveloperProfile(currentProfile,data)
-//                 // restartDevelopersControlButtons(data)
-//             } else {
-//                 changeDeveloperData(data)
-//                 postDeveloperInfo(data)
-//                 fillDeveloperProfile(currentProfile,data)
-//
-//             }
-//         }).then((data) => {
-//             fillDevelopersControlButtons()
-//             returnToHomePage()
-//         })
-// }
-//
-// function changeDeveloperData(data) {
-//     data[currentProfile].name = nameInput.value;
-//     data[currentProfile].position = posInput.value;
-//     data[currentProfile].developerStats.age = ageInput.value;
-//     data[currentProfile].developerStats.height = heightInput.value;
-//     data[currentProfile].developerStats.eyeColor = eyeColorInput.value;
-//     data[currentProfile].developerStats.exp = expInput.value;
-//     data[currentProfile].developerStats.motherTongue = langInput.value;
-//     data[currentProfile].developerStats.placeOfBirth = placeOfBirthInput.value;
-//     data[currentProfile].hobby = hobbyInput.value;
-// }
-//
-// function changeDeveloperDataWithImg(data, path) {
-//     data[currentProfile].photo = path
-//     data[currentProfile].name = nameInput.value;
-//     data[currentProfile].position = posInput.value;
-//     data[currentProfile].developerStats.age = ageInput.value;
-//     data[currentProfile].developerStats.height = heightInput.value;
-//     data[currentProfile].developerStats.eyeColor = eyeColorInput.value;
-//     data[currentProfile].developerStats.exp = expInput.value;
-//     data[currentProfile].developerStats.motherTongue = langInput.value;
-//     data[currentProfile].developerStats.placeOfBirth = placeOfBirthInput.value;
-//     data[currentProfile].hobby = hobbyInput.value;
-// }
-//
-//
-//
-//
-//
-// // profile photo edit
-//
-// function uploadDeveloperPhoto(value, modifier) {
-//     const formData = new FormData();
-//     console.log(value[0].name)
-//     formData.append('file', value[0]);
-//
-//     fetch('http://127.0.0.1:3000/change-photo/' + modifier, {
-//         method: 'POST',
-//         body: formData
-//     })
-// }
-//
-//
-//
-// function postDeveloperInfo(data) {
-//     fetch('http://localhost:3000/developers-edit', {
-//         method: 'POST',
-//         body: JSON.stringify(data)
-//     }).then()
-// }
-//
-// // cancel edit
-//
-// cancelProfileEditButton.onclick = returnToHomePage;
-//
-// // return user to home page
-//
-// function returnToHomePage() {
-//     developersControl.classList.remove('disabled')
-//     developersInfo.classList.remove('disabled')
-//     developersEdit.classList.add('disabled')
-// }
-
-//
-//
-// data[currentProfile].name = nameInput.value;
-// data[currentProfile].position = posInput.value;
-// data[currentProfile].developerStats.age = ageInput.value;
-// data[currentProfile].developerStats.height = heightInput.value;
-// data[currentProfile].developerStats.eyeColor = eyeColorInput.value;
-// data[currentProfile].developerStats.exp = expInput.value;
-// data[currentProfile].developerStats.motherTongue = langInput.value;
-// data[currentProfile].developerStats.placeOfBirth = placeOfBirthInput.value;
-// data[currentProfile].hobby = hobbyInput.value;
-

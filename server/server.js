@@ -1,11 +1,16 @@
-const fs = require('fs') // Обратить внимание на :
-const CORS = require('cors')
-const multer = require('multer')
-const express = require("express")
+const fs = require('fs') // нодовский модуль для работы с файловой системой
+const CORS = require('cors') // решение корс политики
+const multer = require('multer') // легкая загрузка файлов на сервер
+const express = require("express") // для всего и сразу
+const fsExtra = require('fs-extra') // нужен нам для удаления файлов из папки
 
 const storage = multer.diskStorage({
     destination: (req,file, cb) => {
-        cb(null, 'server/public/img')
+        if (req.url.includes('/uploads')) {
+            cb(null, 'server/public/uploads')
+        } else {
+            cb(null, 'server/public/img')
+        }
     },
     filename: (req, file, cb) => {
         cb(null, `${(req.url.split('/'))[2]}${file.originalname}`)
@@ -50,16 +55,28 @@ app.post("/developers-edit", function (req,res) {
 // А тут мы получаем фотокарточки
 
 app.use("/photo", express.static(__dirname + "/public/img"));
+app.use("/temp", express.static(__dirname + "/public/uploads"));
 
 // Загрузка картинок НА сервер
 
 app.post('/change-photo*', upload.single('file'), function (req,res) {
-    console.log((req.path.split('/'))[2])
     const file = req.file;
     if (!file) {
         console.log('ERROR')
     }
-        res.send(file)
+    res.send(file)
+})
+
+app.post('/uploads*', upload.single('file'), function (req,res) {
+    const file = req.file;
+    if (!file) {
+        console.log('ERROR')
+    }
+    res.send(file)
+})
+
+app.get('/deleteTemp', () => {
+    fsExtra.emptydir('server/public/uploads')
 })
 
 // Взлетаем
