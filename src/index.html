@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>JabaScript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/questions.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
 </head>
 <body>
 <main>
@@ -74,6 +78,96 @@
             </section>
             <section class="content-section questions-section"></section>
             <section class="content-section about-section"></section>
+            <section class="questions-section">
+                <main class="wrapper">
+                    <div class="wrapper__filter">
+                        <section class="wrapper__filter--select">
+
+                            <div class="wrapper__select select-custom">
+                                <select class="select select-custom__item">
+                                    <option class="select__option" disabled selected>Select file system</option>
+                                    <option class="select__option">CSV</option>
+                                    <option class="select__option">JSON</option>
+                                    <option class="select__option">XML</option>
+                                    <option class="select__option">YAML</option>
+                                    <option class="select__option">all</option>
+                                </select>
+                            </div>
+
+                            <div class="wrapper__select select-custom">
+                                <select class="select select-custom__item">
+                                    <option class="select__option" disabled selected>Select questions theme</option>
+                                </select>
+                            </div>
+
+                        </section>
+                        <a class="wrapper__href" href="#openModal"
+                           aria-label="Add">+</a>
+                        <!-- <button>+</button> -->
+                    </div>
+                    <article class="text-block wrapper__text-block" id="list-questions-add">
+                        <section class="wrapper__text-block--item"><p>dsds</p></section>
+                        <section class="wrapper__text-block--item"><p>dsds</p></section>
+                        <section class="wrapper__text-block--item"><p>dsds</p></section>
+                    </article>
+                </main>
+
+                <div id="openModal" class="modal">
+                    <div class="modal__dialog">
+                        <div class="modal__content">
+                            <div class="modal__header">
+                                <h3 class="modal__title">ADD QUESTION</h3>
+                                <a href="#close" title="Close" class="modal__close">×</a>
+                            </div>
+                            <div class="modal__body">
+                                <p>QUESTION:</p>
+                                <div class="modal__body--input input-custom">
+                                    <input class="input-custom__item" type="text">
+                                </div>
+                                <p>THEME:</p>
+                                <div class="modal__body--input select-custom ">
+                                    <select class="modal__body--select select-custom__item">
+                                        <option disabled selected>Select one theme</option>
+                                    </select>
+                                </div>
+                                <div class="modal__body--answer">
+                                    <span>ANSWER:</span>
+                                    <input type="radio" class="custom-checkbox" id="checkboxTrue" name="answer"
+                                           value="True">
+                                    <label for="checkboxTrue">True</label>
+                                    <input type="radio" class="custom-checkbox" id="checkboxFalse" name="answer"
+                                           value="False">
+                                    <label for="checkboxFalse">False</label>
+                                </div>
+                                <p>FORMAT:</p>
+                                <div class="modal__body--format">
+                                    <input class="custom-radio" type="checkbox" id="radioCSV"
+                                           value="CSV">
+                                    <label for="radioCSV">CSV</label>
+                                    <input class="custom-radio" type="checkbox" id="radioJSON"
+                                           value="JSON" checked>
+                                    <label for="radioJSON">JSON</label>
+                                    <input class="custom-radio" type="checkbox" id="radioXML"
+                                           value="XML">
+                                    <label for="radioXML">XML</label>
+                                    <input class="custom-radio" type="checkbox" id="radioYAML"
+                                           value="YAML">
+                                    <label for="radioYAML">YAML</label>
+                                </div>
+                                <div class="modal__body--button button-custom">
+                                    <button class="button-custom__item"
+                                            onclick="window.location.href='#close'" type="button">CANCEL
+                                    </button>
+                                    <button class="button-custom__item--disabled button-custom__item" type="button">
+                                        CREATE
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="about-section"></section>
         </div>
     </div>
 </main>
