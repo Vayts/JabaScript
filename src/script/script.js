@@ -36,6 +36,7 @@ function fillDevelopersData(data) {
         let developerCard = createDeveloperCard(data[i]);
         developersList.insertAdjacentHTML('beforeend', developerCard);
     }
+
     addEventDevelopers()
 }
 
@@ -45,7 +46,6 @@ function addEventDevelopers() {
     const developer = document.querySelectorAll('.profile');
     const developerMoreButton = document.querySelectorAll('.info-buttons__more');
     const developerEditButton = document.querySelectorAll('.info-buttons__edit')
-
     for (let i = 0; i < developer.length; i++) {
         developerMoreButton[i].onclick = () => {
             developer[i].classList.toggle('active')
@@ -80,12 +80,16 @@ function startEdit(num) {
 function editMenu() {
     developerInfoBlock.classList.toggle('disabled')
     developerEditBlock.classList.toggle('disabled')
-    clearTempFiles()
 }
 
 // Кнопки для EDIT меню. Подтвердить, закрыть.
 
-cancelEditButton.onclick = editMenu;
+cancelEditButton.onclick = function () {
+    editMenu()
+    clearTempFiles()
+    imgInputs.value = ''
+};
+
 submitEditButton.onclick = submitDeveloperEdit;
 
 // Закрывает EDIT меню не изменяет дату
