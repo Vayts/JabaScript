@@ -26,12 +26,6 @@ gulp.task('copy:js', function (cb) {
     cb()
 })
 
-gulp.task('copy:reset', function (cb) {
-    gulp.src('./src/**/*.css')
-        .pipe(gulp.dest('./dist'))
-    cb()
-})
-
 gulp.task('copy:img', function (cb) {
     gulp.src('./src/**/*.{jpg,gif}')
         .pipe(gulp.dest('./dist'))
@@ -39,7 +33,7 @@ gulp.task('copy:img', function (cb) {
 })
 
 gulp.task('watch', function () {
-    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:reset','copy:img']));
+    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js','copy:img']));
 })
 
-gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:reset', 'copy:img']))
+gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:img']))
