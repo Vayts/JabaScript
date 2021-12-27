@@ -1,7 +1,4 @@
-$mainColor: rgba(123, 158, 135, 0.84);
-$spacing: 5px;
-$subColor: #B6BE9C;
-
+@import "variables";
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -22,7 +19,10 @@ a {
 }
 
 .content-section {
-  padding: 20px;
+
+  &.disabled {
+    display: none;
+  }
 }
 
 .container {
@@ -41,7 +41,7 @@ a {
 }
 
 .main-header {
-  background-color: $mainColor;
+  background-color: $main-color;
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -133,16 +133,16 @@ a {
   letter-spacing: $spacing;
   text-transform: uppercase;
   padding: 20px 30px;
-  margin: 0 -40px 0;
-  background-color: $mainColor;
-  border-top: solid 2px $mainColor;
-  border-bottom: solid 2px $mainColor;
+  margin: 20px -40px 0;
+  background-color: $main-color;
+  border-top: solid 2px $main-color;
+  border-bottom: solid 2px $main-color;
 
   &__text {
     margin: 0 auto;
     width: 500px;
-    border-top: solid 2px $subColor;
-    border-bottom: solid 2px $subColor;
+    border-top: solid 2px $sub-color;
+    border-bottom: solid 2px $sub-color;
     color: #ffffff;
     font-weight: 700;
     padding: 10px 0;
@@ -208,7 +208,7 @@ a {
     letter-spacing: 3px;
     font-weight: 700;
     margin-bottom: 15px;
-    background-color: $mainColor;
+    background-color: $main-color;
     padding: 10px 0;
     color: white;
   }
@@ -262,7 +262,7 @@ a {
     letter-spacing: $spacing;
     font-weight: 700;
     margin-bottom: 10px;
-    color: $mainColor;
+    color: $main-color;
   }
 
   &__text {
@@ -281,8 +281,8 @@ a {
     z-index: 2;
     padding: 5px 10px;
     text-transform: uppercase;
-    background-color: $mainColor;
-    border: solid 2px $mainColor;
+    background-color: $main-color;
+    border: solid 2px $main-color;
     color: #ffffff;
     letter-spacing: 2px;
     transition: all 0.3s;
@@ -291,7 +291,7 @@ a {
 
     &:hover {
       background-color: transparent;
-      color: $mainColor;
+      color: $main-color;
     }
   }
 
@@ -377,7 +377,7 @@ a {
         cursor: pointer;
 
         &:hover {
-          background-color: $mainColor;
+          background-color: $main-color;
           color: #ffffff;
         }
       }
@@ -423,12 +423,12 @@ a {
   }
 
   &__submit {
-    background-color: $mainColor;
-    border: 2px solid $mainColor;
+    background-color: $main-color;
+    border: 2px solid $main-color;
 
     &:hover {
       background-color: transparent;
-      color: $mainColor;
+      color: $main-color;
     }
   }
 
