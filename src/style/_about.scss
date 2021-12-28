@@ -1,0 +1,48 @@
+.about-section{
+}
+
+.section__content{
+  margin: 30px 20px 0 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.information{
+  max-width: 650px;
+
+}
+
+.information--title{
+  font-size: 48px;
+  font-weight: 300;
+  padding-bottom: 30px;
+  border-bottom: 2px solid black;
+
+}
+
+.information--text{
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 40px;
+
+  margin-top: 30px;
+}
+
+.qr{
+  min-width: 370px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.qr--img{
+  /*background: url("../img/qr-code.png");*/
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.qr--name{
+  font-size: 35px;
+  margin-top: 20px;
+  text-align: center;
+}
