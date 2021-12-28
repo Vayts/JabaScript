@@ -1,229 +1,212 @@
-// router
+const developersList = document.getElementById('developers-cards-list');
+const developerInfoBlock = document.getElementById('developer-info-block');
+const developerEditBlock = document.getElementById('developer-edit-block');
+const cancelEditButton = document.getElementById('cancel-developer-edit');
+const submitEditButton = document.getElementById('submit-developer-edit');
+const editInputs = document.querySelectorAll('.edit-window__input')
+const imgInputs = document.getElementById('edit-img-input')
+const imgEditHolder = document.getElementById('img-holder')
 
-
-//
-
-// home-page content
-
-let developersControl = document.querySelector('.developers__control')
-let developersInfo = document.querySelector('.developers__info')
-let developersEdit = document.querySelector('.developers__edit-window')
-
-// Profile
-let developersData;
-let developersControlButtons = document.querySelectorAll('.developers__img-wrapper')
-let position = document.querySelectorAll('.developers__position')
-let name = document.querySelector('.profile__name-text')
-let height = document.querySelector('.profile__height')
-let age = document.querySelector('.profile__age')
-let eyeColor = document.querySelector('.profile__eye-color')
-let exp = document.querySelector('.profile__experience')
-let language = document.querySelector('.profile__language')
-let placeOfBirth = document.querySelector('.profile__place-of-birth')
-let hobby = document.querySelector('.profile__hobby-text')
-
+let lastDeveloperData;
+let currentProfile = 0;
 
 window.onload = function () {
-    loadDevelopersInfo(0)
-    addDevelopersControl()
-    fillDevelopersControlButtons()
+    loadDevelopersContent()
 }
 
-function fillDevelopersControlButtons() {
-    fetch('http://localhost:3000/developers')
-        .then((res)=> {
+// Загрузка developers.json
+
+function loadDevelopersContent() {
+    fetch('http://localhost:3050/developers')
+        .then((res) => {
             return res.json()
         }).then((data) => {
-            for (let i = 0; i < developersControlButtons.length; i++) {
-                developersControlButtons[i].style.backgroundImage = 'url(' + data[i].photo + ')'
-                position[i].innerText = data[i].position
+        lastDeveloperData = data;
+        fillDevelopersData(data);
+    })
+}
+
+// Отрисовка карточек девелоперов
+
+function fillDevelopersData(data) {
+    while (developersList.firstChild) {
+        developersList.removeChild(developersList.firstChild);
+    }
+    for (let i = 0; i < data.length; i++) {
+        let developerCard = createDeveloperCard(data[i]);
+        developersList.insertAdjacentHTML('beforeend', developerCard);
+    }
+
+    addEventDevelopers()
+}
+
+// Функция, которая добавляет события на кнопки в карточках девелоперов
+
+function addEventDevelopers() {
+    const developer = document.querySelectorAll('.profile');
+    const developerMoreButton = document.querySelectorAll('.info-buttons__more');
+    const developerEditButton = document.querySelectorAll('.info-buttons__edit')
+    for (let i = 0; i < developer.length; i++) {
+        developerMoreButton[i].onclick = () => {
+            developer[i].classList.toggle('active')
+
+            if (developer[i].classList.contains('active')) {
+                developerMoreButton[i].innerText = 'Hide';
+            } else {
+                developerMoreButton[i].innerText = 'More';
             }
+
+        }
+        developerEditButton[i].onclick = function () {
+            startEdit(i)
+        };
+    }
+}
+
+// Эта функция отрабатывает при нажатии кнопки EDIT. Она заполняет инпуты и ставит фотку
+
+function startEdit(num) {
+    currentProfile = num;
+    editMenu()
+    let data = Object.values(lastDeveloperData[num])
+    imgEditHolder.style.backgroundImage = `url(${data[0]})`
+    for (let m = 1; m < data.length; m++) {
+        editInputs[m - 1].value = data[m]
+    }
+}
+
+// Включает и выключает EDIT меню
+
+function editMenu() {
+    developerInfoBlock.classList.toggle('disabled')
+    developerEditBlock.classList.toggle('disabled')
+}
+
+// Кнопки для EDIT меню. Подтвердить, закрыть.
+
+cancelEditButton.onclick = function () {
+    editMenu()
+    clearTempFiles()
+    imgInputs.value = ''
+};
+
+submitEditButton.onclick = submitDeveloperEdit;
+
+// Закрывает EDIT меню не изменяет дату
+
+imgInputs.addEventListener('change', () => {
+    clearTempFiles()
+    uploadPhoto(imgInputs.files[0], true)
+})
+
+// Загрузка картинок во временную директорию или постоянную
+
+function uploadPhoto(value, temp) {
+    const file = value;
+    const stampPath = Date.now()
+    const formData = new FormData();
+    const fileName = value.name
+    formData.append('file', value);
+    if (temp) {
+        fetch('http://127.0.0.1:3050/uploads/' + stampPath, {
+            method: 'POST',
+            body: formData
+        }).then(() => {
+            imgEditHolder.style.backgroundImage = `url(http://127.0.0.1:3050/temp/${stampPath}${fileName}`
         })
-}
-
-function loadDevelopersInfo(profileNum) {
-    fetch('http://localhost:3000/developers')
-        .then((res)=> {
-            return res.json()
-        })
-        .then((data) => fillDeveloperProfile(profileNum, data))
-}
-
-function fillDeveloperProfile(profileNum, data) {
-    position[profileNum].innerText = data[profileNum].position
-    name.innerText = data[profileNum].name
-    height.innerText = data[profileNum].developerStats.height
-    age.innerText = data[profileNum].developerStats.age
-    eyeColor.innerText = data[profileNum].developerStats.eyeColor
-    exp.innerText =  data[profileNum].developerStats.exp
-    language.innerText = data[profileNum].developerStats.motherTongue
-    placeOfBirth.innerText = data[profileNum].developerStats.placeOfBirth
-    hobby.innerText = data[profileNum].hobby
-}
-
-// Переключение между профилями девелоперов
-
-function addDevelopersControl() {
-    for (let i = 0; i < developersControlButtons.length; i++) {
-        developersControlButtons[i].addEventListener('click', () => {
-            developersControlButtons.forEach((el) => el.classList.remove('active'))
-            developersControlButtons[i].classList.add('active')
-            loadDevelopersInfo(i)
-            currentProfile = i;
+    } else {
+        lastDeveloperData[currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}${fileName}`
+        fetch('http://127.0.0.1:3050/change-photo/' + stampPath, {
+            method: 'POST',
+            body: formData
         })
     }
 }
 
+// Подтверждение сабмита
 
-// EDIT-Window
+function submitDeveloperEdit() {
+    clearTempFiles()
+    let data = lastDeveloperData;
+    let index = 0;
+    for (let key in data[currentProfile]) {
 
-let currentProfile = 0;
-let profileEditButton = document.querySelector('.profile__edit-button')
-let submitProfileEditButton = document.querySelector('.developers__submit-button')
-let cancelProfileEditButton = document.querySelector('.developers__return-button')
-let photoInput = document.querySelector('.developers__photo-input')
-let nameInput = document.querySelector('.developers__name-input')
-let posInput = document.querySelector('.developers__position-input')
-let heightInput = document.querySelector('.developers__height-input')
-let ageInput = document.querySelector('.developers__age-input')
-let eyeColorInput = document.querySelector('.developers__eye-input')
-let expInput = document.querySelector('.developers__exp-input')
-let langInput = document.querySelector('.developers__language-input')
-let placeOfBirthInput = document.querySelector('.developers__place-of-birth-input')
-let hobbyInput = document.querySelector('.developers__hobby-input')
+        if (key !== 'photo') {
+            data[currentProfile][key] = editInputs[index].value
+            index++
+        }
 
-// Open edit window
+    }
 
-profileEditButton.onclick = openEditWindow;
-
-function openEditWindow() {
-    developersControl.classList.add('disabled')
-    developersInfo.classList.add('disabled')
-    developersEdit.classList.remove('disabled')
-    fillEditInput()
+    if (imgInputs.value !== '') {
+        uploadPhoto(imgInputs.files[0], false)
+        postDeveloperInfo(lastDeveloperData)
+    } else {
+        postDeveloperInfo(lastDeveloperData)
+    }
 }
 
-function fillEditInput() {
-    nameInput.value = name.textContent
-    posInput.value = position[currentProfile].textContent
-    heightInput.value = height.textContent
-    ageInput.value = age.textContent
-    eyeColorInput.value = eyeColor.textContent
-    expInput.value = exp.textContent
-    langInput.value = language.textContent
-    placeOfBirthInput.value = placeOfBirth.textContent
-    hobbyInput.value = hobby.textContent
-}
+// Отправка обновленной информации на сервер
 
-//Submit edit
-
-submitProfileEditButton.onclick = getDeveloperData;
-
-function getDeveloperData() {
-    fetch('http://localhost:3000/developers')
-        .then((res)=> {
-            return res.json()
-        })
-        .then((data)=> {
-            if(photoInput.value !== '') {
-                let fileName = photoInput.files[0].name
-                let stampPath = Date.now()
-                console.log(fileName)
-                uploadDeveloperPhoto(photoInput.files, stampPath)
-                // let nameLength = photoInput.files[0].name.length
-                // let fileType = (photoInput.files[0].name).toString().slice(nameLength-4, nameLength)
-                // const pathToImg = `http://localhost:3000/photo/developerPhoto${currentProfile}${fileType}`
-                // console.log(pathToImg)
-                let imgPath = `http://localhost:3000/photo/${stampPath}` + fileName
-                changeDeveloperDataWithImg(data, imgPath)
-                postDeveloperInfo(data)
-                fillDeveloperProfile(currentProfile,data)
-                // restartDevelopersControlButtons(data)
-            } else {
-                changeDeveloperData(data)
-                postDeveloperInfo(data)
-                fillDeveloperProfile(currentProfile,data)
-
-            }
-        }).then((data) => {
-            fillDevelopersControlButtons()
-            returnToHomePage()
-        })
-}
-
-function changeDeveloperData(data) {
-    data[currentProfile].name = nameInput.value;
-    data[currentProfile].position = posInput.value;
-    data[currentProfile].developerStats.age = ageInput.value;
-    data[currentProfile].developerStats.height = heightInput.value;
-    data[currentProfile].developerStats.eyeColor = eyeColorInput.value;
-    data[currentProfile].developerStats.exp = expInput.value;
-    data[currentProfile].developerStats.motherTongue = langInput.value;
-    data[currentProfile].developerStats.placeOfBirth = placeOfBirthInput.value;
-    data[currentProfile].hobby = hobbyInput.value;
-}
-
-function changeDeveloperDataWithImg(data, path) {
-    data[currentProfile].photo = path
-    data[currentProfile].name = nameInput.value;
-    data[currentProfile].position = posInput.value;
-    data[currentProfile].developerStats.age = ageInput.value;
-    data[currentProfile].developerStats.height = heightInput.value;
-    data[currentProfile].developerStats.eyeColor = eyeColorInput.value;
-    data[currentProfile].developerStats.exp = expInput.value;
-    data[currentProfile].developerStats.motherTongue = langInput.value;
-    data[currentProfile].developerStats.placeOfBirth = placeOfBirthInput.value;
-    data[currentProfile].hobby = hobbyInput.value;
-}
-
-
-
-
-
-// profile photo edit
-
-function uploadDeveloperPhoto(value, modifier) {
-    const formData = new FormData();
-    console.log(value[0].name)
-    formData.append('file', value[0]);
-
-    fetch('http://127.0.0.1:3000/change-photo/' + modifier, {
+function postDeveloperInfo(data) {
+    fetch('http://localhost:3050/developers-edit', {
         method: 'POST',
-        body: formData
+        body: JSON.stringify(data)
+    }).then(() => {
+        loadDevelopersContent()
+        editMenu()
     })
 }
 
+// Очистка временной папки
 
-
-function postDeveloperInfo(data) {
-    fetch('http://localhost:3000/developers-edit', {
-        method: 'POST',
-        body: JSON.stringify(data)
-    }).then()
+function clearTempFiles() {
+    console.log('aaaaaaaaa')
+    fetch('http://localhost:3050/deleteTemp').then()
 }
 
-// cancel edit
-
-cancelProfileEditButton.onclick = returnToHomePage;
-
-// return user to home page
-
-function returnToHomePage() {
-    developersControl.classList.remove('disabled')
-    developersInfo.classList.remove('disabled')
-    developersEdit.classList.add('disabled')
+function createDeveloperCard(data) {
+    return '<li class="developers-list__item">' +
+        '<div class="profile">' +
+        '<div class="profile__img" style="background-image: url(' + data.photo + ')"></div>' +
+        '<p class="profile__name">' + data.name + '</p>' +
+        '<p class="profile__position">' + data.position + '</p>' +
+        '<div class="profile__info">' +
+        '<ul class="stats-list">' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Height: &nbsp;</p>' +
+        '<p class="stat__text">' + data.height + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Age: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.age + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Eye color: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.eyeColor + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Experience: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.exp + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Mother tongue: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.motherTongue + '</p>' +
+        '</li>' +
+        '<li class="stats-list__item stat">' +
+        '<p class="stat__title">Place of birth: &nbsp;</p>' +
+        '<p class="stat__text info-holder">' + data.placeOfBirth + '</p>' +
+        '</li>' +
+        '</ul>' +
+        '<div class="hobby">' +
+        '<p class="hobby__title">Hobby</p>' +
+        '<p class="hobby__text">' + data.hobby + '</p>' +
+        '</div>' +
+        '</div>' +
+        '<div class="profile__buttons info-buttons">' +
+        '<button type="button" class="info-buttons__more button">More</button>' +
+        '<button type="button" class="info-buttons__edit button">Edit</button>' +
+        '</div>' +
+        '</div>' +
+        '</li>'
 }
-
-
-//
-//
-// data[currentProfile].name = nameInput.value;
-// data[currentProfile].position = posInput.value;
-// data[currentProfile].developerStats.age = ageInput.value;
-// data[currentProfile].developerStats.height = heightInput.value;
-// data[currentProfile].developerStats.eyeColor = eyeColorInput.value;
-// data[currentProfile].developerStats.exp = expInput.value;
-// data[currentProfile].developerStats.motherTongue = langInput.value;
-// data[currentProfile].developerStats.placeOfBirth = placeOfBirthInput.value;
-// data[currentProfile].hobby = hobbyInput.value;
-
