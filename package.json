@@ -4,7 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "browser-sync": "^2.27.7",
+    "cors": "^2.8.5",
     "del": "^6.0.0",
+    "fs-extra": "^10.0.0",
     "gulp": "^4.0.2",
     "gulp-sass": "^5.0.0",
     "sass": "^1.45.0"
@@ -12,7 +15,8 @@
   "scripts": {
     "cmd": "node_modules/.bin/gulp",
     "build": "yarn cmd default",
-    "watch": "yarn cmd watch"
+    "watch": "yarn cmd watch",
+    "start": "yarn cmd start"
   },
   "devDependencies": {
     "@types/gulp": "^4.0.9",

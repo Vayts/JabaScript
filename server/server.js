@@ -1,27 +1,25 @@
-const port = 3000;
-const hostname = '127.0.0.1'
-const fs = require('fs') // Обратить внимание на :
-
-// multer
-
-const multer = require('multer')
+const fs = require('fs') // нодовский модуль для работы с файловой системой
+const CORS = require('cors') // решение корс политики
+const multer = require('multer') // легкая загрузка файлов на сервер
+const express = require("express") // для всего и сразу
+const fsExtra = require('fs-extra') // нужен нам для удаления файлов из папки
 
 const storage = multer.diskStorage({
     destination: (req,file, cb) => {
-        cb(null, 'server/public/img')
+        if (req.url.includes('/uploads')) {
+            cb(null, 'server/public/uploads')
+        } else {
+            cb(null, 'server/public/img')
+        }
     },
     filename: (req, file, cb) => {
         cb(null, `${(req.url.split('/'))[2]}${file.originalname}`)
     }
 })
-
 const upload = multer({storage: storage})
-
-// node express
-
-const express = require("express")
-const path = require("express");
 const app = express();
+
+app.use(CORS())
 
 app.get("/developers", function (req, res) {
     disableCORS(res)
@@ -37,7 +35,6 @@ app.get("/developers", function (req, res) {
 // Редактирование профиля и контента developers.json
 
 app.post("/developers-edit", function (req,res) {
-    disableCORS(res)
     let developersData = '';
     req.on('data', content => {
         developersData += content
@@ -59,30 +56,33 @@ app.post("/developers-edit", function (req,res) {
 // А тут мы получаем фотокарточки
 
 app.use("/photo", express.static(__dirname + "/public/img"));
+app.use("/temp", express.static(__dirname + "/public/uploads"));
 
 // Загрузка картинок НА сервер
 
 app.post('/change-photo*', upload.single('file'), function (req,res) {
-    console.log((req.path.split('/'))[2])
-    disableCORS(res)
     const file = req.file;
     if (!file) {
         console.log('ERROR')
     }
-        res.send(file)
+    res.send(file)
+})
+
+app.post('/uploads*', upload.single('file'), function (req,res) {
+    const file = req.file;
+    if (!file) {
+        console.log('ERROR')
+    }
+    res.send(file)
+})
+
+app.get('/deleteTemp', () => {
+    fsExtra.emptydir('server/public/uploads')
 })
 
 // Взлетаем
 
-app.listen(3000)
-
-// СORS POLICY
-
-function disableCORS(res) {
-    res.setHeader("Access-Control-Allow-Headers", 'append,delete,entries,foreach,get,has,keys,set,values,Authorization')// ЭТО ДЛЯ КОРС ПОЛИТИКИ!!!!!
-    res.setHeader("Access-Control-Allow-Origin", '*')// ЭТО ДЛЯ КОРС ПОЛИТИКИ!!!!!
-    res.setHeader("Access-Control-Allow-Methods", 'POST, GET, OPTIONS, DELETE, PUT')// ЭТО РЕШАЕТ КОРС ПОЛИТИКУ!!!!!
-}
+app.listen(3050)
 
 //получение данных из questions.json
 app.get("/questions.json", function (req, res) {
