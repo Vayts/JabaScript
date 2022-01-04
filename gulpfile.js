@@ -27,7 +27,7 @@ gulp.task('copy:js', function (cb) {
 })
 
 gulp.task('copy:img', function (cb) {
-    gulp.src('./src/**/*.{jpg,gif}')
+    gulp.src('./src/**/*.{jpg,gif,png}')
         .pipe(gulp.dest('./dist'))
     cb()
 })
