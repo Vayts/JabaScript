@@ -22,6 +22,7 @@ const app = express();
 app.use(CORS())
 
 app.get("/developers", function (req, res) {
+    disableCORS(res)
     fs.readFile("server/public/developers/developers.json", (error, data) => {
         if (error) {
             throw error
@@ -82,3 +83,36 @@ app.get('/deleteTemp', () => {
 // Взлетаем
 
 app.listen(3050)
+
+//получение данных из questions.json
+app.get("/questions.json", function (req, res) {
+    disableCORS(res)
+    fs.readFile("server/public/files/questions.json", (error, data) => {
+        if (error) {
+            throw error
+        } else {
+            res.end(data.toString())
+        }
+    })
+});
+
+
+app.post("/questions.json-add", function (req,res) {
+    disableCORS(res)
+    let questionsData = '';
+    req.on('data', content => {
+        questionsData += content
+    })
+    req.on('end', () => {
+        if (questionsData) {
+            fs.writeFile('server/public/files/questions.json', questionsData, function (err) {
+                if (err) {
+                    throw err
+                } else {
+                    console.log('Перезаписано')
+                }
+            })
+        }
+        res.end("Данные успешно получены");
+    })
+})
