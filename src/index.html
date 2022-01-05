@@ -10,7 +10,6 @@
 </head>
 <body>
 <main>
-    <script src="script/questions.js"></script>
     <div class="container">
         <div class="content">
             <header class="main-header">
@@ -80,10 +79,10 @@
                         <section class="wrapper__filter--select">
 
                             <div class="wrapper__select select-custom">
-                                <select class="select select-custom__item">
-                                    <option class="select__option" disabled selected>Select file system</option>
+                                <select class="select select-custom__item" id="select_format">
+                                    <option class="select__option" disabled>Select file system</option>
                                     <option class="select__option">CSV</option>
-                                    <option class="select__option">JSON</option>
+                                    <option class="select__option" selected>JSON</option>
                                     <option class="select__option">XML</option>
                                     <option class="select__option">YAML</option>
                                     <option class="select__option">all</option>
@@ -91,8 +90,12 @@
                             </div>
 
                             <div class="wrapper__select select-custom">
-                                <select class="select select-custom__item">
+                                <select class="select select-custom__item" id="select_theme_filter">
                                     <option class="select__option" disabled selected>Select questions theme</option>
+                                    <option>One theme</option>
+                                    <option>Two theme</option>
+                                    <option>Three theme</option>
+                                    <option>Four theme</option>
                                 </select>
                             </div>
 
@@ -118,18 +121,22 @@
                             <div class="modal__body">
                                 <p>QUESTION:</p>
                                 <div class="modal__body--input input-custom">
-                                    <input class="input-custom__item" type="text">
+                                    <input class="input-custom__item" id="question_input" type="text">
                                 </div>
                                 <p>THEME:</p>
                                 <div class="modal__body--input select-custom ">
-                                    <select class="modal__body--select select-custom__item">
+                                    <select class="modal__body--select select-custom__item" id="select_theme">
                                         <option disabled selected>Select one theme</option>
+                                        <option>One theme</option>
+                                        <option>Two theme</option>
+                                        <option>Three theme</option>
+                                        <option>Four theme</option>
                                     </select>
                                 </div>
                                 <div class="modal__body--answer">
                                     <span>ANSWER:</span>
                                     <input type="radio" class="custom-checkbox" id="checkboxTrue" name="answer"
-                                           value="True">
+                                           value="True" checked>
                                     <label for="checkboxTrue">True</label>
                                     <input type="radio" class="custom-checkbox" id="checkboxFalse" name="answer"
                                            value="False">
@@ -151,10 +158,10 @@
                                     <label for="radioYAML">YAML</label>
                                 </div>
                                 <div class="modal__body--button button-custom">
-                                    <button class="button-custom__item"
-                                            onclick="window.location.href='#close'" type="button">CANCEL
+                                    <button class="button-custom__item" id="close_module" type="button">CANCEL
                                     </button>
-                                    <button class="button-custom__item--disabled button-custom__item" type="button">
+<!--                                    button-custom__item--disabled -->
+                                    <button class="button-custom__item" id="create_question" type="button">
                                         CREATE
                                     </button>
                                 </div>
@@ -185,5 +192,6 @@
 </main>
 <script src="script/router.js"></script>
 <script src="script/script.js"></script>
+<script src="script/questions.js"></script>
 </body>
 </html>
