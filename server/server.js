@@ -22,7 +22,6 @@ const app = express();
 app.use(CORS())
 
 app.get("/developers", function (req, res) {
-    disableCORS(res)
     fs.readFile("server/public/developers/developers.json", (error, data) => {
         if (error) {
             throw error
@@ -86,8 +85,7 @@ app.listen(3050)
 
 //получение данных из questions.json
 app.get("/questions.json", function (req, res) {
-    disableCORS(res)
-    fs.readFile("server/public/files/questions.json", (error, data) => {
+    fs.readFile("server/public/questions/questions.json", (error, data) => {
         if (error) {
             throw error
         } else {
@@ -96,16 +94,14 @@ app.get("/questions.json", function (req, res) {
     })
 });
 
-
 app.post("/questions.json-add", function (req,res) {
-    disableCORS(res)
     let questionsData = '';
     req.on('data', content => {
         questionsData += content
     })
     req.on('end', () => {
         if (questionsData) {
-            fs.writeFile('server/public/files/questions.json', questionsData, function (err) {
+            fs.writeFile('server/public/questions/questions.json', questionsData, function (err) {
                 if (err) {
                     throw err
                 } else {
@@ -116,3 +112,99 @@ app.post("/questions.json-add", function (req,res) {
         res.end("Данные успешно получены");
     })
 })
+//получение данных из questions.xml
+app.get("/questions.xml", function (req, res) {
+    fs.readFile("server/public/questions/questions.xml", (error, data) => {
+        if (error) {
+            throw error
+        } else {
+            console.log(data)
+            res.end(data.toString())
+        }
+    })
+});
+
+app.post("/questions.xml-add", function (req,res) {
+    let questionsData = '';
+    req.on('data', content => {
+        questionsData += content
+    })
+    req.on('end', () => {
+        if (questionsData) {
+            fs.writeFile('server/public/questions/questions.xml', questionsData, function (err) {
+                if (err) {
+                    throw err
+                } else {
+                    console.log('Перезаписано')
+                }
+            })
+        }
+        res.end("Данные успешно получены");
+    })
+})
+
+//получение данных из questions.csv
+app.get("/questions.csv", function (req, res) {
+    fs.readFile("server/public/questions/questions.csv", (error, data) => {
+        if (error) {
+            throw error
+        } else {
+            console.log(data)
+            res.end(data.toString())
+        }
+    })
+});
+
+app.post("/questions.csv-add", function (req,res) {
+    let questionsData = '';
+    req.on('data', content => {
+        questionsData += content
+    })
+    req.on('end', () => {
+        if (questionsData) {
+            fs.writeFile('server/public/questions/questions.csv', questionsData, function (err) {
+                if (err) {
+                    throw err
+                } else {
+                    console.log('Перезаписано')
+                }
+            })
+        }
+        res.end("Данные успешно получены");
+    })
+})
+
+//получение данных из questions.yaml
+app.get("/questions.yaml", function (req, res) {
+    fs.readFile("server/public/questions/questions.yaml", (error, data) => {
+        if (error) {
+            throw error
+        } else {
+            console.log(data)
+            res.end(data.toString())
+        }
+    })
+});
+
+
+app.post("/questions.yaml-add", function (req,res) {
+    let questionsData = '';
+    req.on('data', content => {
+        questionsData += content
+    })
+    req.on('end', () => {
+        if (questionsData) {
+            fs.writeFile('server/public/questions/questions.yaml', questionsData, function (err) {
+                if (err) {
+                    throw err
+                } else {
+                    console.log('Перезаписано')
+                }
+            })
+        }
+        res.end("Данные успешно получены");
+    })
+})
+
+
+
