@@ -7,7 +7,18 @@ let objJSON = null;
 let objXML = null;
 let objCSV = null;
 let objYAML = null;
+let allFormat = [];
+let activeFormat='JSON';
 
+function addListener(id, eventType, callback) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.addEventListener(eventType, callback);
+    }
+}
+getDataYAML();
+getDataCSV();
+getDataXML();
 getDataJSON();
 
 function getDataJSON() {
@@ -16,7 +27,7 @@ function getDataJSON() {
             return res.json()
         }).then((data) => {
         objJSON = data;
-        addElement(data['01']);
+        addElement(objJSON['01']);
     })
 }
 
@@ -37,7 +48,7 @@ function getDataCSV() {
             return res.text()
         }).then((data) => {
         objCSV = parseCSV(data);
-        addElement(objCSV["questions"]);
+        addElement(objCSV);
     })
 }
 
@@ -83,22 +94,22 @@ function postDataYAML(objYAML) {
 }
 
 function addToJSON(question, theme, answer) {
-    objJSON['01'].push({'id':  Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    objJSON['01'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
     postDataJSON(objJSON);
 }
 
 function addToXML(question, theme, answer) {
-    objXML['questions']['block'].push({'id':  Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    objXML['questions']['block'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
     postDataXML(objXML);
 }
 
 function addToCSV(question, theme, answer) {
-    objCSV["questions"].push({'id':  Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    objCSV.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
     postDataCSV(objCSV);
 }
 
 function addToYAML(question, theme, answer) {
-    objYAML.push({'id':  Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    objYAML.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
     postDataYAML(objYAML);
 }
 
@@ -176,7 +187,7 @@ function parseXML(xml) {
     return xmlToObject(dom);
 }
 
-function serialiseXML(objXML, result='<?xml version="1.0"?>', block = '') {
+function serialiseXML(objXML, result = '<?xml version="1.0"?>', block = '') {
     const objXMLKey = Object.getOwnPropertyNames(objXML);
     if (!Number.isNaN(Number(objXMLKey[0]))) {
         objXMLKey.pop();
@@ -202,7 +213,7 @@ function serialiseXML(objXML, result='<?xml version="1.0"?>', block = '') {
 }
 
 function parseCSV(csv) {
-    let result = {"questions": []};
+    let result = [];
     let lineCSV = csv.split('\r\n');
     lineCSV.pop();
     for (let i = 0; i < lineCSV.length; i++) {
@@ -213,19 +224,18 @@ function parseCSV(csv) {
         for (let j = 0; j < lineCSV[i].length; j++) {
             tempResult[lineCSV[0][j]] = lineCSV[i][j];
         }
-        result["questions"].push(tempResult);
+        result.push(tempResult);
     }
     return result;
 }
 
 function serialiseCSV(objCSV) {
-    objCSV = objCSV['question'];
     let result = '';
     const objCSVKey = Object.getOwnPropertyNames(objCSV);
     if (objCSVKey.length > 0) {
         result = Object.getOwnPropertyNames(objCSV[objCSVKey[0]]).join(';');
-        for (let i = 1; i < objCSVKey.length; i++) {
-            result = result.concat('/r/n', Object.values(objCSV[objCSVKey[0]]).join(';'))
+        for (let i = 0; i < objCSVKey.length; i++) {
+            result = result.concat('\r\n', Object.values(objCSV[objCSVKey[i]]).join(';'))
         }
     }
     return result;
@@ -268,3 +278,110 @@ function serialiseYAML(objYAML) {
     }
     return result;
 }
+
+
+function eventClickCreateQuestion() {
+    const question = document.getElementById('question_input').value;
+    const themeSelect = document.getElementById('select_theme');
+    const theme = themeSelect.options[themeSelect.selectedIndex].text;
+    const answer = document.getElementById('checkboxTrue').checked;
+    const radioCSV = document.getElementById('radioCSV');
+    const radioJSON = document.getElementById('radioJSON');
+    const radioXML = document.getElementById('radioXML');
+    const radioYAML = document.getElementById('radioYAML');
+
+    if (radioJSON.checked) {
+        addToJSON(question, theme, answer);
+    }
+    if (radioCSV.checked) {
+        addToCSV(question, theme, answer);
+    }
+    if (radioXML.checked) {
+        addToXML(question, theme, answer);
+    }
+    if (radioYAML.checked) {
+        addToYAML(question, theme, answer);
+    }
+    eventClickCloseQuestion();
+    console.log('create');
+}
+
+function eventClickCloseQuestion() {
+    document.getElementById('question_input').value = '';
+    const themeSelect = document.getElementById('select_theme');
+    themeSelect.selectedIndex = 0;
+    document.getElementById('checkboxTrue').checked = true;
+    document.getElementById('radioCSV').checked = false;
+    document.getElementById('radioJSON').checked = true;
+    document.getElementById('radioXML').checked = false;
+    document.getElementById('radioYAML').checked = false;
+    window.location.href = '#close';
+    console.log('close');
+}
+
+function eventClickFilterFormat() {
+    const selectFormat = document.getElementById('select_format');
+    const formatFile = selectFormat.options[selectFormat.selectedIndex].text;
+    switch (formatFile) {
+        case 'JSON':
+            activeFormat='JSON';
+            addElement(objJSON['01']);
+            break;
+        case 'XML':
+            activeFormat='XML';
+            addElement(objXML['questions']['block']);
+            break;
+        case 'CSV':
+            activeFormat='CSV';
+            addElement(objCSV);
+            break;
+        case 'YAML':
+            activeFormat='YAML';
+            addElement(objYAML);
+            break;
+        case 'all':
+            activeFormat='all';
+            allFormat=allFormat.concat(objJSON['01'],objXML['questions']['block'],objCSV,objYAML);
+            addElement(allFormat);
+            break;
+    }
+}
+
+function eventClickFilterTheme(){
+    const selectThemeFilter = document.getElementById('select_theme_filter');
+    const themeFilter = selectThemeFilter.options[selectThemeFilter.selectedIndex].text;
+    let filteredArray=[];
+    switch (activeFormat) {
+        case 'JSON':
+            filteredArray=filteredArray.concat(objJSON['01']);
+            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
+            addElement(filteredArray);
+            break;
+        case 'XML':
+            filteredArray=filteredArray.concat(objXML['questions']['block']);
+            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
+            addElement(filteredArray);
+            break;
+        case 'CSV':
+            filteredArray=filteredArray.concat(objCSV);
+            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
+            addElement(filteredArray);
+            break;
+        case 'YAML':
+            filteredArray=filteredArray.concat(objYAML);
+            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
+            addElement(filteredArray);
+            break;
+        case 'all':
+            filteredArray=filteredArray.concat(objJSON['01'],objXML['questions']['block'],objCSV,objYAML);
+            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
+            addElement(filteredArray);
+            break;
+    }
+}
+
+
+addListener('create_question', 'click', eventClickCreateQuestion)
+addListener('close_module', 'click', eventClickCloseQuestion)
+addListener('select_format', 'change', eventClickFilterFormat)
+addListener('select_theme_filter', 'change', eventClickFilterTheme)
