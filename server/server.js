@@ -13,7 +13,14 @@ const storage = multer.diskStorage({
         }
     },
     filename: (req, file, cb) => {
-        cb(null, `${(req.url.split('/'))[2]}${file.originalname}`)
+        let name = file.originalname
+        console.log(name)
+        name = name.split('').filter((el) => {
+            if (el !== ' ' || el !== '(' || el !== ')') {
+                return el
+            }
+        }).join('')
+        cb(null, `${(req.url.split('/'))[2]}developerPhoto${name.slice(name.length-4, name.length)}`)
     }
 })
 const upload = multer({storage: storage})
@@ -22,7 +29,6 @@ const app = express();
 app.use(CORS())
 
 app.get("/developers", function (req, res) {
-    disableCORS(res)
     fs.readFile("server/public/developers/developers.json", (error, data) => {
         if (error) {
             throw error
@@ -86,7 +92,6 @@ app.listen(3050)
 
 //получение данных из questions.json
 app.get("/questions.json", function (req, res) {
-    disableCORS(res)
     fs.readFile("server/public/files/questions.json", (error, data) => {
         if (error) {
             throw error
@@ -98,7 +103,6 @@ app.get("/questions.json", function (req, res) {
 
 
 app.post("/questions.json-add", function (req,res) {
-    disableCORS(res)
     let questionsData = '';
     req.on('data', content => {
         questionsData += content
