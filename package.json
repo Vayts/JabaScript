@@ -10,7 +10,7 @@
     "fs-extra": "^10.0.0",
     "gulp": "^4.0.2",
     "gulp-sass": "^5.0.0",
-    "sass": "^1.45.0"
+    "sass": "^1.45.0nn"
   },
   "scripts": {
     "cmd": "node_modules/.bin/gulp",
