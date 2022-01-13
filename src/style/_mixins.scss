@@ -1,0 +1,9 @@
+@mixin button {
+  padding: 20px 50px;
+  color: #ffffff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: $spacing;
+  transition: all 0.2s;
+  cursor: pointer;
+}
