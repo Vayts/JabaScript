@@ -43,16 +43,15 @@
 
 .logo {
   padding: 0 10px;
-  border-top: 10px solid #83a891;
-  border-bottom: 10px solid #83a891;
   transition: all 0.3s;
 
   &:hover &__text {
-      color: #bead3c;
+    color: #e6a80e;
+
   }
 
   &:hover &__img {
-    transform: rotate(30deg);
+    transform: scaleX(-1);
   }
 
   &__link {
@@ -71,6 +70,7 @@
     justify-content: center;
     border-radius: 50%;
     margin-right: 10px;
+    background-color: $sub-color;
   }
 
   &__img {
@@ -78,12 +78,30 @@
     transition: all 0.3s;
   }
 
+  .logo__text-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+  }
+
   &__text {
-    font-size: 40px;
+    font-size: 1.4rem;
     font-weight: 300;
-    letter-spacing: 3px;
     color: #ffffff;
-    margin: 0;
+    margin: 0 0 0 3px;
     transition: all 0.3s;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+
+    &_upper {
+      font-size: 3rem;
+      color: #e6a80e;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin: 0;
+      transition: all 0.3s;
+    }
+
   }
 }

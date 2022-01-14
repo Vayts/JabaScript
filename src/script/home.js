@@ -85,7 +85,7 @@ function startEdit(num, state) {
     const editInputs = document.querySelectorAll('.edit-window__input')
 
     state.currentProfile = num;
-    editMenu()
+    toggleDisabledClass('developer-info-block', 'developer-edit-block')
     let data = Object.values(state.lastDeveloperData[num])
     imgEditHolder.style.backgroundImage = `url(${data[0]})`
     for (let m = 1; m < data.length; m++) {
@@ -119,45 +119,53 @@ function submitDeveloperEdit(state) {
     }
 }
 
+function toggleDisabledClass(id) {
+    for (let i = 0; i < arguments.length; i++) {
+        const node = document.getElementById(arguments[i])
 
-// Включает и выключает EDIT меню
+        if (node) {
+            node.classList.toggle('disabled')
+        } else {
+            return false
+        }
+    }
+    return true
+}
 
-function editMenu() {
-    const developerInfoBlock = document.getElementById('developer-info-block');
-    const developerEditBlock = document.getElementById('developer-edit-block');
+function setInputValue(id, value) {
+    const node = document.getElementById(id)
 
-    developerInfoBlock.classList.toggle('disabled')
-    developerEditBlock.classList.toggle('disabled')
+    if (node) {
+        node.value = value;
+    }
 }
 
 // Кнопки для EDIT меню. Подтвердить, закрыть.
 
 
 function cancelEdit() {
-    const imgInputs = document.getElementById('edit-img-input')
-
-    editMenu()
+    toggleDisabledClass('developer-info-block', 'developer-edit-block')
     clearTempFiles()
-    imgInputs.value = ''
+    setInputValue('edit-img-input', '')
 }
 
 // Редактирование фотографии (временное и постоянное)
 
 function imgLoad(state) {
     const imgInputs = document.getElementById('edit-img-input')
-    if (!imgValidate(imgInputs.files[0])) {
+    if (!imgValidate(imgInputs.files[0].name)) {
         alert('Ты всё сломал');
-        imgInputs.value = '';
+        setInputValue('edit-img-input', '')
     } else {
         clearTempFiles();
         uploadPhoto(state, imgInputs.files[0], true);
     }
 }
 
-function imgValidate(file) {
+function imgValidate(fileName) {
     const allowedFileType = /(\.jpg|\.png|\.gif)$/i;
 
-    if (allowedFileType.exec(file.name)) {
+    if (allowedFileType.exec(fileName)) {
         return true;
     }
     return false;
@@ -200,7 +208,7 @@ function postDeveloperInfo(state) {
         body: JSON.stringify(state.lastDeveloperData)
     }).then(() => {
         loadDevelopersContent(state)
-        editMenu()
+        toggleDisabledClass('developer-info-block', 'developer-edit-block')
     })
 }
 
