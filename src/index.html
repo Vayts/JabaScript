@@ -17,17 +17,16 @@
                 <div class="logo">
                     <a href="" class="logo__link">
                         <div class="logo__img-wrapper"><img class="logo__img" src="img/logo.png" alt="Logo"></div>
-                        <span class="logo__text-wrapper">
+                        <div class="logo__text-wrapper">
                             <p class="logo__text logo__text_upper">Jaba</p>
                             <p class="logo__text">script</p>
-                        </span>
+                        </div>
                     </a>
                 </div>
                 <nav class="navigation">
                     <ul class="navigation-list">
-                        <li class="navigation-list__item"><a class="navigation-list__link" id="home">Home</a></li>
-                        <li class="navigation-list__item"><a class="navigation-list__link" id="questions">Questions</a>
-                        </li>
+                        <li class="navigation-list__item"><a class="navigation-list__link"  id="home">Home</a></li>
+                        <li class="navigation-list__item"><a class="navigation-list__link" id="questions">Questions</a></li>
                         <li class="navigation-list__item"><a class="navigation-list__link" id="about">About</a></li>
                     </ul>
                 </nav>
@@ -38,15 +37,9 @@
                         <h1 class="section-title__text">Meet the team</h1>
                     </div>
                     <ul class="developers-list" id="developers-cards-list">
-                        <li class="developers-list__item">
-                            <div class="profile profile_empty"></div>
-                        </li>
-                        <li class="developers-list__item">
-                            <div class="profile profile_empty"></div>
-                        </li>
-                        <li class="developers-list__item">
-                            <div class="profile profile_empty"></div>
-                        </li>
+                        <li class="developers-list__item"><div class="profile profile_empty"></div></li>
+                        <li class="developers-list__item"><div class="profile profile_empty"></div></li>
+                        <li class="developers-list__item"><div class="profile profile_empty"></div></li>
                     </ul>
                 </div>
                 <div class="home-section__edit  disabled" id="developer-edit-block">
@@ -56,14 +49,10 @@
                     <form class="edit-form" id="edit-form">
                         <div class="edit-window">
                             <div class="edit-window__column">
-                                <label class="edit-window__label">Name:<input class="edit-window__input" type="text"
-                                                                              minlength="4" maxlength="25"></label>
-                                <label class="edit-window__label">Position:<input class="edit-window__input" type="text"
-                                                                                  minlength="4" maxlength="25"></label>
-                                <label class="edit-window__label">Height:<input class="edit-window__input" type="number"
-                                                                                min="100" max="200"></label>
-                                <label class="edit-window__label">Age:<input class="edit-window__input" type="number"
-                                                                             min="16" max="100"></label>
+                                    <label class="edit-window__label">Name:<input class="edit-window__input" id="name" type="text" minlength="4" maxlength="25"></label>
+                                    <label class="edit-window__label">Position:<input class="edit-window__input" id="position" type="text" minlength="4" maxlength="25"></label>
+                                    <label class="edit-window__label">Height:<input class="edit-window__input" id="height" type="number" min="100" max="200"></label>
+                                    <label class="edit-window__label">Age:<input class="edit-window__input" id="age" type="number" min="16" max="100"></label>
                             </div>
                             <div class="edit-window__column">
                                 <div class="edit-window__photo">
@@ -71,44 +60,34 @@
                                          style="background-image: url(img/developer1.jpg)">
                                         <label class="edit-window__label">
                                             <span class="edit-window__img-button">Change</span>
-                                            <input class="edit-window__img-input edit-window__input_hidden"
-                                                   id="edit-img-input" type="file">
+                                            <input class="edit-window__img-input edit-window__input_hidden" id="edit-img-input" type="file">
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="edit-window__column">
-                                <label class="edit-window__label">Eye color:<input class="edit-window__input"
-                                                                                   type="text" minlength="5"
-                                                                                   maxlength="30"></label>
-                                <label class="edit-window__label">Experience:<input
-                                        class="edit-window__input edit-window__input" type="number" min="0"
-                                        max="20"></label>
-                                <label class="edit-window__label">Mother tongue:<input class="edit-window__input"
-                                                                                       type="text" minlength="4"
-                                                                                       maxlength="20"></label>
-                                <label class="edit-window__label">Place of birth:<input class="edit-window__input"
-                                                                                        type="text" minlength="4"
-                                                                                        maxlength="25"></label>
+                                    <label class="edit-window__label">Eye color:<input class="edit-window__input" id="eye-color" type="text" minlength="5" maxlength="30"></label>
+                                    <label class="edit-window__label">Experience:<input class="edit-window__input edit-window__input" id="exp" type="number" min="0" max="70"></label>
+                                    <label class="edit-window__label">Mother tongue:<input class="edit-window__input" id="mother-tongue" type="text" minlength="4" maxlength="20"></label>
+                                    <label class="edit-window__label">Place of birth:<input class="edit-window__input" id="place-of-birth" type="text" minlength="4" maxlength="25"></label>
                             </div>
                             <div class="edit-window__column edit-window__column_big">
-                                <label class="edit-window__label">Hobby<textarea
-                                        class="edit-window__input edit-window__input_big"
-                                        maxlength="170"></textarea></label>
+                                <label class="edit-window__label">Hobby<textarea class="edit-window__input edit-window__input_big" id="hobby" maxlength="170"></textarea></label>
                             </div>
                         </div>
                         <div class="edit-buttons">
-                            <button type="button" id="submit-developer-edit"
-                                    class="edit-buttons__button edit-buttons__submit">Submit
+                            <button type="button" id="submit-developer-edit" class="edit-buttons__button edit-buttons__submit">Submit
                             </button>
-                            <button type="button" id="cancel-developer-edit"
-                                    class="edit-buttons__button edit-buttons__cancel">Cancel
+                            <button type="button" id="cancel-developer-edit" class="edit-buttons__button edit-buttons__cancel">Cancel
                             </button>
                         </div>
                     </form>
                 </div>
             </section>
             <section id="questions-section" class="content-section questions-section disabled">
+                <div class="section-title">
+                    <h1 class="section-title__text">Questions</h1>
+                </div>
                 <main class="wrapper">
                     <div class="wrapper__filter">
                         <section class="wrapper__filter--select">

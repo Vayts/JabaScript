@@ -5,12 +5,13 @@ document.addEventListener('DOMContentLoaded', function(){
 function initHome( ) {
 
     let developersState = {
+        url: 'http://localhost:3050',
         currentProfile: 0,
         lastDeveloperData: []
     }
 
     addListener('cancel-developer-edit', 'click', cancelEdit)
-    addListener('submit-developer-edit', 'click', submitDeveloperEdit.bind(null, developersState))
+    addListener('submit-developer-edit', 'click', checkDeveloperEdit.bind(null, developersState))
     addListener('edit-img-input', 'change', imgLoad.bind(null, developersState ))
 
     loadDevelopersContent(developersState)
@@ -24,10 +25,8 @@ function addListener(id, eventType, cb) {
     }
 }
 
-// Загрузка developers.json
-
 function loadDevelopersContent(state) {
-    fetch('http://localhost:3050/developers')
+    fetch(`${state.url}/developers`)
         .then((res) => {
             return res.json()
         }).then((data) => {
@@ -35,8 +34,6 @@ function loadDevelopersContent(state) {
         fillDevelopersData(state);
     })
 }
-
-// Отрисовка карточек девелоперов
 
 function fillDevelopersData(state) {
     const developersList = document.getElementById('developers-cards-list');
@@ -52,8 +49,6 @@ function fillDevelopersData(state) {
 
     addEventDevelopers(state)
 }
-
-// Функция, которая добавляет события на кнопки в карточках девелоперов
 
 function addEventDevelopers(state) {
     const developer = document.querySelectorAll('.profile');
@@ -78,41 +73,96 @@ function addEventDevelopers(state) {
     }
 }
 
-// Эта функция отрабатывает при нажатии кнопки EDIT. Она заполняет инпуты и ставит фотку
-
 function startEdit(num, state) {
-    const imgEditHolder = document.getElementById('img-holder')
     const editInputs = document.querySelectorAll('.edit-window__input')
 
     state.currentProfile = num;
     toggleDisabledClass('developer-info-block', 'developer-edit-block')
     let data = Object.values(state.lastDeveloperData[num])
-    imgEditHolder.style.backgroundImage = `url(${data[0]})`
+    setBackgroundImage('img-holder', `url(${data[0]})`)
     for (let m = 1; m < data.length; m++) {
         editInputs[m - 1].value = data[m]
     }
 }
 
-// Подтверждение сабмита
-
-function submitDeveloperEdit(state) {
+function checkDeveloperEdit(state) {
     clearTempFiles()
-    const editInputs = document.querySelectorAll('.edit-window__input')
-    const imgInputs = document.getElementById('edit-img-input')
 
+    const obj = {
+        name: getInputValue('name'),
+        position: getInputValue('position'),
+        height: Number(getInputValue('height')),
+        age: Number(getInputValue('age')),
+        eyeColor: getInputValue('eye-color'),
+        exp: Number(getInputValue('exp')),
+        motherTongue: getInputValue('mother-tongue'),
+        placeOfBirth: getInputValue('place-of-birth'),
+        hobby: getInputValue('hobby')
+    }
+
+    if (validateInputs(obj)) {
+        submitDevelopersEdit(state, Object.values(obj))
+        return true
+    } else {
+        alert('Invalid input data')
+        return false;
+    }
+}
+
+function validateInputs(obj) {
+    const reg = /^[a-zA-Z\s\-]*$/
+    const regExt = /^[a-zA-Z\s\-.,:\/]*$/
+
+    if (obj.name.length > 25 || obj.name.length < 4 || !obj.name.match(reg)) {
+        return false;
+    }
+
+    if (obj.position.length > 20 || obj.position.length < 4 || !obj.position.match(regExt)) {
+        return false;
+    }
+
+    if (obj.height > 240 || obj.height < 100) {
+        return false;
+    }
+
+    if (obj.age > 100 || obj.age < 16) {
+        return false;
+    }
+
+    if (obj.eyeColor.length > 20 || obj.eyeColor.length < 3 || !obj.eyeColor.match(reg)) {
+        return false;
+    }
+
+    if (obj.age - obj.exp < 16 || obj.exp < 0) {
+        return false;
+    }
+
+    if (obj.motherTongue.length > 15 || obj.motherTongue.length < 5 || !obj.motherTongue.match(reg)) {
+        return false;
+    }
+
+    if (obj.placeOfBirth.length > 30 || obj.placeOfBirth.length < 3 || !obj.placeOfBirth.match(reg)) {
+        return false;
+    }
+
+    if (obj.hobby.length > 170 || obj.hobby.length < 3) {
+        return false;
+    }
+    return true
+}
+
+function submitDevelopersEdit(state, arr) {
     let index = 0;
 
     for (let key in state.lastDeveloperData[state.currentProfile]) {
-
         if (key !== 'photo') {
-            state.lastDeveloperData[state.currentProfile][key] = editInputs[index].value
+            state.lastDeveloperData[state.currentProfile][key] = arr[index]
             index++
         }
-
     }
 
-    if (imgInputs.value !== '') {
-        uploadPhoto(state, imgInputs.files[0], false)
+    if (getFileFromInput('edit-img-input') !== '') {
+        uploadPhoto(state, getFileFromInput('edit-img-input'), false)
         postDeveloperInfo(state)
     } else {
         postDeveloperInfo(state)
@@ -133,15 +183,45 @@ function toggleDisabledClass(id) {
 }
 
 function setInputValue(id, value) {
-    const node = document.getElementById(id)
+    const node = document.getElementById(id);
 
     if (node) {
         node.value = value;
+        return true;
     }
+    return false;
 }
 
-// Кнопки для EDIT меню. Подтвердить, закрыть.
+function getInputValue(id) {
+    const node = document.getElementById(id);
 
+    if(node) {
+        return node.value;
+    }
+    return false;
+}
+
+function getFileFromInput(id) {
+    const node = document.getElementById(id);
+
+    if (node && node.type === 'file') {
+        if (node.value === '') {
+            return '';
+        }
+        return node.files[0];
+    }
+    return false;
+}
+
+function setBackgroundImage(id, value) {
+    const node = document.getElementById(id)
+
+    if (node) {
+        node.style.backgroundImage = value;
+        return true;
+    }
+    return false;
+}
 
 function cancelEdit() {
     toggleDisabledClass('developer-info-block', 'developer-edit-block')
@@ -149,17 +229,17 @@ function cancelEdit() {
     setInputValue('edit-img-input', '')
 }
 
-// Редактирование фотографии (временное и постоянное)
-
 function imgLoad(state) {
-    const imgInputs = document.getElementById('edit-img-input')
-    if (!imgValidate(imgInputs.files[0].name)) {
+
+    if (!imgValidate(getFileFromInput('edit-img-input').name)) {
         alert('Ты всё сломал');
         setInputValue('edit-img-input', '')
-    } else {
-        clearTempFiles();
-        uploadPhoto(state, imgInputs.files[0], true);
+        return false;
     }
+
+    clearTempFiles();
+    uploadPhoto(state, getFileFromInput('edit-img-input'), true);
+    return true;
 }
 
 function imgValidate(fileName) {
@@ -168,32 +248,29 @@ function imgValidate(fileName) {
     if (allowedFileType.exec(fileName)) {
         return true;
     }
-    return false;
 
+    return false;
 }
 
 // Загрузка картинок во временную директорию или постоянную
 
 function uploadPhoto(state, value, temp) {
-
-    const imgEditHolder = document.getElementById('img-holder')
     const stampPath = Date.now()
     const formData = new FormData();
     const name = value.name
     const mimeType = name.slice(name.length - 4, name.length)
-
-
     formData.append('file', value);
+
     if (temp) {
-        fetch('http://127.0.0.1:3050/uploads/' + stampPath, {
+        fetch(`${state.url}/uploads/${stampPath}`, {
             method: 'POST',
             body: formData
         }).then(() => {
-            imgEditHolder.style.backgroundImage = `url(http://127.0.0.1:3050/temp/${stampPath}developerPhoto${mimeType}`
+            setBackgroundImage('img-holder', `url(http://127.0.0.1:3050/temp/${stampPath}developerPhoto${mimeType}`)
         })
     } else {
         state.lastDeveloperData[state.currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}developerPhoto${mimeType}`
-        fetch('http://127.0.0.1:3050/change-photo/' + stampPath, {
+        fetch(`${state.url}/change-photo/${stampPath}`, {
             method: 'POST',
             body: formData
         })
@@ -203,7 +280,7 @@ function uploadPhoto(state, value, temp) {
 // Отправка обновленной информации на сервер
 
 function postDeveloperInfo(state) {
-    fetch('http://localhost:3050/developers-edit', {
+    fetch(`${state.url}/developers-edit`, {
         method: 'POST',
         body: JSON.stringify(state.lastDeveloperData)
     }).then(() => {
