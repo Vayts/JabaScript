@@ -51,7 +51,7 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             listQuestionsDiv.removeChild(listQuestionsDiv.firstChild);
         }
     }
-    if (objectDataQuestions != null) {
+    if (objectDataQuestions != null && (objectDataQuestions.length!==0 )) {
         for (let i = 0; i < objectDataQuestions.length; i++) {
             const recordTheme = objectDataQuestions[i]["theme"] || objectDataQuestions[i]['item']["theme"];
             const recordQuestion = objectDataQuestions[i]["question"] || objectDataQuestions[i]['item']["question"];
@@ -84,8 +84,11 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             blockQuestionBlockElement.setAttribute('valueId',recordId)
             documentFragment.appendChild(blockQuestionBlockElement);
         }
-        listQuestionsDiv.appendChild(documentFragment);
+    } else {
+        const blockTheme = createElement("h2", 'coming-soon', 'There are no questions');
+        documentFragment.appendChild(blockTheme);
     }
+    listQuestionsDiv.appendChild(documentFragment);
 }
 
 function getNodeValue(id) {
