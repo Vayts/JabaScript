@@ -1,6 +1,8 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const del = require('del');
+const concat = require('gulp-concat');
+const replace = require('gulp-replace');
 
 gulp.task('clean', function(cb) {
     del(['./dist/*']);
@@ -20,9 +22,17 @@ gulp.task('copy:html', function (cb) {
     cb()
 })
 
+const scripts = (paths, outputFilename, outputPath) => {
+    return gulp
+        .src(paths)
+        .pipe(concat(outputFilename))
+        // .pipe(replace(/((?!require).*)/,'//replace'))
+        .pipe(replace(/((module.exports).*)/,'//replace'))
+        .pipe(gulp.dest(outputPath));
+};
+
 gulp.task('copy:js', function (cb) {
-    gulp.src('./src/**/*.js')
-        .pipe(gulp.dest('./dist'))
+    scripts(['./src/script/**/*.js'], 'index.js', './dist/script', false);
     cb()
 })
 
@@ -43,8 +53,6 @@ gulp.task('watch', () => {
     gulp.watch('./src/**/*.scss', gulp.series('sass'));
     gulp.watch('./src/**/*.html', gulp.series('copy:html'));
     gulp.watch('./src/**/*.js', gulp.series('copy:js'));
-    gulp.watch('./src/img/**/*', gulp.series('copy:img'));
-    gulp.watch('./src/fonts/**/*', gulp.series('copy:fonts'));
 });
 
 
