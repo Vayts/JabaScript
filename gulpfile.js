@@ -39,7 +39,7 @@ gulp.task('copy:fonts', (cb) => {
 })
 
 gulp.task('watch', function () {
-    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js', './src/fonts/*'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js','copy:img', 'copy:fonts']));
+    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js','copy:img']));
 })
 
 gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:img', 'copy:fonts']))
