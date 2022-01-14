@@ -27,7 +27,7 @@ function getDataJSON() {
             return res.json()
         }).then((data) => {
         objJSON = data;
-        addElement(objJSON['01']);
+        addElement(objJSON['01'],'JSON');
     })
 }
 
@@ -38,7 +38,6 @@ function getDataXML() {
             return res.text()
         }).then((data) => {
         objXML = parseXML(data);
-        addElement(objXML['questions']['block']);
     })
 }
 
@@ -48,7 +47,6 @@ function getDataCSV() {
             return res.text()
         }).then((data) => {
         objCSV = parseCSV(data);
-        addElement(objCSV);
     })
 }
 
@@ -59,8 +57,6 @@ function getDataYAML() {
             return res.text()
         }).then((data) => {
         objYAML = parseYAML(data);
-        console.log(objYAML);
-        addElement(objYAML);
     })
 }
 
@@ -160,6 +156,7 @@ function parseXML(xml) {
     xml = xml.replace('</block>', '');
     xml = xml.replace('\r\n', '');
     let arrayDataXML = xml.split('<block>');
+    console.log(arrayDataXML)
     let result = {"questions": {"block": []}};
     for (let index = 0; index < arrayDataXML.length; index++) {
         let object = {};
@@ -193,6 +190,7 @@ function parseXML(xml) {
     return result;
 }
 
+
 function serialiseXML(objXML, result = '<?xml version="1.0"?>', block = '') {
     const objXMLKey = Object.getOwnPropertyNames(objXML);
     if (!Number.isNaN(Number(objXMLKey[0]))) {
@@ -220,7 +218,9 @@ function serialiseXML(objXML, result = '<?xml version="1.0"?>', block = '') {
 
 function parseCSV(csv) {
     let result = [];
+    console.log(csv)
     let lineCSV = csv.split('\r\n');
+    console.log(lineCSV)
     lineCSV.pop();
     for (let i = 0; i < lineCSV.length; i++) {
         lineCSV[i] = lineCSV[i].split(';');
@@ -349,8 +349,10 @@ function eventClickFilterFormat() {
             break;
         case 'all':
             activeFormat = 'all';
-            allFormat = allFormat.concat(objJSON['01'], objXML['questions']['block'], objCSV, objYAML);
-            addElement(allFormat, 'all');
+            addElement(objJSON['01'], 'JSON');
+            addElement(objXML['questions']['block'], 'XML',false);
+            addElement(objCSV, 'CSV',false);
+            addElement(objYAML, 'YAML',false);
             break;
     }
 }
@@ -363,7 +365,7 @@ function eventClickFilterTheme() {
         case 'JSON':
             filteredArray = filteredArray.concat(objJSON['01']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray);
+            addElement(filteredArray,'JSON');
             break;
         case 'XML':
             filteredArray = filteredArray.concat(objXML['questions']['block']);
