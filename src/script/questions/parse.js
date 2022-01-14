@@ -13,16 +13,22 @@ function parseXML(xmlText) {
         arrayDataXML[index] = arrayDataXML[index].replace('<question>', '');
         arrayDataXML[index] = arrayDataXML[index].replace('<answer>', '');
         arrayDataXML[index] = arrayDataXML[index].replace('<id>', '');
-        const splitLine = arrayDataXML[index].split('</id>');
-        currentRecord['id'] = splitLine[0].replace('\r\n', '').trim();
-        if (splitLine.length > 1) {
-            const splitLine2 = splitLine[1].split('</question>');
-            currentRecord['question'] = splitLine2[0].replace('\r\n', '').trim();
-            if (splitLine2.length > 1) {
-                const splitLine3 = splitLine2[1].split('</theme>');
-                currentRecord['theme'] = splitLine3[0].replace('\r\n', '').trim();
-                if (splitLine3.length > 1) {
-                    currentRecord['answer'] = splitLine3[1].split('</answer>')[0].replace('\r\n', '').trim();
+        const currentElementBeforeSplit = arrayDataXML[index].split('</id>');
+        currentRecord['id'] = currentElementBeforeSplit[0].replace('\r\n', '').trim();
+
+        if (currentElementBeforeSplit.length > 1) {
+
+            const currentElementBeforeDoubleSplit = currentElementBeforeSplit[1].split('</question>');
+            currentRecord['question'] = currentElementBeforeDoubleSplit[0].replace('\r\n', '').trim();
+
+            if (currentElementBeforeDoubleSplit.length > 1) {
+
+                const currentElementBeforeTripleSplit = currentElementBeforeDoubleSplit[1].split('</theme>');
+                currentRecord['theme'] = currentElementBeforeTripleSplit[0].replace('\r\n', '').trim();
+
+                if (currentElementBeforeTripleSplit.length > 1) {
+
+                    currentRecord['answer'] = currentElementBeforeTripleSplit[1].split('</answer>')[0].replace('\r\n', '').trim();
                     result['questions']['block'].push(currentRecord);
                 }
             }
@@ -34,9 +40,7 @@ function parseXML(xmlText) {
 
 function parseCSV(csv) {
     let result = [];
-    console.log(csv)
     let lineCSV = csv.split('\r\n');
-    console.log(lineCSV)
     lineCSV.pop();
     for (let i = 0; i < lineCSV.length; i++) {
         lineCSV[i] = lineCSV[i].split(';');
