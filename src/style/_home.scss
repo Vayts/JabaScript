@@ -18,22 +18,20 @@
 
 .section-title {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   letter-spacing: $spacing;
   text-transform: uppercase;
-  padding: 20px 30px;
+  padding: 10px 30px;
   margin: 20px -40px 0;
-  background-color: $main-color;
-  border-top: solid 2px $main-color;
-  border-bottom: solid 2px $main-color;
+  //background-color: $sub-color;
 
   &__text {
     margin: 0 auto;
     width: 500px;
-    border-top: solid 2px $sub-color;
-    border-bottom: solid 2px $sub-color;
-    color: #ffffff;
-    font-weight: 700;
+    border-top: solid 3px $main-color;
+    border-bottom: solid 3px $main-color;
+    color: $main-color;
+    font-weight: 300;
     padding: 10px 0;
   }
 }
