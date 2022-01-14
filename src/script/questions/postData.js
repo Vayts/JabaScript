@@ -1,28 +1,28 @@
 
-function postDataJSON(objJSON) {
+function postDataJSON(state,urlJSON) {
     fetch(urlJSON + '-add', {
         method: 'POST',
-        body: JSON.stringify(objJSON)
+        body: JSON.stringify(state.objJSON)
     }).then()
 }
 
-function postDataXML(objXML) {
+function postDataXML(state,urlXML) {
     fetch(urlXML + '-add', {
         method: 'POST',
-        body: serialiseXML(objXML)
+        body: serialiseXML(state.objXML)
     }).then()
 }
 
-function postDataCSV(objCSV) {
+function postDataCSV(state,urlCSV) {
     fetch(urlCSV + '-add', {
         method: 'POST',
-        body: serialiseCSV(objCSV)
+        body: serialiseCSV(state.objCSV)
     }).then()
 }
 
-function postDataYAML(objYAML) {
+function postDataYAML(state,urlYAML) {
     fetch(urlYAML + '-add', {
         method: 'POST',
-        body: serialiseYAML(objYAML)
+        body: serialiseYAML(state.objYAML)
     }).then()
 }

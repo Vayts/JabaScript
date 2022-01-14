@@ -1,14 +1,3 @@
-const urlJSON = 'http://localhost:3050/questions.json';
-const urlXML = 'http://localhost:3050/questions.xml';
-const urlCSV = 'http://localhost:3050/questions.csv';
-const urlYAML = 'http://localhost:3050/questions.yaml';
-
-let objJSON = null;
-let objXML = null;
-let objCSV = [];
-let objYAML = [];
-let activeFormat = 'JSON';
-
 function addListener(id, eventType, callback) {
     const node = document.getElementById(id);
     if (node) {
@@ -24,10 +13,61 @@ function removeListener(id, eventType, callback) {
     }
 }
 
-getDataYAML();
-getDataCSV();
-getDataXML();
-getDataJSON();
+function setValueLocalStorage(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function getValueLocalStorage(key) {
+    if (localStorage.hasOwnProperty(key)) {
+        return localStorage[key]
+    }
+    return false;
+}
+
+eventLoadPage();
+
+function eventLoadPage() {
+    const urlJSON = 'http://localhost:3050/questions.json';
+    const urlXML = 'http://localhost:3050/questions.xml';
+    const urlCSV = 'http://localhost:3050/questions.csv';
+    const urlYAML = 'http://localhost:3050/questions.yaml';
+    let activeFormat = {fileFormat: 'JSON', currentTheme: 'all'};
+    const localeStorageValueFileFormat = getValueLocalStorage('fileFormat');
+    if (typeof localeStorageValueFileFormat === 'boolean') {
+        setValueLocalStorage('fileFormat', 'JSON')
+    } else {
+        activeFormat.fileFormat = localeStorageValueFileFormat;
+        setNodeSelectedText('select_format',['CSV','JSON','XML','YAML','all'].indexOf(activeFormat.fileFormat)+1);
+    }
+    const localeStorageValue = getValueLocalStorage('currentTheme');
+    if (typeof localeStorageValue === 'boolean') {
+        setValueLocalStorage('currentTheme', 'all')
+    } else {
+        activeFormat.currentTheme = localeStorageValue;
+        setNodeSelectedText('select_theme_filter',['One theme','Two theme','Three theme','Four theme','all'].indexOf(activeFormat.currentTheme)+1);
+    }
+    let stateAllFormat = {
+        objJSON: null,
+        objXML: null,
+        objCSV: [],
+        objYAML: []
+    }
+
+    getDataYAML(stateAllFormat, urlYAML);
+    getDataCSV(stateAllFormat, urlCSV);
+    getDataXML(stateAllFormat, urlXML);
+    getDataJSON(stateAllFormat, urlJSON,activeFormat);
+    // eventClickFilterFormat(stateAllFormat, activeFormat);
+    addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat,activeFormat))
+    addListener('close_module', 'click', eventClickCloseQuestion)
+    addListener('list-questions-add', 'click', eventClickDeleteQuestion.bind(null, stateAllFormat))
+    addListener('list-questions-add', 'mouseover', eventMouseoverAddButtonDelete)
+    addListener('list-questions-add', 'mouseout', eventMouseoverAddButtonDelete)
+    addListener('select_format', 'change', eventClickFilterFormat.bind(null, stateAllFormat, activeFormat))
+    addListener('select_theme_filter', 'change', eventClickFilterTheme.bind(null, stateAllFormat, activeFormat))
+    addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
+    addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
+}
 
 
 //////////
@@ -51,18 +91,18 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             listQuestionsDiv.removeChild(listQuestionsDiv.firstChild);
         }
     }
-    if (objectDataQuestions != null && (objectDataQuestions.length!==0 )) {
+    if (objectDataQuestions != null && (objectDataQuestions.length !== 0)) {
         for (let i = 0; i < objectDataQuestions.length; i++) {
             const recordTheme = objectDataQuestions[i]["theme"] || objectDataQuestions[i]['item']["theme"];
             const recordQuestion = objectDataQuestions[i]["question"] || objectDataQuestions[i]['item']["question"];
-            const recordAnswer = objectDataQuestions[i]["answer"] || objectDataQuestions[i]['item']["answer"];
+            const recordAnswer = objectDataQuestions[i]["answer"]===undefined?objectDataQuestions[i]['item']["answer"]:objectDataQuestions[i]["answer"];
             const recordId = objectDataQuestions[i]['id'] || objectDataQuestions[i]['item']['id'];
-            const fileFormat = formatFile || objectDataQuestions[i]['format'];
+            const fileFormat = formatFile || objectDataQuestions[i]['fileFormat'];
 
             const blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
-            const blockTheme = createElement("h2", '', `${recordTheme}`);
-            const blockQuestion = createElement("h4", '', `${recordQuestion}`);
-            const blockAnswer = createElement("h4", '', `${recordAnswer}`);
+            const blockTheme = createElement("h4", '', `${recordTheme}`);
+            const blockQuestion = createElement("h2", 'record-text', `${recordQuestion}`);
+            const blockAnswer = createElement("h4", '', `Answer - ${recordAnswer}`);
             const blockDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(recordId)).toLocaleDateString()} ${new Date(Number(recordId)).toLocaleTimeString()}`);
             const blockClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
             const blockFormat = createElement("div", '', fileFormat);
@@ -71,9 +111,9 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             const topWrapper = createElement('div', 'wrapper__text-block--top', '');
 
 
-            leftWrapper.appendChild(blockTheme);
             leftWrapper.appendChild(blockQuestion);
             leftWrapper.appendChild(blockAnswer);
+            leftWrapper.appendChild(blockTheme);
             bottomWrapper.appendChild(blockDate);
             bottomWrapper.appendChild(blockFormat);
             topWrapper.appendChild(leftWrapper);
@@ -81,7 +121,7 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             blockQuestionBlockElement.appendChild(topWrapper);
             blockQuestionBlockElement.appendChild(bottomWrapper);
 
-            blockQuestionBlockElement.setAttribute('valueId',recordId)
+            blockQuestionBlockElement.setAttribute('valueId', recordId)
             documentFragment.appendChild(blockQuestionBlockElement);
         }
     } else {
@@ -99,10 +139,10 @@ function getNodeValue(id) {
     return '';
 }
 
-function setNodeValue(id, value='') {
+function setNodeValue(id, value = '') {
     const node = document.getElementById(id);
     if (node) {
-        return node.value=value;
+        return node.value = value;
     }
     return false;
 }
@@ -115,7 +155,7 @@ function getNodeChecked(id) {
     return false;
 }
 
-function setNodeChecked(id,checked=false) {
+function setNodeChecked(id, checked = false) {
     const node = document.getElementById(id);
     if (node) {
         return node.checked = checked;
@@ -134,12 +174,12 @@ function getNodeSelectedText(id) {
 function setNodeSelectedText(id, selectIndex) {
     const node = document.getElementById(id);
     if (node) {
-        return node.selectedIndex=selectIndex;
+        return node.selectedIndex = selectIndex;
     }
     return '';
 }
 
-function eventClickCreateQuestion() {
+function eventClickCreateQuestion(state,activeFormat) {
     const question = getNodeValue('question_input');
     const theme = getNodeSelectedText('select_theme');
     const isAnswer = getNodeChecked('checkboxTrue');
@@ -149,19 +189,19 @@ function eventClickCreateQuestion() {
     const checkedRadioYAML = getNodeChecked('radioYAML');
 
     if (checkedRadioJSON) {
-        addToJSON(question, theme, isAnswer);
+        addToJSON(state, question, theme, isAnswer);
     }
     if (checkedRadioCSV) {
-        addToCSV(question, theme, isAnswer);
+        addToCSV(state, question, theme, isAnswer);
     }
     if (checkedRadioXML) {
-        addToXML(question, theme, isAnswer);
+        addToXML(state, question, theme, isAnswer);
     }
     if (checkedRadioYAML) {
-        addToYAML(question, theme, isAnswer);
+        addToYAML(state, question, theme, isAnswer);
     }
     eventClickCloseQuestion();
-    eventClickFilterFormat();
+    eventClickFilterFormat(state,activeFormat);
 }
 
 function setWindowLocationHref(href) {
@@ -170,7 +210,7 @@ function setWindowLocationHref(href) {
 
 function eventClickCloseQuestion() {
     setNodeValue('question_input');
-    setNodeSelectedText('select_theme',0);
+    setNodeSelectedText('select_theme', 0);
     setNodeChecked('checkboxTrue', true);
     setNodeChecked('radioCSV');
     setNodeChecked('radioJSON', true);
@@ -179,33 +219,38 @@ function eventClickCloseQuestion() {
     setWindowLocationHref('#close');
 }
 
-function eventClickFilterFormat() {
+function eventClickFilterFormat(state, activeFormat) {
     const formatFile = getNodeSelectedText('select_format');
     let allFormat = [];
     switch (formatFile) {
         case 'JSON':
-            activeFormat = 'JSON';
-            addQuestionsBlock(objJSON['01'], 'JSON');
+            activeFormat.fileFormat = 'JSON';
+            setValueLocalStorage('fileFormat', 'JSON')
+            addQuestionsBlock(state.objJSON['01'], 'JSON');
             break;
         case 'XML':
-            activeFormat = 'XML';
-            addQuestionsBlock(objXML['questions']['block'], 'XML');
+            activeFormat.fileFormat = 'XML';
+            setValueLocalStorage('fileFormat', 'XML')
+            addQuestionsBlock(state.objXML['questions']['block'], 'XML');
             break;
         case 'CSV':
-            activeFormat = 'CSV';
-            addQuestionsBlock(objCSV, 'CSV');
+            activeFormat.fileFormat = 'CSV';
+            setValueLocalStorage('fileFormat', 'CSV')
+            addQuestionsBlock(state.objCSV, 'CSV');
             break;
         case 'YAML':
-            activeFormat = 'YAML';
-            addQuestionsBlock(objYAML, 'YAML');
+            activeFormat.fileFormat = 'YAML';
+            setValueLocalStorage('fileFormat', 'YAML')
+            addQuestionsBlock(state.objYAML, 'YAML');
             break;
         case 'all':
-            activeFormat = 'all';
+            activeFormat.fileFormat = 'all';
+            setValueLocalStorage('fileFormat', 'all')
             let allData = [];
-            allData = addArrayAndFormat(objJSON['01'], allData, 'JSON');
-            allData = addArrayAndFormat(objXML['questions']['block'], allData, 'XML');
-            allData = addArrayAndFormat(objCSV, allData, 'CSV');
-            allData = addArrayAndFormat(objYAML, allData, 'YAML');
+            allData = addArrayAndFormat(state.objJSON['01'], allData, 'JSON');
+            allData = addArrayAndFormat(state.objXML['questions']['block'], allData, 'XML');
+            allData = addArrayAndFormat(state.objCSV, allData, 'CSV');
+            allData = addArrayAndFormat(state.objYAML, allData, 'YAML');
             allDataSort(allData);
             addQuestionsBlock(allData);
             break;
@@ -222,43 +267,49 @@ function allDataSort(arrayData) {
     }
 }
 
-function addArrayAndFormat(fromArray, toArray, format) {
+function addArrayAndFormat(fromArray, toArray, fileFormat) {
     fromArray.forEach((item) => {
-        toArray.push({'item': item, 'format': format})
+        toArray.push({'item': item, 'fileFormat': fileFormat})
     })
     return toArray;
 }
 
-function eventClickFilterTheme() {
+function eventClickFilterTheme(state, activeFormat) {
     const themeFilter = getNodeSelectedText('select_theme_filter');
+    activeFormat.currentTheme = themeFilter;
+    setValueLocalStorage('currentTheme', themeFilter)
     let filteredArray = [];
-    switch (activeFormat) {
+    if (themeFilter === 'all') {
+        eventClickFilterFormat(state, activeFormat);
+        return;
+    }
+    switch (activeFormat.fileFormat) {
         case 'JSON':
-            filteredArray = filteredArray.concat(objJSON['01']);
+            filteredArray = filteredArray.concat(state.objJSON['01']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
             addQuestionsBlock(filteredArray, 'JSON');
             break;
         case 'XML':
-            filteredArray = filteredArray.concat(objXML['questions']['block']);
+            filteredArray = filteredArray.concat(state.objXML['questions']['block']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
             addQuestionsBlock(filteredArray, 'XML');
             break;
         case 'CSV':
-            filteredArray = filteredArray.concat(objCSV);
+            filteredArray = filteredArray.concat(state.objCSV);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
             addQuestionsBlock(filteredArray, 'CSV');
             break;
         case 'YAML':
-            filteredArray = filteredArray.concat(objYAML);
+            filteredArray = filteredArray.concat(state.objYAML);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
             addQuestionsBlock(filteredArray, 'YAML');
             break;
         case 'all':
             let allData = [];
-            allData = addArrayAndFormat(objJSON['01'], allData, 'JSON');
-            allData = addArrayAndFormat(objXML['questions']['block'], allData, 'XML');
-            allData = addArrayAndFormat(objCSV, allData, 'CSV');
-            allData = addArrayAndFormat(objYAML, allData, 'YAML');
+            allData = addArrayAndFormat(state.objJSON['01'], allData, 'JSON');
+            allData = addArrayAndFormat(state.objXML['questions']['block'], allData, 'XML');
+            allData = addArrayAndFormat(state.objCSV, allData, 'CSV');
+            allData = addArrayAndFormat(state.objYAML, allData, 'YAML');
             allDataSort(allData);
             allData = allData.filter((elem) => elem['item']['theme'] === themeFilter)
             addQuestionsBlock(allData);
@@ -278,12 +329,12 @@ function eventClickWithoutModal(className, event) {
 }
 
 
-function eventConfirm(id, formatFile) {
+function eventConfirm(state, id, formatFile) {
     setWindowLocationHref('#openAlert');
 
     const clickConfirm = () => {
         setWindowLocationHref('#close');
-        deleteByIdFromFormat(id, formatFile);
+        deleteByIdFromFormat(state, id, formatFile);
         removeListener('confirm', 'click', clickConfirm)
         removeListener('cancel', 'click', clickCancel)
         removeListener('closeAlert', 'click', clickCancel)
@@ -302,29 +353,29 @@ function eventConfirm(id, formatFile) {
 
 }
 
-function eventClickDeleteQuestion(event) {
+function eventClickDeleteQuestion(state, event) {
     if (!event.target.classList.contains('delete')) return;
     const formatFile = event.target.parentNode.parentNode.lastChild.lastChild.innerText;
     const id = event.target.parentNode.parentNode.getAttribute('valueid');
-    eventConfirm(id, formatFile);
+    eventConfirm(state, id, formatFile);
 }
 
-function deleteByIdFromFormat(id, format) {
-    switch (format) {
+function deleteByIdFromFormat(state, id, fileFormat) {
+    switch (fileFormat) {
         case 'JSON':
-            deleteFromJSON(objJSON, id);
+            deleteFromJSON(state, id);
             break;
         case 'XML':
-            deleteFromXML(objXML, id)
+            deleteFromXML(state, id)
             break;
         case 'CSV':
-            deleteFromCSV(objCSV, id)
+            deleteFromCSV(state, id)
             break;
         case 'YAML':
-            deleteFromYAML(objYAML, id)
+            deleteFromYAML(state, id)
             break;
     }
-    eventClickFilterFormat();
+    eventClickFilterFormat(state,{fileFormat:fileFormat});
 }
 
 function removeClassFormChild() {
@@ -332,7 +383,6 @@ function removeClassFormChild() {
     let list = document.getElementById('list-questions-add').childNodes;
     list.forEach((item) => {
         item.childNodes[0].childNodes[1].classList.add('delete__disabled');
-        console.log(item.childNodes[0].childNodes[1].classList)
     })
 
 }
@@ -346,6 +396,7 @@ function eventMouseoverAddButtonDelete(event) {
         event.target.firstChild.lastChild.classList.remove('delete__disabled');
     } else if (event.type === 'mouseout') {
         let rT = event.relatedTarget;
+        if (!rT) return;
         while (!rT.classList.contains('wrapper__text-block--item') && rT.localName !== 'body') {
             if (!rT) break;
             if (rT.classList.contains('wrapper__text-block--item'))
@@ -358,13 +409,3 @@ function eventMouseoverAddButtonDelete(event) {
         // event.target.firstChild.lastChild.classList.add('delete__disabled');
     }
 }
-
-addListener('create_question', 'click', eventClickCreateQuestion)
-addListener('close_module', 'click', eventClickCloseQuestion)
-addListener('list-questions-add', 'click', eventClickDeleteQuestion)
-addListener('list-questions-add', 'mouseover', eventMouseoverAddButtonDelete)
-addListener('list-questions-add', 'mouseout', eventMouseoverAddButtonDelete)
-addListener('select_format', 'change', eventClickFilterFormat)
-addListener('select_theme_filter', 'change', eventClickFilterTheme.bind(null, event))
-addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
-addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))

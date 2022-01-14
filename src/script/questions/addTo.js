@@ -1,20 +1,20 @@
 
-function addToJSON(question, theme, answer) {
-    objJSON['01'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
-    postDataJSON(objJSON);
+function addToJSON(state,question, theme, answer) {
+    state.objJSON['01'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    postDataJSON(state,'http://localhost:3050/questions.json');
 }
 
-function addToXML(question, theme, answer) {
-    objXML['questions']['block'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
-    postDataXML(objXML);
+function addToXML(state,question, theme, answer) {
+    state.objXML['questions']['block'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    postDataXML(state,'http://localhost:3050/questions.xml');
 }
 
-function addToCSV(question, theme, answer) {
-    objCSV.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
-    postDataCSV(objCSV);
+function addToCSV(state,question, theme, answer) {
+    state.objCSV.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    postDataCSV(state,'http://localhost:3050/questions.csv');
 }
 
-function addToYAML(question, theme, answer) {
-    objYAML.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
-    postDataYAML(objYAML);
+function addToYAML(state,question, theme, answer) {
+    state.objYAML.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
+    postDataYAML(state,'http://localhost:3050/questions.yaml');
 }
