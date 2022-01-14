@@ -16,6 +16,14 @@ function addListener(id, eventType, callback) {
     }
 }
 
+
+function removeListener(id, eventType, callback) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.removeEventListener(eventType, callback);
+    }
+}
+
 getDataYAML();
 getDataCSV();
 getDataXML();
@@ -182,11 +190,12 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             const newQuestion = createElement("h4", '', `${objectDataQuestions[i]["question"]}`);
             const newAnswer = createElement("h4", '', `${objectDataQuestions[i]["answer"]}`);
             const newDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(objectDataQuestions[i]['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['id'])).toLocaleTimeString()}`);
-            const newClose = createElement("div", 'wrapper__text-block--delete delete', '×');
+            const newClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
             const newFormat = createElement("div", '', formatFile);
             const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
             const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
             const topWrapper = createElement('div', 'wrapper__text-block--top', '');
+
 
             leftWrapper.appendChild(newTheme);
             leftWrapper.appendChild(newQuestion);
@@ -220,11 +229,12 @@ function addAllQuestionsBlock(objectDataQuestions) {
             const newQuestion = createElement("h4", '', `${objectDataQuestions[i]['item']["question"]}`);
             const newAnswer = createElement("h4", '', `${objectDataQuestions[i]['item']["answer"]}`);
             const newDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(objectDataQuestions[i]['item']['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['item']['id'])).toLocaleTimeString()}`);
-            const newClose = createElement("div", 'wrapper__text-block--delete delete', '×');
+            const newClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
             const newFormat = createElement("div", '', objectDataQuestions[i]['format']);
             const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
             const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
             const topWrapper = createElement('div', 'wrapper__text-block--top', '');
+
 
             leftWrapper.appendChild(newTheme);
             leftWrapper.appendChild(newQuestion);
@@ -236,7 +246,7 @@ function addAllQuestionsBlock(objectDataQuestions) {
             newQuestionBlockElement.appendChild(topWrapper);
             newQuestionBlockElement.appendChild(bottomWrapper);
 
-            newQuestionBlockElement.setAttribute('valueId', objectDataQuestions[i]['id'])
+            newQuestionBlockElement.setAttribute('valueId', objectDataQuestions[i]['item']['id'])
             documentFragment.appendChild(newQuestionBlockElement);
         }
         my_div.appendChild(documentFragment);
@@ -457,10 +467,10 @@ function eventClickFilterFormat() {
 }
 
 function allDataSort(arrayData) {
-    for(let i=0;i<arrayData.length;i++){
-        for(let j=i;j<arrayData.length;j++){
-            if (Number(arrayData[i]['item']['id'])<Number(arrayData[j]['item']['id'])){
-                [arrayData[i],arrayData[j]]= [arrayData[j],arrayData[i]];
+    for (let i = 0; i < arrayData.length; i++) {
+        for (let j = i; j < arrayData.length; j++) {
+            if (Number(arrayData[i]['item']['id']) < Number(arrayData[j]['item']['id'])) {
+                [arrayData[i], arrayData[j]] = [arrayData[j], arrayData[i]];
             }
         }
     }
@@ -505,17 +515,53 @@ function eventClickFilterTheme() {
             allData = addArrayAndFormat(objCSV, allData, 'CSV');
             allData = addArrayAndFormat(objYAML, allData, 'YAML');
             allDataSort(allData);
-            allData=allData.filter((elem) => elem['item']['theme'] === themeFilter)
+            allData = allData.filter((elem) => elem['item']['theme'] === themeFilter)
             addAllQuestionsBlock(allData);
             break;
     }
+}
+
+function eventClickWithoutModal(className,event) {
+    let targetNode = event.target;
+    while (!targetNode.classList.contains(className) && targetNode.localName !== 'body') {
+        targetNode = targetNode.parentNode;
+
+    }
+    if (targetNode.classList.contains(className))
+        return;
+    window.location.href = '#close';
+}
+
+
+function eventConfirm(id, formatFile) {
+    window.location.href = '#openAlert';
+
+    const clickConfirm =() => {
+        window.location.href = '#close';
+        deleteByIdFromFormat(id, formatFile);
+        removeListener('confirm', 'click',clickConfirm )
+        removeListener('cancel', 'click', clickCancel)
+        removeListener('closeAlert', 'click', clickCancel)
+    };
+    const clickCancel =()=>{
+        window.location.href = '#close';
+        removeListener('cancel', 'click', clickCancel)
+        removeListener('closeAlert', 'click', clickCancel)
+        removeListener('confirm', 'click',clickConfirm )
+    }
+
+    addListener('confirm', 'click',clickConfirm )
+    addListener('cancel', 'click', clickCancel)
+    addListener('closeAlert', 'click', clickCancel)
+
+
 }
 
 function eventClickDeleteQuestion(event) {
     if (!event.target.classList.contains('delete')) return;
     const formatFile = event.target.parentNode.parentNode.lastChild.lastChild.innerText;
     const id = event.target.parentNode.parentNode.getAttribute('valueid');
-    deleteByIdFromFormat(id, formatFile);
+    eventConfirm(id, formatFile);
 }
 
 function deleteByIdFromFormat(id, format) {
@@ -536,8 +582,44 @@ function deleteByIdFromFormat(id, format) {
     eventClickFilterFormat();
 }
 
+function removeClassFormChild() {
+//document.getElementById('list-questions-add').childNodes[0].childNodes[0].childNodes[1].classList.remove('delete')
+    let list = document.getElementById('list-questions-add').childNodes;
+    list.forEach((item) => {
+        item.childNodes[0].childNodes[1].classList.add('delete__disabled');
+        console.log(item.childNodes[0].childNodes[1].classList)
+    })
+
+}
+
+
+function eventMouseoverAddButtonDelete(event) {
+    if (!event.target.classList.contains('wrapper__text-block--item')) return;
+    if (event.type === 'mouseover') {
+        // console.log('mouseover', event)
+        removeClassFormChild();
+        event.target.firstChild.lastChild.classList.remove('delete__disabled');
+    } else if (event.type === 'mouseout') {
+        let rT = event.relatedTarget;
+        while (!rT.classList.contains('wrapper__text-block--item') && rT.localName !== 'body') {
+            if (!rT) break;
+            if (rT.classList.contains('wrapper__text-block--item'))
+                return;
+            rT = rT.parentNode;
+        }
+        if (rT.localName === 'body') {
+            event.target.firstChild.lastChild.classList.add('delete__disabled')
+        }
+        // event.target.firstChild.lastChild.classList.add('delete__disabled');
+    }
+}
+
 addListener('create_question', 'click', eventClickCreateQuestion)
 addListener('close_module', 'click', eventClickCloseQuestion)
 addListener('list-questions-add', 'click', eventClickDeleteQuestion)
+addListener('list-questions-add', 'mouseover', eventMouseoverAddButtonDelete)
+addListener('list-questions-add', 'mouseout', eventMouseoverAddButtonDelete)
 addListener('select_format', 'change', eventClickFilterFormat)
 addListener('select_theme_filter', 'change', eventClickFilterTheme.bind(null, event))
+addListener('openAlert', 'click', eventClickWithoutModal.bind(null,'modal__content'))
+addListener('openModal', 'click', eventClickWithoutModal.bind(null,'modal__content'))

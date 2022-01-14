@@ -97,7 +97,12 @@
   }
 
 }
-
+.delete {
+  &__disabled {
+    opacity: -1;
+    pointer-events: none;
+  }
+}
 
 /*Модальное окно*/
 .modal {
