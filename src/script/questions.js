@@ -156,11 +156,11 @@ function deleteFromYAML(objYAML, id) {
     return false;
 }
 
-function createElement(tagName, className,text) {
+function createElement(tagName, className, text) {
     let newNode = document.createElement(tagName);
     if (newNode) {
-        newNode.innerText=text;
-        newNode.className+=className;
+        newNode.innerText = text;
+        newNode.className += className;
         return newNode;
     }
     return null;
@@ -177,16 +177,54 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
     }
     if (objectDataQuestions != null) {
         for (let i = 0; i < objectDataQuestions.length; i++) {
-            const newQuestionBlockElement = createElement("section",'wrapper__text-block--item','');
-            const newTheme = createElement("h2",'',`${objectDataQuestions[i]["theme"]}`);
-            const newQuestion = createElement("h4",'',`${objectDataQuestions[i]["question"]}`);
-            const newAnswer = createElement("h4",'',`${objectDataQuestions[i]["answer"]}`);
-            const newDate = createElement('p','wrapper__text-block--text',`${new Date(Number(objectDataQuestions[i]['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['id'])).toLocaleTimeString()}`);
-            const newClose = createElement("div",'wrapper__text-block--delete delete','×');
-            const newFormat = createElement("div",'',formatFile);
-            const leftWrapper = createElement('div','wrapper__text-block--left','');
-            const bottomWrapper = createElement('div','wrapper__text-block--bottom','');
-            const topWrapper = createElement('div','wrapper__text-block--top','');
+            const newQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
+            const newTheme = createElement("h2", '', `${objectDataQuestions[i]["theme"]}`);
+            const newQuestion = createElement("h4", '', `${objectDataQuestions[i]["question"]}`);
+            const newAnswer = createElement("h4", '', `${objectDataQuestions[i]["answer"]}`);
+            const newDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(objectDataQuestions[i]['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['id'])).toLocaleTimeString()}`);
+            const newClose = createElement("div", 'wrapper__text-block--delete delete', '×');
+            const newFormat = createElement("div", '', formatFile);
+            const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
+            const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
+            const topWrapper = createElement('div', 'wrapper__text-block--top', '');
+
+            leftWrapper.appendChild(newTheme);
+            leftWrapper.appendChild(newQuestion);
+            leftWrapper.appendChild(newAnswer);
+            bottomWrapper.appendChild(newDate);
+            bottomWrapper.appendChild(newFormat);
+            topWrapper.appendChild(leftWrapper);
+            topWrapper.appendChild(newClose);
+            newQuestionBlockElement.appendChild(topWrapper);
+            newQuestionBlockElement.appendChild(bottomWrapper);
+
+            newQuestionBlockElement.setAttribute('valueId', objectDataQuestions[i]['id'])
+            documentFragment.appendChild(newQuestionBlockElement);
+        }
+        my_div.appendChild(documentFragment);
+    }
+}
+
+function addAllQuestionsBlock(objectDataQuestions) {
+    let my_div = document.getElementById("list-questions-add");
+    let documentFragment = document.createDocumentFragment();
+
+    while (my_div.firstChild) {
+        my_div.removeChild(my_div.firstChild);
+    }
+
+    if (objectDataQuestions != null) {
+        for (let i = 0; i < objectDataQuestions.length; i++) {
+            const newQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
+            const newTheme = createElement("h2", '', `${objectDataQuestions[i]['item']["theme"]}`);
+            const newQuestion = createElement("h4", '', `${objectDataQuestions[i]['item']["question"]}`);
+            const newAnswer = createElement("h4", '', `${objectDataQuestions[i]['item']["answer"]}`);
+            const newDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(objectDataQuestions[i]['item']['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['item']['id'])).toLocaleTimeString()}`);
+            const newClose = createElement("div", 'wrapper__text-block--delete delete', '×');
+            const newFormat = createElement("div", '', objectDataQuestions[i]['format']);
+            const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
+            const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
+            const topWrapper = createElement('div', 'wrapper__text-block--top', '');
 
             leftWrapper.appendChild(newTheme);
             leftWrapper.appendChild(newQuestion);
@@ -407,12 +445,32 @@ function eventClickFilterFormat() {
             break;
         case 'all':
             activeFormat = 'all';
-            addQuestionsBlock(objJSON['01'], 'JSON');
-            addQuestionsBlock(objXML['questions']['block'], 'XML', false);
-            addQuestionsBlock(objCSV, 'CSV', false);
-            addQuestionsBlock(objYAML, 'YAML', false);
+            let allData = [];
+            allData = addArrayAndFormat(objJSON['01'], allData, 'JSON');
+            allData = addArrayAndFormat(objXML['questions']['block'], allData, 'XML');
+            allData = addArrayAndFormat(objCSV, allData, 'CSV');
+            allData = addArrayAndFormat(objYAML, allData, 'YAML');
+            allDataSort(allData);
+            addAllQuestionsBlock(allData);
             break;
     }
+}
+
+function allDataSort(arrayData) {
+    for(let i=0;i<arrayData.length;i++){
+        for(let j=i;j<arrayData.length;j++){
+            if (Number(arrayData[i]['item']['id'])<Number(arrayData[j]['item']['id'])){
+                [arrayData[i],arrayData[j]]= [arrayData[j],arrayData[i]];
+            }
+        }
+    }
+}
+
+function addArrayAndFormat(fromArray, toArray, format) {
+    fromArray.forEach((item) => {
+        toArray.push({'item': item, 'format': format})
+    })
+    return toArray;
 }
 
 function eventClickFilterTheme() {
@@ -441,9 +499,14 @@ function eventClickFilterTheme() {
             addQuestionsBlock(filteredArray, 'YAML');
             break;
         case 'all':
-            filteredArray = filteredArray.concat(objJSON['01'], objXML['questions']['block'], objCSV, objYAML);
-            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addQuestionsBlock(filteredArray, 'all');
+            let allData = [];
+            allData = addArrayAndFormat(objJSON['01'], allData, 'JSON');
+            allData = addArrayAndFormat(objXML['questions']['block'], allData, 'XML');
+            allData = addArrayAndFormat(objCSV, allData, 'CSV');
+            allData = addArrayAndFormat(objYAML, allData, 'YAML');
+            allDataSort(allData);
+            allData=allData.filter((elem) => elem['item']['theme'] === themeFilter)
+            addAllQuestionsBlock(allData);
             break;
     }
 }
