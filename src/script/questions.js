@@ -7,7 +7,7 @@ let objJSON = null;
 let objXML = null;
 let objCSV = [];
 let objYAML = [];
-let activeFormat='JSON';
+let activeFormat = 'JSON';
 
 function addListener(id, eventType, callback) {
     const node = document.getElementById(id);
@@ -15,6 +15,7 @@ function addListener(id, eventType, callback) {
         node.addEventListener(eventType, callback);
     }
 }
+
 getDataYAML();
 getDataCSV();
 getDataXML();
@@ -112,11 +113,13 @@ function addToYAML(question, theme, answer) {
     postDataYAML(objYAML);
 }
 
-function addElement(objectDataQuestions,format='JSON') {
+function addElement(objectDataQuestions, format, flag = true) {
     let my_div = document.getElementById("list-questions-add");
     let documentFragment = document.createDocumentFragment();
-    while (my_div.firstChild) {
-        my_div.removeChild(my_div.firstChild);
+    if (flag) {
+        while (my_div.firstChild) {
+            my_div.removeChild(my_div.firstChild);
+        }
     }
     if (objectDataQuestions != null) {
         for (let i = 0; i < objectDataQuestions.length; i++) {
@@ -128,18 +131,18 @@ function addElement(objectDataQuestions,format='JSON') {
             let newAnswer = document.createElement("p");
             newAnswer.innerText = `${objectDataQuestions[i]["answer"]}`;
             let newClose = document.createElement("div");
-            newClose.innerText='×';
-            newClose.className+='modal__close';
-            let newFormat=document.createElement("div");
-            newFormat.innerText=format;
-            let newWrap=document.createElement("div");
-            let newWrap2=document.createElement("div");
+            newClose.innerText = '×';
+            newClose.className += 'modal__close';
+            let newFormat = document.createElement("div");
+            newFormat.innerText = format;
+            let newWrap = document.createElement("div");
+            let newWrap2 = document.createElement("div");
             newWrap.appendChild(newTheme);
             newWrap.appendChild(newQuestion);
             newWrap.appendChild(newAnswer);
             newWrap2.appendChild(newClose);
             newWrap2.appendChild(newFormat);
-            newWrap2.className+='wrapper__text-block--right';
+            newWrap2.className += 'wrapper__text-block--right';
             newDiv.appendChild(newWrap);
             newDiv.appendChild(newWrap2);
 
@@ -151,39 +154,39 @@ function addElement(objectDataQuestions,format='JSON') {
 }
 
 function parseXML(xml) {
-    xml=xml.replace('<?xml version="1.0"?>','');
-    xml=xml.replace('<questions>','');
-    xml=xml.replace('</questions>','');
-    xml=xml.replace('</block>','');
-    xml=xml.replace('\r\n','');
-    let arrayDataXML=xml.split('<block>');
-    let result={"questions":{"block":[]}};
-    for (let index=0;index<arrayDataXML.length;index++) {
-        let object={};
-        arrayDataXML[index]=arrayDataXML[index].replace('<theme>','');
-        arrayDataXML[index]=arrayDataXML[index].replace('<question>','');
-        arrayDataXML[index]=arrayDataXML[index].replace('<answer>','');
-        arrayDataXML[index]=arrayDataXML[index].replace('<id>','');
-        let arrayLine=[];
-        const splitLine=arrayDataXML[index].split('</id>');
-        object['id']=splitLine[0].replace('\r\n','').trim();
+    xml = xml.replace('<?xml version="1.0"?>', '');
+    xml = xml.replace('<questions>', '');
+    xml = xml.replace('</questions>', '');
+    xml = xml.replace('</block>', '');
+    xml = xml.replace('\r\n', '');
+    let arrayDataXML = xml.split('<block>');
+    let result = {"questions": {"block": []}};
+    for (let index = 0; index < arrayDataXML.length; index++) {
+        let object = {};
+        arrayDataXML[index] = arrayDataXML[index].replace('<theme>', '');
+        arrayDataXML[index] = arrayDataXML[index].replace('<question>', '');
+        arrayDataXML[index] = arrayDataXML[index].replace('<answer>', '');
+        arrayDataXML[index] = arrayDataXML[index].replace('<id>', '');
+        let arrayLine = [];
+        const splitLine = arrayDataXML[index].split('</id>');
+        object['id'] = splitLine[0].replace('\r\n', '').trim();
         arrayLine.push(splitLine[0]);
-        if (splitLine.length>1) {
-            const splitLine2=splitLine[1].split('</question>');
-            object['question']=splitLine2[0].replace('\r\n','').trim();
+        if (splitLine.length > 1) {
+            const splitLine2 = splitLine[1].split('</question>');
+            object['question'] = splitLine2[0].replace('\r\n', '').trim();
             arrayLine.push(splitLine2[0]);
-            if (splitLine2.length>1) {
-                const splitLine3=splitLine2[1].split('</theme>');
-                object['theme']=splitLine3[0].replace('\r\n','').trim();
+            if (splitLine2.length > 1) {
+                const splitLine3 = splitLine2[1].split('</theme>');
+                object['theme'] = splitLine3[0].replace('\r\n', '').trim();
                 arrayLine.push(splitLine3[0]);
-                if (splitLine3.length>1) {
-                    object['answer']=splitLine3[1].split('</answer>')[0].replace('\r\n','').trim();
+                if (splitLine3.length > 1) {
+                    object['answer'] = splitLine3[1].split('</answer>')[0].replace('\r\n', '').trim();
                     arrayLine.push(splitLine3[1].split('</answer>')[0]);
                     result['questions']['block'].push(object);
                 }
             }
         }
-        arrayDataXML[index]=arrayLine;
+        arrayDataXML[index] = arrayLine;
         // arrayDataXML[index]=arrayDataXML[index].trim()
     }
     console.log(result);
@@ -264,8 +267,8 @@ function parseYAML(yaml) {
         }
 
     }
-    if (key>0)
-    result[key - 1] = tempResult;
+    if (key > 0)
+        result[key - 1] = tempResult;
     return result;
 }
 
@@ -329,58 +332,58 @@ function eventClickFilterFormat() {
     let allFormat = [];
     switch (formatFile) {
         case 'JSON':
-            activeFormat='JSON';
-            addElement(objJSON['01'],'JSON');
+            activeFormat = 'JSON';
+            addElement(objJSON['01'], 'JSON');
             break;
         case 'XML':
-            activeFormat='XML';
-            addElement(objXML['questions']['block'],'XML');
+            activeFormat = 'XML';
+            addElement(objXML['questions']['block'], 'XML');
             break;
         case 'CSV':
-            activeFormat='CSV';
-            addElement(objCSV,'CSV');
+            activeFormat = 'CSV';
+            addElement(objCSV, 'CSV');
             break;
         case 'YAML':
-            activeFormat='YAML';
-            addElement(objYAML,'YAML');
+            activeFormat = 'YAML';
+            addElement(objYAML, 'YAML');
             break;
         case 'all':
-            activeFormat='all';
-            allFormat=allFormat.concat(objJSON['01'],objXML['questions']['block'],objCSV,objYAML);
-            addElement(allFormat,'all');
+            activeFormat = 'all';
+            allFormat = allFormat.concat(objJSON['01'], objXML['questions']['block'], objCSV, objYAML);
+            addElement(allFormat, 'all');
             break;
     }
 }
 
-function eventClickFilterTheme(){
+function eventClickFilterTheme() {
     const selectThemeFilter = document.getElementById('select_theme_filter');
     const themeFilter = selectThemeFilter.options[selectThemeFilter.selectedIndex].text;
-    let filteredArray=[];
+    let filteredArray = [];
     switch (activeFormat) {
         case 'JSON':
-            filteredArray=filteredArray.concat(objJSON['01']);
-            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
+            filteredArray = filteredArray.concat(objJSON['01']);
+            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
             addElement(filteredArray);
             break;
         case 'XML':
-            filteredArray=filteredArray.concat(objXML['questions']['block']);
-            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
-            addElement(filteredArray,'XML');
+            filteredArray = filteredArray.concat(objXML['questions']['block']);
+            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
+            addElement(filteredArray, 'XML');
             break;
         case 'CSV':
-            filteredArray=filteredArray.concat(objCSV);
-            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
-            addElement(filteredArray,'CSV');
+            filteredArray = filteredArray.concat(objCSV);
+            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
+            addElement(filteredArray, 'CSV');
             break;
         case 'YAML':
-            filteredArray=filteredArray.concat(objYAML);
-            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
-            addElement(filteredArray,'YAML');
+            filteredArray = filteredArray.concat(objYAML);
+            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
+            addElement(filteredArray, 'YAML');
             break;
         case 'all':
-            filteredArray=filteredArray.concat(objJSON['01'],objXML['questions']['block'],objCSV,objYAML);
-            filteredArray=filteredArray.filter((elem)=>elem['theme']===themeFilter);
-            addElement(filteredArray,'all');
+            filteredArray = filteredArray.concat(objJSON['01'], objXML['questions']['block'], objCSV, objYAML);
+            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
+            addElement(filteredArray, 'all');
             break;
     }
 }

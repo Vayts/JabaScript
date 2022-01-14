@@ -13,7 +13,14 @@ const storage = multer.diskStorage({
         }
     },
     filename: (req, file, cb) => {
-        cb(null, `${(req.url.split('/'))[2]}${file.originalname}`)
+        let name = file.originalname
+        console.log(name)
+        name = name.split('').filter((el) => {
+            if (el !== ' ' || el !== '(' || el !== ')') {
+                return el
+            }
+        }).join('')
+        cb(null, `${(req.url.split('/'))[2]}developerPhoto${name.slice(name.length-4, name.length)}`)
     }
 })
 const upload = multer({storage: storage})
@@ -93,6 +100,7 @@ app.get("/questions.json", function (req, res) {
         }
     })
 });
+
 
 app.post("/questions.json-add", function (req,res) {
     let questionsData = '';
@@ -205,6 +213,3 @@ app.post("/questions.yaml-add", function (req,res) {
         res.end("Данные успешно получены");
     })
 })
-
-
-

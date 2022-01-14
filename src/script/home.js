@@ -1,54 +1,69 @@
-const developersList = document.getElementById('developers-cards-list');
-const developerInfoBlock = document.getElementById('developer-info-block');
-const developerEditBlock = document.getElementById('developer-edit-block');
-const cancelEditButton = document.getElementById('cancel-developer-edit');
-const submitEditButton = document.getElementById('submit-developer-edit');
-const editInputs = document.querySelectorAll('.edit-window__input')
-const imgInputs = document.getElementById('edit-img-input')
-const imgEditHolder = document.getElementById('img-holder')
+document.addEventListener('DOMContentLoaded', function(){
+    initHome()
+})
 
-let lastDeveloperData;
-let currentProfile = 0;
+function initHome( ) {
 
-window.onload = function () {
-    loadDevelopersContent()
+    let developersState = {
+        currentProfile: 0,
+        lastDeveloperData: []
+    }
+
+    addListener('cancel-developer-edit', 'click', cancelEdit)
+    addListener('submit-developer-edit', 'click', submitDeveloperEdit.bind(null, developersState))
+    addListener('edit-img-input', 'change', imgLoad.bind(null, developersState ))
+
+    loadDevelopersContent(developersState)
+}
+
+function addListener(id, eventType, cb) {
+    const node = document.getElementById(id)
+
+    if (node) {
+        node.addEventListener(eventType, cb)
+    }
 }
 
 // Загрузка developers.json
 
-function loadDevelopersContent() {
+function loadDevelopersContent(state) {
     fetch('http://localhost:3050/developers')
         .then((res) => {
             return res.json()
         }).then((data) => {
-        lastDeveloperData = data;
-        fillDevelopersData(data);
+        state.lastDeveloperData = data;
+        fillDevelopersData(state);
     })
 }
 
 // Отрисовка карточек девелоперов
 
-function fillDevelopersData(data) {
+function fillDevelopersData(state) {
+    const developersList = document.getElementById('developers-cards-list');
+
     while (developersList.firstChild) {
         developersList.removeChild(developersList.firstChild);
     }
-    for (let i = 0; i < data.length; i++) {
-        let developerCard = createDeveloperCard(data[i]);
+
+    for (let i = 0; i < state.lastDeveloperData.length; i++) {
+        let developerCard = createDeveloperCard(state.lastDeveloperData[i]);
         developersList.insertAdjacentHTML('beforeend', developerCard);
     }
 
-    addEventDevelopers()
+    addEventDevelopers(state)
 }
 
 // Функция, которая добавляет события на кнопки в карточках девелоперов
 
-function addEventDevelopers() {
+function addEventDevelopers(state) {
     const developer = document.querySelectorAll('.profile');
     const developerMoreButton = document.querySelectorAll('.info-buttons__more');
     const developerEditButton = document.querySelectorAll('.info-buttons__edit')
+
     for (let i = 0; i < developer.length; i++) {
         developerMoreButton[i].onclick = () => {
             developer[i].classList.toggle('active')
+            developerEditButton[i].classList.toggle('active')
 
             if (developer[i].classList.contains('active')) {
                 developerMoreButton[i].innerText = 'Hide';
@@ -58,64 +73,118 @@ function addEventDevelopers() {
 
         }
         developerEditButton[i].onclick = function () {
-            startEdit(i)
+            startEdit(i, state)
         };
     }
 }
 
 // Эта функция отрабатывает при нажатии кнопки EDIT. Она заполняет инпуты и ставит фотку
 
-function startEdit(num) {
-    currentProfile = num;
+function startEdit(num, state) {
+    const imgEditHolder = document.getElementById('img-holder')
+    const editInputs = document.querySelectorAll('.edit-window__input')
+
+    state.currentProfile = num;
     editMenu()
-    let data = Object.values(lastDeveloperData[num])
+    let data = Object.values(state.lastDeveloperData[num])
     imgEditHolder.style.backgroundImage = `url(${data[0]})`
     for (let m = 1; m < data.length; m++) {
         editInputs[m - 1].value = data[m]
     }
 }
 
+// Подтверждение сабмита
+
+function submitDeveloperEdit(state) {
+    clearTempFiles()
+    const editInputs = document.querySelectorAll('.edit-window__input')
+    const imgInputs = document.getElementById('edit-img-input')
+
+    let index = 0;
+
+    for (let key in state.lastDeveloperData[state.currentProfile]) {
+
+        if (key !== 'photo') {
+            state.lastDeveloperData[state.currentProfile][key] = editInputs[index].value
+            index++
+        }
+
+    }
+
+    if (imgInputs.value !== '') {
+        uploadPhoto(state, imgInputs.files[0], false)
+        postDeveloperInfo(state)
+    } else {
+        postDeveloperInfo(state)
+    }
+}
+
+
 // Включает и выключает EDIT меню
 
 function editMenu() {
+    const developerInfoBlock = document.getElementById('developer-info-block');
+    const developerEditBlock = document.getElementById('developer-edit-block');
+
     developerInfoBlock.classList.toggle('disabled')
     developerEditBlock.classList.toggle('disabled')
 }
 
 // Кнопки для EDIT меню. Подтвердить, закрыть.
 
-cancelEditButton.onclick = function () {
+
+function cancelEdit() {
+    const imgInputs = document.getElementById('edit-img-input')
+
     editMenu()
     clearTempFiles()
     imgInputs.value = ''
-};
+}
 
-submitEditButton.onclick = submitDeveloperEdit;
+// Редактирование фотографии (временное и постоянное)
 
-// Закрывает EDIT меню не изменяет дату
+function imgLoad(state) {
+    const imgInputs = document.getElementById('edit-img-input')
+    if (!imgValidate(imgInputs.files[0])) {
+        alert('Ты всё сломал');
+        imgInputs.value = '';
+    } else {
+        clearTempFiles();
+        uploadPhoto(state, imgInputs.files[0], true);
+    }
+}
 
-imgInputs.addEventListener('change', () => {
-    clearTempFiles()
-    uploadPhoto(imgInputs.files[0], true)
-})
+function imgValidate(file) {
+    const allowedFileType = /(\.jpg|\.png|\.gif)$/i;
+
+    if (allowedFileType.exec(file.name)) {
+        return true;
+    }
+    return false;
+
+}
 
 // Загрузка картинок во временную директорию или постоянную
 
-function uploadPhoto(value, temp) {
-    const file = value;
+function uploadPhoto(state, value, temp) {
+
+    const imgEditHolder = document.getElementById('img-holder')
     const stampPath = Date.now()
     const formData = new FormData();
-    const fileName = value.name
+    const name = value.name
+    const mimeType = name.slice(name.length - 4, name.length)
+
+
     formData.append('file', value);
     if (temp) {
         fetch('http://127.0.0.1:3050/uploads/' + stampPath, {
             method: 'POST',
             body: formData
         }).then(() => {
-            imgEditHolder.style.backgroundImage = `url(http://127.0.0.1:3050/temp/${stampPath}${fileName}`
+            imgEditHolder.style.backgroundImage = `url(http://127.0.0.1:3050/temp/${stampPath}developerPhoto${mimeType}`
         })
     } else {
-        lastDeveloperData[currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}${fileName}`
+        state.lastDeveloperData[state.currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}developerPhoto${mimeType}`
         fetch('http://127.0.0.1:3050/change-photo/' + stampPath, {
             method: 'POST',
             body: formData
@@ -123,37 +192,14 @@ function uploadPhoto(value, temp) {
     }
 }
 
-// Подтверждение сабмита
-
-function submitDeveloperEdit() {
-    clearTempFiles()
-    let data = lastDeveloperData;
-    let index = 0;
-    for (let key in data[currentProfile]) {
-
-        if (key !== 'photo') {
-            data[currentProfile][key] = editInputs[index].value
-            index++
-        }
-
-    }
-
-    if (imgInputs.value !== '') {
-        uploadPhoto(imgInputs.files[0], false)
-        postDeveloperInfo(lastDeveloperData)
-    } else {
-        postDeveloperInfo(lastDeveloperData)
-    }
-}
-
 // Отправка обновленной информации на сервер
 
-function postDeveloperInfo(data) {
+function postDeveloperInfo(state) {
     fetch('http://localhost:3050/developers-edit', {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(state.lastDeveloperData)
     }).then(() => {
-        loadDevelopersContent()
+        loadDevelopersContent(state)
         editMenu()
     })
 }
@@ -161,7 +207,6 @@ function postDeveloperInfo(data) {
 // Очистка временной папки
 
 function clearTempFiles() {
-    console.log('aaaaaaaaa')
     fetch('http://localhost:3050/deleteTemp').then()
 }
 
@@ -205,7 +250,7 @@ function createDeveloperCard(data) {
         '</div>' +
         '<div class="profile__buttons info-buttons">' +
         '<button type="button" class="info-buttons__more button">More</button>' +
-        '<button type="button" class="info-buttons__edit button">Edit</button>' +
+        '<button type="button" class="info-buttons__edit button"><span class="icon-edit"></span></button>' +
         '</div>' +
         '</div>' +
         '</li>'

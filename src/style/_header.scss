@@ -10,7 +10,7 @@
 
 .main-header {
   background-color: $main-color;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,9 +42,17 @@
 }
 
 .logo {
+  padding: 0 10px;
+  border-top: 10px solid #83a891;
+  border-bottom: 10px solid #83a891;
+  transition: all 0.3s;
 
   &:hover &__text {
-    color: #bead3c;
+      color: #bead3c;
+  }
+
+  &:hover &__img {
+    transform: rotate(30deg);
   }
 
   &__link {
@@ -56,9 +64,8 @@
 
 
   &__img-wrapper {
-    background-color: #B6BE9C;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -68,6 +75,7 @@
 
   &__img {
     width: 80px;
+    transition: all 0.3s;
   }
 
   &__text {

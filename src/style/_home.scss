@@ -46,7 +46,7 @@
   padding: 50px 0 0;
 
   &__item {
-    flex-basis: 30%;
+    flex-basis: 22%;
   }
 }
 
@@ -75,6 +75,12 @@
     .profile__info {
       opacity: 1;
     }
+  }
+
+
+  &_empty {
+    background-color: rgba(229, 229, 229, 0.45);
+    animation: emptyBlock 4s infinite;
   }
 
   &__img {
@@ -118,6 +124,9 @@
     pointer-events: none;
     position: relative;
     z-index: 1;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -127,12 +136,12 @@
   padding: 0 10px;
   justify-content: center;
   margin-bottom: 15px;
+  width: 70%;
 
   &__item {
     flex-basis: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
     margin-bottom: 10px;
     font-size: 1.2rem;
   }
@@ -194,9 +203,14 @@
     letter-spacing: 2px;
     transition: all 0.3s;
     cursor: pointer;
+    display: none;
 
     &:hover {
       color: #969696;
+    }
+
+    &.active {
+      display: block;
     }
   }
 }
@@ -276,6 +290,7 @@
     height: 30px;
     border: solid 1px #1d1d1d;
     padding: 2px;
+    width: 200px;
     font-family: "Roboto", sans-serif;
     text-align: center;
     font-size: 1.2rem;

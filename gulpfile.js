@@ -27,13 +27,19 @@ gulp.task('copy:js', function (cb) {
 })
 
 gulp.task('copy:img', function (cb) {
-    gulp.src('./src/**/*.{jpg,gif,png}')
+    gulp.src('./src/**/*.{jpg,gif,png,ico}')
         .pipe(gulp.dest('./dist'))
     cb()
 })
 
-gulp.task('watch', function () {
-    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js','copy:img']));
+gulp.task('copy:fonts', (cb) => {
+    gulp.src('./src/fonts/*')
+        .pipe(gulp.dest('./dist/fonts'))
+    cb()
 })
 
-gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:img']))
+gulp.task('watch', function () {
+    gulp.watch(['./src/**/*.scss', './src/**/*.html', './src/**/*.js', './src/fonts/*'], gulp.series(['clean', 'sass', 'copy:html', 'copy:js','copy:img', 'copy:fonts']));
+})
+
+gulp.task('default', gulp.series(['clean', 'sass', 'copy:html', 'copy:js', 'copy:img', 'copy:fonts']))
