@@ -34,7 +34,16 @@
       padding: 5px;
       margin: 5px;
       border: 1px solid $main-color;
+      display: flex;
+      justify-content: space-between;
     }
+     &--right {
+       display: flex;
+       justify-content: space-between;
+       flex-direction: column;
+       align-items: center;
+    }
+
   }
 
   &__href {
