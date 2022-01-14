@@ -27,7 +27,7 @@ function getDataJSON() {
             return res.json()
         }).then((data) => {
         objJSON = data;
-        addElement(objJSON['01'], 'JSON');
+        addQuestionsBlock(objJSON['01'], 'JSON');
     })
 }
 
@@ -134,8 +134,8 @@ function deleteFromXML(objXML, id) {
     return false;
 }
 
-function deleteFromCSV(objCSV,id) {
-    objCSV.forEach((item,i)=>{
+function deleteFromCSV(objCSV, id) {
+    objCSV.forEach((item, i) => {
         if (String(item['id']) === String(id)) {
             objCSV.splice(i, 1);
             postDataCSV(objCSV);
@@ -145,8 +145,8 @@ function deleteFromCSV(objCSV,id) {
     return false;
 }
 
-function deleteFromYAML(objYAML,id) {
-    objYAML.forEach((item,i)=>{
+function deleteFromYAML(objYAML, id) {
+    objYAML.forEach((item, i) => {
         if (String(item['id']) === String(id)) {
             objYAML.splice(i, 1);
             postDataYAML(objYAML);
@@ -156,42 +156,50 @@ function deleteFromYAML(objYAML,id) {
     return false;
 }
 
+function createElement(tagName, className,text) {
+    let newNode = document.createElement(tagName);
+    if (newNode) {
+        newNode.innerText=text;
+        newNode.className+=className;
+        return newNode;
+    }
+    return null;
+}
 
-function addElement(objectDataQuestions, format, flag = true) {
+
+function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = true) {
     let my_div = document.getElementById("list-questions-add");
     let documentFragment = document.createDocumentFragment();
-    if (flag) {
+    if (isRemoveOldBlock) {
         while (my_div.firstChild) {
             my_div.removeChild(my_div.firstChild);
         }
     }
     if (objectDataQuestions != null) {
         for (let i = 0; i < objectDataQuestions.length; i++) {
-            let newDiv = document.createElement("section");
-            let newTheme = document.createElement("h3");
-            newTheme.innerText = `${objectDataQuestions[i]["theme"]}`;
-            let newQuestion = document.createElement("p");
-            newQuestion.innerText = `${objectDataQuestions[i]["question"]}`;
-            let newAnswer = document.createElement("p");
-            newAnswer.innerText = `${objectDataQuestions[i]["answer"]}`;
-            let newClose = document.createElement("div");
-            newClose.innerText = '×';
-            newClose.className += 'modal__close delete';
-            let newFormat = document.createElement("div");
-            newFormat.innerText = format;
-            let newWrap = document.createElement("div");
-            let newWrap2 = document.createElement("div");
-            newWrap.appendChild(newTheme);
-            newWrap.appendChild(newQuestion);
-            newWrap.appendChild(newAnswer);
-            newWrap2.appendChild(newClose);
-            newWrap2.appendChild(newFormat);
-            newWrap2.className += 'wrapper__text-block--right';
-            newDiv.appendChild(newWrap);
-            newDiv.appendChild(newWrap2);
-            newDiv.setAttribute('valueId', objectDataQuestions[i]['id'])
-            newDiv.className += 'wrapper__text-block--item';
-            documentFragment.appendChild(newDiv);
+            const newQuestionBlockElement = createElement("section",'wrapper__text-block--item','');
+            const newTheme = createElement("h2",'',`${objectDataQuestions[i]["theme"]}`);
+            const newQuestion = createElement("h4",'',`${objectDataQuestions[i]["question"]}`);
+            const newAnswer = createElement("h4",'',`${objectDataQuestions[i]["answer"]}`);
+            const newDate = createElement('p','wrapper__text-block--text',`${new Date(Number(objectDataQuestions[i]['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['id'])).toLocaleTimeString()}`);
+            const newClose = createElement("div",'wrapper__text-block--delete delete','×');
+            const newFormat = createElement("div",'',formatFile);
+            const leftWrapper = createElement('div','wrapper__text-block--left','');
+            const bottomWrapper = createElement('div','wrapper__text-block--bottom','');
+            const topWrapper = createElement('div','wrapper__text-block--top','');
+
+            leftWrapper.appendChild(newTheme);
+            leftWrapper.appendChild(newQuestion);
+            leftWrapper.appendChild(newAnswer);
+            bottomWrapper.appendChild(newDate);
+            bottomWrapper.appendChild(newFormat);
+            topWrapper.appendChild(leftWrapper);
+            topWrapper.appendChild(newClose);
+            newQuestionBlockElement.appendChild(topWrapper);
+            newQuestionBlockElement.appendChild(bottomWrapper);
+
+            newQuestionBlockElement.setAttribute('valueId', objectDataQuestions[i]['id'])
+            documentFragment.appendChild(newQuestionBlockElement);
         }
         my_div.appendChild(documentFragment);
     }
@@ -313,7 +321,7 @@ function parseYAML(yaml) {
             key = key + 1;
         } else {
             if (lineYAML[i][1])
-            tempResult[lineYAML[i][0].trim()] = lineYAML[i][1].trim();
+                tempResult[lineYAML[i][0].trim()] = lineYAML[i][1].trim();
         }
 
     }
@@ -383,26 +391,26 @@ function eventClickFilterFormat() {
     switch (formatFile) {
         case 'JSON':
             activeFormat = 'JSON';
-            addElement(objJSON['01'], 'JSON');
+            addQuestionsBlock(objJSON['01'], 'JSON');
             break;
         case 'XML':
             activeFormat = 'XML';
-            addElement(objXML['questions']['block'], 'XML');
+            addQuestionsBlock(objXML['questions']['block'], 'XML');
             break;
         case 'CSV':
             activeFormat = 'CSV';
-            addElement(objCSV, 'CSV');
+            addQuestionsBlock(objCSV, 'CSV');
             break;
         case 'YAML':
             activeFormat = 'YAML';
-            addElement(objYAML, 'YAML');
+            addQuestionsBlock(objYAML, 'YAML');
             break;
         case 'all':
             activeFormat = 'all';
-            addElement(objJSON['01'], 'JSON');
-            addElement(objXML['questions']['block'], 'XML', false);
-            addElement(objCSV, 'CSV', false);
-            addElement(objYAML, 'YAML', false);
+            addQuestionsBlock(objJSON['01'], 'JSON');
+            addQuestionsBlock(objXML['questions']['block'], 'XML', false);
+            addQuestionsBlock(objCSV, 'CSV', false);
+            addQuestionsBlock(objYAML, 'YAML', false);
             break;
     }
 }
@@ -415,34 +423,34 @@ function eventClickFilterTheme() {
         case 'JSON':
             filteredArray = filteredArray.concat(objJSON['01']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'JSON');
+            addQuestionsBlock(filteredArray, 'JSON');
             break;
         case 'XML':
             filteredArray = filteredArray.concat(objXML['questions']['block']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'XML');
+            addQuestionsBlock(filteredArray, 'XML');
             break;
         case 'CSV':
             filteredArray = filteredArray.concat(objCSV);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'CSV');
+            addQuestionsBlock(filteredArray, 'CSV');
             break;
         case 'YAML':
             filteredArray = filteredArray.concat(objYAML);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'YAML');
+            addQuestionsBlock(filteredArray, 'YAML');
             break;
         case 'all':
             filteredArray = filteredArray.concat(objJSON['01'], objXML['questions']['block'], objCSV, objYAML);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'all');
+            addQuestionsBlock(filteredArray, 'all');
             break;
     }
 }
 
 function eventClickDeleteQuestion(event) {
     if (!event.target.classList.contains('delete')) return;
-    const formatFile = event.target.parentNode.lastChild.innerText;
+    const formatFile = event.target.parentNode.parentNode.lastChild.lastChild.innerText;
     const id = event.target.parentNode.parentNode.getAttribute('valueid');
     deleteByIdFromFormat(id, formatFile);
 }
