@@ -16,6 +16,14 @@ function addListener(id, eventType, callback) {
     }
 }
 
+
+function removeListener(id, eventType, callback) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.removeEventListener(eventType, callback);
+    }
+}
+
 getDataYAML();
 getDataCSV();
 getDataXML();
@@ -27,7 +35,7 @@ function getDataJSON() {
             return res.json()
         }).then((data) => {
         objJSON = data;
-        addElement(objJSON['01'],'JSON');
+        addQuestionsBlock(objJSON['01'], 'JSON');
     })
 }
 
@@ -109,41 +117,137 @@ function addToYAML(question, theme, answer) {
     postDataYAML(objYAML);
 }
 
-function addElement(objectDataQuestions, format, flag = true) {
+//////////
+
+function deleteFromJSON(objJSON, id) {
+    objJSON['01'].forEach((item, i) => {
+        if (String(item['id']) === String(id)) {
+            objJSON['01'].splice(i, 1);
+            postDataJSON(objJSON);
+            return true;
+        }
+    })
+    return false;
+}
+
+
+function deleteFromXML(objXML, id) {
+    objXML['questions']['block'].forEach((item, i) => {
+        if (String(item['id']) === String(id)) {
+            objXML['questions']['block'].splice(i, 1);
+            postDataXML(objXML);
+            return true;
+        }
+    })
+    return false;
+}
+
+function deleteFromCSV(objCSV, id) {
+    objCSV.forEach((item, i) => {
+        if (String(item['id']) === String(id)) {
+            objCSV.splice(i, 1);
+            postDataCSV(objCSV);
+            return true;
+        }
+    })
+    return false;
+}
+
+function deleteFromYAML(objYAML, id) {
+    objYAML.forEach((item, i) => {
+        if (String(item['id']) === String(id)) {
+            objYAML.splice(i, 1);
+            postDataYAML(objYAML);
+            return true;
+        }
+    })
+    return false;
+}
+
+function createElement(tagName, className, text) {
+    let newNode = document.createElement(tagName);
+    if (newNode) {
+        newNode.innerText = text;
+        newNode.className += className;
+        return newNode;
+    }
+    return null;
+}
+
+
+function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = true) {
     let my_div = document.getElementById("list-questions-add");
     let documentFragment = document.createDocumentFragment();
-    if (flag) {
+    if (isRemoveOldBlock) {
         while (my_div.firstChild) {
             my_div.removeChild(my_div.firstChild);
         }
     }
     if (objectDataQuestions != null) {
         for (let i = 0; i < objectDataQuestions.length; i++) {
-            let newDiv = document.createElement("section");
-            let newTheme = document.createElement("h3");
-            newTheme.innerText = `${objectDataQuestions[i]["theme"]}`;
-            let newQuestion = document.createElement("p");
-            newQuestion.innerText = `${objectDataQuestions[i]["question"]}`;
-            let newAnswer = document.createElement("p");
-            newAnswer.innerText = `${objectDataQuestions[i]["answer"]}`;
-            let newClose = document.createElement("div");
-            newClose.innerText = '×';
-            newClose.className += 'modal__close';
-            let newFormat = document.createElement("div");
-            newFormat.innerText = format;
-            let newWrap = document.createElement("div");
-            let newWrap2 = document.createElement("div");
-            newWrap.appendChild(newTheme);
-            newWrap.appendChild(newQuestion);
-            newWrap.appendChild(newAnswer);
-            newWrap2.appendChild(newClose);
-            newWrap2.appendChild(newFormat);
-            newWrap2.className += 'wrapper__text-block--right';
-            newDiv.appendChild(newWrap);
-            newDiv.appendChild(newWrap2);
+            const newQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
+            const newTheme = createElement("h2", '', `${objectDataQuestions[i]["theme"]}`);
+            const newQuestion = createElement("h4", '', `${objectDataQuestions[i]["question"]}`);
+            const newAnswer = createElement("h4", '', `${objectDataQuestions[i]["answer"]}`);
+            const newDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(objectDataQuestions[i]['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['id'])).toLocaleTimeString()}`);
+            const newClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
+            const newFormat = createElement("div", '', formatFile);
+            const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
+            const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
+            const topWrapper = createElement('div', 'wrapper__text-block--top', '');
 
-            newDiv.className += 'wrapper__text-block--item';
-            documentFragment.appendChild(newDiv);
+
+            leftWrapper.appendChild(newTheme);
+            leftWrapper.appendChild(newQuestion);
+            leftWrapper.appendChild(newAnswer);
+            bottomWrapper.appendChild(newDate);
+            bottomWrapper.appendChild(newFormat);
+            topWrapper.appendChild(leftWrapper);
+            topWrapper.appendChild(newClose);
+            newQuestionBlockElement.appendChild(topWrapper);
+            newQuestionBlockElement.appendChild(bottomWrapper);
+
+            newQuestionBlockElement.setAttribute('valueId', objectDataQuestions[i]['id'])
+            documentFragment.appendChild(newQuestionBlockElement);
+        }
+        my_div.appendChild(documentFragment);
+    }
+}
+
+function addAllQuestionsBlock(objectDataQuestions) {
+    let my_div = document.getElementById("list-questions-add");
+    let documentFragment = document.createDocumentFragment();
+
+    while (my_div.firstChild) {
+        my_div.removeChild(my_div.firstChild);
+    }
+
+    if (objectDataQuestions != null) {
+        for (let i = 0; i < objectDataQuestions.length; i++) {
+            const newQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
+            const newTheme = createElement("h2", '', `${objectDataQuestions[i]['item']["theme"]}`);
+            const newQuestion = createElement("h4", '', `${objectDataQuestions[i]['item']["question"]}`);
+            const newAnswer = createElement("h4", '', `${objectDataQuestions[i]['item']["answer"]}`);
+            const newDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(objectDataQuestions[i]['item']['id'])).toLocaleDateString()} ${new Date(Number(objectDataQuestions[i]['item']['id'])).toLocaleTimeString()}`);
+            const newClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
+            const newFormat = createElement("div", '', objectDataQuestions[i]['format']);
+            const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
+            const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
+            const topWrapper = createElement('div', 'wrapper__text-block--top', '');
+
+
+            leftWrapper.appendChild(newTheme);
+            leftWrapper.appendChild(newQuestion);
+            leftWrapper.appendChild(newAnswer);
+            bottomWrapper.appendChild(newDate);
+            bottomWrapper.appendChild(newFormat);
+            topWrapper.appendChild(leftWrapper);
+            topWrapper.appendChild(newClose);
+            newQuestionBlockElement.appendChild(topWrapper);
+            newQuestionBlockElement.appendChild(bottomWrapper);
+
+            newQuestionBlockElement.setAttribute('valueId', objectDataQuestions[i]['item']['id'])
+            documentFragment.appendChild(newQuestionBlockElement);
         }
         my_div.appendChild(documentFragment);
     }
@@ -196,6 +300,7 @@ function serialiseXML(objXML, result = '<?xml version="1.0"?>', block = '') {
     if (!Number.isNaN(Number(objXMLKey[0]))) {
         objXMLKey.pop();
     }
+    if (objXMLKey.includes('length')) return '';
     let tempResult = '';
     for (let elem in objXMLKey) {
         if (Number.isNaN(Number(objXMLKey[elem]))) {
@@ -263,7 +368,8 @@ function parseYAML(yaml) {
             tempResult = {};
             key = key + 1;
         } else {
-            tempResult[lineYAML[i][0].trim()] = lineYAML[i][1].trim();
+            if (lineYAML[i][1])
+                tempResult[lineYAML[i][0].trim()] = lineYAML[i][1].trim();
         }
 
     }
@@ -273,7 +379,7 @@ function parseYAML(yaml) {
 }
 
 function serialiseYAML(objYAML) {
-    let result = '';
+    let result = ' ';
     const keyObjYAML = Object.getOwnPropertyNames(objYAML);
     keyObjYAML.pop();
     for (let i = 0; i < keyObjYAML.length; i++) {
@@ -333,28 +439,48 @@ function eventClickFilterFormat() {
     switch (formatFile) {
         case 'JSON':
             activeFormat = 'JSON';
-            addElement(objJSON['01'], 'JSON');
+            addQuestionsBlock(objJSON['01'], 'JSON');
             break;
         case 'XML':
             activeFormat = 'XML';
-            addElement(objXML['questions']['block'], 'XML');
+            addQuestionsBlock(objXML['questions']['block'], 'XML');
             break;
         case 'CSV':
             activeFormat = 'CSV';
-            addElement(objCSV, 'CSV');
+            addQuestionsBlock(objCSV, 'CSV');
             break;
         case 'YAML':
             activeFormat = 'YAML';
-            addElement(objYAML, 'YAML');
+            addQuestionsBlock(objYAML, 'YAML');
             break;
         case 'all':
             activeFormat = 'all';
-            addElement(objJSON['01'], 'JSON');
-            addElement(objXML['questions']['block'], 'XML',false);
-            addElement(objCSV, 'CSV',false);
-            addElement(objYAML, 'YAML',false);
+            let allData = [];
+            allData = addArrayAndFormat(objJSON['01'], allData, 'JSON');
+            allData = addArrayAndFormat(objXML['questions']['block'], allData, 'XML');
+            allData = addArrayAndFormat(objCSV, allData, 'CSV');
+            allData = addArrayAndFormat(objYAML, allData, 'YAML');
+            allDataSort(allData);
+            addAllQuestionsBlock(allData);
             break;
     }
+}
+
+function allDataSort(arrayData) {
+    for (let i = 0; i < arrayData.length; i++) {
+        for (let j = i; j < arrayData.length; j++) {
+            if (Number(arrayData[i]['item']['id']) < Number(arrayData[j]['item']['id'])) {
+                [arrayData[i], arrayData[j]] = [arrayData[j], arrayData[i]];
+            }
+        }
+    }
+}
+
+function addArrayAndFormat(fromArray, toArray, format) {
+    fromArray.forEach((item) => {
+        toArray.push({'item': item, 'format': format})
+    })
+    return toArray;
 }
 
 function eventClickFilterTheme() {
@@ -365,33 +491,135 @@ function eventClickFilterTheme() {
         case 'JSON':
             filteredArray = filteredArray.concat(objJSON['01']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray,'JSON');
+            addQuestionsBlock(filteredArray, 'JSON');
             break;
         case 'XML':
             filteredArray = filteredArray.concat(objXML['questions']['block']);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'XML');
+            addQuestionsBlock(filteredArray, 'XML');
             break;
         case 'CSV':
             filteredArray = filteredArray.concat(objCSV);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'CSV');
+            addQuestionsBlock(filteredArray, 'CSV');
             break;
         case 'YAML':
             filteredArray = filteredArray.concat(objYAML);
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'YAML');
+            addQuestionsBlock(filteredArray, 'YAML');
             break;
         case 'all':
-            filteredArray = filteredArray.concat(objJSON['01'], objXML['questions']['block'], objCSV, objYAML);
-            filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
-            addElement(filteredArray, 'all');
+            let allData = [];
+            allData = addArrayAndFormat(objJSON['01'], allData, 'JSON');
+            allData = addArrayAndFormat(objXML['questions']['block'], allData, 'XML');
+            allData = addArrayAndFormat(objCSV, allData, 'CSV');
+            allData = addArrayAndFormat(objYAML, allData, 'YAML');
+            allDataSort(allData);
+            allData = allData.filter((elem) => elem['item']['theme'] === themeFilter)
+            addAllQuestionsBlock(allData);
             break;
     }
 }
 
+function eventClickWithoutModal(className,event) {
+    let targetNode = event.target;
+    while (!targetNode.classList.contains(className) && targetNode.localName !== 'body') {
+        targetNode = targetNode.parentNode;
+
+    }
+    if (targetNode.classList.contains(className))
+        return;
+    window.location.href = '#close';
+}
+
+
+function eventConfirm(id, formatFile) {
+    window.location.href = '#openAlert';
+
+    const clickConfirm =() => {
+        window.location.href = '#close';
+        deleteByIdFromFormat(id, formatFile);
+        removeListener('confirm', 'click',clickConfirm )
+        removeListener('cancel', 'click', clickCancel)
+        removeListener('closeAlert', 'click', clickCancel)
+    };
+    const clickCancel =()=>{
+        window.location.href = '#close';
+        removeListener('cancel', 'click', clickCancel)
+        removeListener('closeAlert', 'click', clickCancel)
+        removeListener('confirm', 'click',clickConfirm )
+    }
+
+    addListener('confirm', 'click',clickConfirm )
+    addListener('cancel', 'click', clickCancel)
+    addListener('closeAlert', 'click', clickCancel)
+
+
+}
+
+function eventClickDeleteQuestion(event) {
+    if (!event.target.classList.contains('delete')) return;
+    const formatFile = event.target.parentNode.parentNode.lastChild.lastChild.innerText;
+    const id = event.target.parentNode.parentNode.getAttribute('valueid');
+    eventConfirm(id, formatFile);
+}
+
+function deleteByIdFromFormat(id, format) {
+    switch (format) {
+        case 'JSON':
+            deleteFromJSON(objJSON, id);
+            break;
+        case 'XML':
+            deleteFromXML(objXML, id)
+            break;
+        case 'CSV':
+            deleteFromCSV(objCSV, id)
+            break;
+        case 'YAML':
+            deleteFromYAML(objYAML, id)
+            break;
+    }
+    eventClickFilterFormat();
+}
+
+function removeClassFormChild() {
+//document.getElementById('list-questions-add').childNodes[0].childNodes[0].childNodes[1].classList.remove('delete')
+    let list = document.getElementById('list-questions-add').childNodes;
+    list.forEach((item) => {
+        item.childNodes[0].childNodes[1].classList.add('delete__disabled');
+        console.log(item.childNodes[0].childNodes[1].classList)
+    })
+
+}
+
+
+function eventMouseoverAddButtonDelete(event) {
+    if (!event.target.classList.contains('wrapper__text-block--item')) return;
+    if (event.type === 'mouseover') {
+        // console.log('mouseover', event)
+        removeClassFormChild();
+        event.target.firstChild.lastChild.classList.remove('delete__disabled');
+    } else if (event.type === 'mouseout') {
+        let rT = event.relatedTarget;
+        while (!rT.classList.contains('wrapper__text-block--item') && rT.localName !== 'body') {
+            if (!rT) break;
+            if (rT.classList.contains('wrapper__text-block--item'))
+                return;
+            rT = rT.parentNode;
+        }
+        if (rT.localName === 'body') {
+            event.target.firstChild.lastChild.classList.add('delete__disabled')
+        }
+        // event.target.firstChild.lastChild.classList.add('delete__disabled');
+    }
+}
 
 addListener('create_question', 'click', eventClickCreateQuestion)
 addListener('close_module', 'click', eventClickCloseQuestion)
+addListener('list-questions-add', 'click', eventClickDeleteQuestion)
+addListener('list-questions-add', 'mouseover', eventMouseoverAddButtonDelete)
+addListener('list-questions-add', 'mouseout', eventMouseoverAddButtonDelete)
 addListener('select_format', 'change', eventClickFilterFormat)
-addListener('select_theme_filter', 'change', eventClickFilterTheme)
+addListener('select_theme_filter', 'change', eventClickFilterTheme.bind(null, event))
+addListener('openAlert', 'click', eventClickWithoutModal.bind(null,'modal__content'))
+addListener('openModal', 'click', eventClickWithoutModal.bind(null,'modal__content'))
