@@ -27,7 +27,7 @@ function serialiseXML(objXML, result = '<?xml version="1.0"?>', block = '') {
 
 function serialiseCSV(objCSV) {
     let result = '';
-    const objCSVKey = Object.getOwnPropertyNames(objCSV);
+    const objCSVKey = Object.getOwnPropertyNames(objCSV).filter((key)=>key!=='length')
     if (objCSVKey.length > 0) {
         result = Object.getOwnPropertyNames(objCSV[objCSVKey[0]]).join(';');
         for (let i = 0; i < objCSVKey.length; i++) {
@@ -39,9 +39,8 @@ function serialiseCSV(objCSV) {
 
 
 function serialiseYAML(objYAML) {
-    let result = ' ';
-    const keyObjYAML = Object.getOwnPropertyNames(objYAML);
-    keyObjYAML.pop();
+    let result = '';
+    const keyObjYAML = Object.getOwnPropertyNames(objYAML).filter((key)=>key!=='length');
     for (let i = 0; i < keyObjYAML.length; i++) {
         const innerKeyObject = Object.getOwnPropertyNames(objYAML[i]);
         result = result + keyObjYAML[i] + ":\r\n";
@@ -51,3 +50,6 @@ function serialiseYAML(objYAML) {
     }
     return result;
 }
+//removeIf(production)
+module.exports = {serialiseXML,serialiseCSV,serialiseYAML}
+//endRemoveIf(production)
