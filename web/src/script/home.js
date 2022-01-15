@@ -1,11 +1,9 @@
-document.addEventListener('DOMContentLoaded', function(){
-    initApp()
-})
+//removeIf(production)
+const {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, removeListener, createElement, getNodeChecked, getNodeSelectedText, setNodeChecked, setNodeSelectedText, setValueLocalStorage, getValueLocalStorage, removeClass, addClass} = require('../script/utils')
+const {getDataDevelopers} = require('../script/getData')
+const {postDataPhoto, postDataDevelopers} = require('../script/postData')
+//endRemoveIf(production)
 
-function initApp( ) {
-    initHome()
-    initQuestions()
-}
 
 function initHome() {
     let developersState = {
@@ -15,7 +13,7 @@ function initHome() {
     }
 
     addListener('cancel-developer-edit', 'click', cancelEdit)
-    addListener('submit-developer-edit', 'click', checkDeveloperEdit.bind(null, developersState))
+    addListener('submit-developer-edit', 'click', collectInputsValue.bind(null, developersState))
     addListener('edit-img-input', 'change', imgLoad.bind(null, developersState ))
 
     getDataDevelopers(developersState)
@@ -62,18 +60,18 @@ function addEventDevelopers(state) {
 function startEdit(num, state) {
     const editInputs = document.querySelectorAll('.edit-window__input')
 
-    state.currentProfile = num;
     toggleDisabledClass('developer-info-block', 'developer-edit-block')
-    let data = Object.values(state.lastDeveloperData[num])
+
+    state.currentProfile = num;
+    const data = Object.values(state.lastDeveloperData[num])
     setBackgroundImage('img-holder', `url(${data[0]})`)
     for (let m = 1; m < data.length; m++) {
         editInputs[m - 1].value = data[m]
     }
 }
 
-function checkDeveloperEdit(state) {
+function collectInputsValue(state) {
     clearTempFiles()
-
     const obj = {
         name: getInputValue('name'),
         position: getInputValue('position'),
@@ -85,9 +83,12 @@ function checkDeveloperEdit(state) {
         placeOfBirth: getInputValue('place-of-birth'),
         hobby: getInputValue('hobby')
     }
+    checkEditError(state, obj)
+}
 
+function checkEditError(state, obj) {
     if (validateInputs(obj)) {
-        submitDevelopersEdit(state, Object.values(obj))
+        fillState(state, Object.values(obj))
         return true
     } else {
         alert('Invalid input data')
@@ -137,7 +138,7 @@ function validateInputs(obj) {
     return true
 }
 
-function submitDevelopersEdit(state, arr) {
+function fillState(state, arr) {
     let index = 0;
 
     for (let key in state.lastDeveloperData[state.currentProfile]) {
@@ -146,12 +147,18 @@ function submitDevelopersEdit(state, arr) {
             index++
         }
     }
+    startPostProcess(state)
+    return state
+}
 
+function startPostProcess(state) {
     if (getFileFromInput('edit-img-input') !== '') {
         postDataPhoto(state, getFileFromInput('edit-img-input'), false)
         postDataDevelopers(state)
+        return 'Post with photo'
     } else {
         postDataDevelopers(state)
+        return 'Post without photo'
     }
 }
 
@@ -164,7 +171,7 @@ function cancelEdit() {
 
 function imgLoad(state) {
 
-    if (!imgValidate(getFileFromInput('edit-img-input').name)) {
+    if (!validateImg(getFileFromInput('edit-img-input').name)) {
         alert('Ты всё сломал');
         setInputValue('edit-img-input', '')
         return false;
@@ -175,7 +182,12 @@ function imgLoad(state) {
     return true;
 }
 
-function imgValidate(fileName) {
+function validateImg(fileName) {
+
+    if (typeof fileName !== 'string') {
+        return false;
+    }
+
     const allowedFileType = /(\.jpg|\.png|\.gif)$/i;
 
     if (allowedFileType.exec(fileName)) {
@@ -185,48 +197,6 @@ function imgValidate(fileName) {
     return false;
 }
 
-function createDeveloperCard(data) {
-    return '<li class="developers-list__item">' +
-        '<div class="profile">' +
-        '<div class="profile__img" style="background-image: url(' + data.photo + ')"></div>' +
-        '<p class="profile__name">' + data.name + '</p>' +
-        '<p class="profile__position">' + data.position + '</p>' +
-        '<div class="profile__info">' +
-        '<ul class="stats-list">' +
-        '<li class="stats-list__item stat">' +
-        '<p class="stat__title">Height: &nbsp;</p>' +
-        '<p class="stat__text">' + data.height + '</p>' +
-        '</li>' +
-        '<li class="stats-list__item stat">' +
-        '<p class="stat__title">Age: &nbsp;</p>' +
-        '<p class="stat__text info-holder">' + data.age + '</p>' +
-        '</li>' +
-        '<li class="stats-list__item stat">' +
-        '<p class="stat__title">Eye color: &nbsp;</p>' +
-        '<p class="stat__text info-holder">' + data.eyeColor + '</p>' +
-        '</li>' +
-        '<li class="stats-list__item stat">' +
-        '<p class="stat__title">Experience: &nbsp;</p>' +
-        '<p class="stat__text info-holder">' + data.exp + '</p>' +
-        '</li>' +
-        '<li class="stats-list__item stat">' +
-        '<p class="stat__title">Mother tongue: &nbsp;</p>' +
-        '<p class="stat__text info-holder">' + data.motherTongue + '</p>' +
-        '</li>' +
-        '<li class="stats-list__item stat">' +
-        '<p class="stat__title">Place of birth: &nbsp;</p>' +
-        '<p class="stat__text info-holder">' + data.placeOfBirth + '</p>' +
-        '</li>' +
-        '</ul>' +
-        '<div class="hobby">' +
-        '<p class="hobby__title">Hobby</p>' +
-        '<p class="hobby__text">' + data.hobby + '</p>' +
-        '</div>' +
-        '</div>' +
-        '<div class="profile__buttons info-buttons">' +
-        '<button type="button" class="info-buttons__more button">More</button>' +
-        '<button type="button" class="info-buttons__edit button"><span class="icon-edit"></span></button>' +
-        '</div>' +
-        '</div>' +
-        '</li>'
-}
+//removeIf(production)
+module.exports = {validateInputs, validateImg, fillState, checkEditError}
+//endRemoveIf(production)

@@ -1,25 +1,25 @@
-const homeLink = document.getElementById('home')
-const questionLink = document.getElementById('questions')
-const aboutLink = document.getElementById('about')
-
-const homeSection = document.getElementById('home-section')
-const questionSection = document.getElementById('questions-section')
-const aboutSection = document.getElementById('about-section')
-
-homeLink.onclick = function () {
-    homeSection.classList.remove('disabled')
-    questionSection.classList.add('disabled')
-    aboutSection.classList.add('disabled')
+function initRouter() {
+    addListener('home', 'click', homePage)
+    addListener('logo', 'click', homePage)
+    addListener('questions', 'click', questionPage)
+    addListener('about', 'click', aboutPage)
 }
 
-questionLink.onclick = function () {
-    homeSection.classList.add('disabled')
-    questionSection.classList.remove('disabled')
-    aboutSection.classList.add('disabled')
+function homePage() {
+    removeClass('home-section', 'disabled')
+    addClass('questions-section', 'disabled')
+    addClass('about-section', 'disabled')
 }
 
-aboutLink.onclick = function () {
-    homeSection.classList.add('disabled')
-    questionSection.classList.add('disabled')
-    aboutSection.classList.remove('disabled')
+function questionPage() {
+    addClass('home-section', 'disabled')
+    removeClass('questions-section', 'disabled')
+    addClass('about-section', 'disabled')
 }
+function aboutPage() {
+    addClass('home-section', 'disabled')
+    addClass('questions-section', 'disabled')
+    removeClass('about-section', 'disabled')
+}
+
+

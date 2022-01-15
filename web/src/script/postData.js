@@ -61,3 +61,6 @@ function postDataPhoto(state, value, temp) {
         })
     }
 }
+//removeIf(production)
+module.exports = {postDataPhoto, postDataDevelopers}
+//endRemoveIf(production)

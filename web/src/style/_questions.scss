@@ -42,7 +42,7 @@
       transition: background-color 0.3s;
 
       &:hover {
-        background-color: $sub-color;
+        background-color: #f3f3f3;
       }
     }
 
@@ -118,6 +118,7 @@
   display: -webkit-box; /* Включаем флексбоксы */
   -webkit-box-orient: vertical; /* Вертикальная ориентация */
   overflow: hidden;
+  line-height: 1.2;
   transition: all 0.3s;
   &:hover {
     -webkit-line-clamp:inherit;

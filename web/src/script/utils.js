@@ -52,20 +52,23 @@ function setBackgroundImage(id, value) {
     return false;
 }
 
-
 function addListener(id, eventType, cb) {
     const node = document.getElementById(id)
 
     if (node) {
-        node.addEventListener(eventType, cb)
+        node.addEventListener(eventType, cb);
+        return true;
     }
+    return false;
 }
 
-function removeListener(id, eventType, callback) {
+function removeListener(id, eventType, cb) {
     const node = document.getElementById(id);
     if (node) {
-        node.removeEventListener(eventType, callback);
+        node.removeEventListener(eventType, cb);
+        return true;
     }
+    return false;
 }
 
 function setValueLocalStorage(key, value) {
@@ -124,11 +127,30 @@ function setNodeSelectedText(id, selectIndex) {
     return '';
 }
 
-
 function clearTempFiles() {
-    fetch('http://localhost:3050/deleteTemp').then()
+    fetch('http://localhost:3050/deleteTemp').then(() => {
+        return true;
+    })
+}
+
+function removeClass(id, classValue) {
+    const node = document.getElementById(id)
+    if (node) {
+        node.classList.remove(classValue)
+        return true;
+    }
+    return false;
+}
+
+function addClass(id, classValue) {
+    const node = document.getElementById(id)
+    if (node) {
+        node.classList.add(classValue)
+        return true;
+    }
+    return false;
 }
 
 //removeIf(production)
-module.exports = {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, removeListener, createElement, getNodeChecked, getNodeSelectedText, setNodeChecked, setNodeSelectedText, setValueLocalStorage, getValueLocalStorage}
+module.exports = {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, removeListener, createElement, getNodeChecked, getNodeSelectedText, setNodeChecked, setNodeSelectedText, setValueLocalStorage, getValueLocalStorage, removeClass, addClass}
 //endRemoveIf(production)
