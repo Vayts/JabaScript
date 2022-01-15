@@ -24,7 +24,7 @@ function setInputValue(id, value = '') {
 function getInputValue(id) {
     const node = document.getElementById(id);
 
-    if(node) {
+    if (node) {
         return node.value;
     }
     return false;
@@ -52,23 +52,20 @@ function setBackgroundImage(id, value) {
     return false;
 }
 
+
 function addListener(id, eventType, cb) {
     const node = document.getElementById(id)
 
     if (node) {
-        node.addEventListener(eventType, cb);
-        return true;
+        node.addEventListener(eventType, cb)
     }
-    return false;
 }
 
-function removeListener(id, eventType, cb) {
+function removeListener(id, eventType, callback) {
     const node = document.getElementById(id);
     if (node) {
-        node.removeEventListener(eventType, cb);
-        return true;
+        node.removeEventListener(eventType, callback);
     }
-    return false;
 }
 
 function setValueLocalStorage(key, value) {
@@ -102,6 +99,15 @@ function getNodeChecked(id) {
     return false;
 }
 
+function setNodeDisable(id,disable=false) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.disabled=disable;
+        return true;
+    }
+    return false;
+}
+
 function setNodeChecked(id, checked = false) {
     const node = document.getElementById(id);
     if (node) {
@@ -125,6 +131,24 @@ function setNodeSelectedText(id, selectIndex) {
         return node.selectedIndex = selectIndex;
     }
     return '';
+}
+
+function addNodeClass(id, className) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.classList.add(className);
+        return true;
+    }
+    return false;
+}
+
+function removeNodeClass(id, className) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.classList.remove(className);
+        return true;
+    }
+    return false;
 }
 
 function clearTempFiles() {
@@ -152,5 +176,23 @@ function addClass(id, classValue) {
 }
 
 //removeIf(production)
-module.exports = {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, removeListener, createElement, getNodeChecked, getNodeSelectedText, setNodeChecked, setNodeSelectedText, setValueLocalStorage, getValueLocalStorage, removeClass, addClass}
+module.exports = {
+    setBackgroundImage,
+    getInputValue,
+    setInputValue,
+    getFileFromInput,
+    clearTempFiles,
+    toggleDisabledClass,
+    addListener,
+    removeListener,
+    createElement,
+    getNodeChecked,
+    getNodeSelectedText,
+    setNodeChecked,
+    setNodeSelectedText,
+    setValueLocalStorage,
+    getValueLocalStorage,
+    addClass,
+    removeClass
+}
 //endRemoveIf(production)

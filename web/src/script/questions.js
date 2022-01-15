@@ -4,7 +4,7 @@ function initQuestions() {
     const urlCSV = 'http://localhost:3050/questions.csv';
     const urlYAML = 'http://localhost:3050/questions.yaml';
 
-    let activeFormat = {fileFormat: 'JSON', currentTheme: 'all'};
+    let activeFormat = {fileFormat: 'JSON', currentTheme: 'ALL'};
     initLocalStorage(activeFormat)
 
     let stateAllFormat = {
@@ -14,10 +14,14 @@ function initQuestions() {
         objYAML: []
     }
 
-    getDataYAML(stateAllFormat, urlYAML);
-    getDataCSV(stateAllFormat, urlCSV);
-    getDataXML(stateAllFormat, urlXML);
-    getDataJSON(stateAllFormat, urlJSON,activeFormat);
+    const a = getDataYAML(stateAllFormat, urlYAML);
+    const b = getDataCSV(stateAllFormat, urlCSV);
+    const c = getDataXML(stateAllFormat, urlXML);
+    const d = getDataJSON(stateAllFormat, urlJSON, activeFormat);
+    Promise.all([a, b, c, d]).then(() => {
+        console.log('values');
+        eventClickFilterTheme(stateAllFormat, activeFormat);
+    });
     // eventClickFilterFormat(stateAllFormat, activeFormat);
     addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat,activeFormat))
     addListener('close_module', 'click', eventClickCloseQuestion)
@@ -28,6 +32,18 @@ function initQuestions() {
     addListener('select_theme_filter', 'change', eventClickFilterTheme.bind(null, stateAllFormat, activeFormat))
     addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
+    addListener('question_input', 'change', eventChangeQuestionInput.bind(null, stateAllFormat, activeFormat))
+    addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat, activeFormat))
+}
+
+function eventChangeQuestionInput(stateAllFormat, activeFormat) {
+    if (getInputValue('question_input').length > 0) {
+        removeNodeClass('create_question', 'button-custom__item--disabled');
+        setNodeDisable('create_question');
+    } else {
+        addNodeClass('create_question', 'button-custom__item--disabled');
+        setNodeDisable('create_question',true);
+    }
 }
 
 //////////
@@ -38,18 +54,75 @@ function initLocalStorage(activeFormat) {
         setValueLocalStorage('fileFormat', 'JSON')
     } else {
         activeFormat.fileFormat = localeStorageValueFileFormat;
-        setNodeSelectedText('select_format',['CSV','JSON','XML','YAML','all'].indexOf(activeFormat.fileFormat)+1);
+        setNodeSelectedText('select_format', ['CSV', 'JSON', 'XML', 'YAML', 'ALL'].indexOf(activeFormat.fileFormat) + 1);
     }
     const localeStorageValue = getValueLocalStorage('currentTheme');
     if (typeof localeStorageValue === 'boolean') {
-        setValueLocalStorage('currentTheme', 'all')
+        setValueLocalStorage('currentTheme', 'ALL')
     } else {
         activeFormat.currentTheme = localeStorageValue;
-        setNodeSelectedText('select_theme_filter',['One theme','Two theme','Three theme','Four theme','all'].indexOf(activeFormat.currentTheme)+1);
+        setNodeSelectedText('select_theme_filter', ['GIT', 'UNIT TESTING', 'CLOSURE', 'OOP','DATA STRUCTURES', 'ALL'].indexOf(activeFormat.currentTheme) + 1);
     }
 }
 
-function eventClickCreateQuestion(state,activeFormat) {
+function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = true) {
+    let listQuestionsDiv = document.getElementById("list-questions-add");
+    let documentFragment = document.createDocumentFragment();
+    if (isRemoveOldBlock) {
+        while (listQuestionsDiv.firstChild) {
+            listQuestionsDiv.removeChild(listQuestionsDiv.firstChild);
+        }
+    }
+    if (objectDataQuestions != null && (objectDataQuestions.length !== 0)) {
+        for (let i = 0; i < objectDataQuestions.length; i++) {
+            const recordTheme = objectDataQuestions[i]["theme"] || objectDataQuestions[i]['item']["theme"];
+            const recordQuestion = objectDataQuestions[i]["question"] || objectDataQuestions[i]['item']["question"];
+            const recordQuestionsPart = recordQuestion.length > 150 ? recordQuestion.slice(0, 130) + '...' : recordQuestion;
+            const recordAnswer = objectDataQuestions[i]["answer"] === undefined ? objectDataQuestions[i]['item']["answer"] : objectDataQuestions[i]["answer"];
+            const recordId = objectDataQuestions[i]['id'] || objectDataQuestions[i]['item']['id'];
+            const fileFormat = formatFile || objectDataQuestions[i]['fileFormat'];
+            let blockQuestionBlockElement;
+            if (recordQuestion.length > 150) {
+                blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item height-200px', '');
+            } else {
+
+                blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
+            }
+
+            const blockTheme = createElement("h4", '', `${recordTheme}`);
+            const blockQuestionFull = createElement("h2", 'record-text record-text__full', `${recordQuestion}`);
+            const blockQuestionPart = createElement("h2", 'record-text record-text__part', `${recordQuestionsPart}`);
+            const blockAnswer = createElement("h4", '', `Answer - ${recordAnswer}`);
+            const blockDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(recordId)).toLocaleDateString()} ${new Date(Number(recordId)).toLocaleTimeString()}`);
+            const blockClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
+            const blockFormat = createElement("div", '', fileFormat);
+            const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
+            const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
+            const topWrapper = createElement('div', 'wrapper__text-block--top', '');
+
+
+            leftWrapper.appendChild(blockQuestionFull);
+            leftWrapper.appendChild(blockQuestionPart);
+            leftWrapper.appendChild(blockAnswer);
+            leftWrapper.appendChild(blockTheme);
+            bottomWrapper.appendChild(blockDate);
+            bottomWrapper.appendChild(blockFormat);
+            topWrapper.appendChild(leftWrapper);
+            topWrapper.appendChild(blockClose);
+            blockQuestionBlockElement.appendChild(topWrapper);
+            blockQuestionBlockElement.appendChild(bottomWrapper);
+
+            blockQuestionBlockElement.setAttribute('valueId', recordId)
+            documentFragment.appendChild(blockQuestionBlockElement);
+        }
+    } else {
+        const blockTheme = createElement("h2", 'coming-soon', 'There are no questions');
+        documentFragment.appendChild(blockTheme);
+    }
+    listQuestionsDiv.appendChild(documentFragment);
+}
+
+function eventClickCreateQuestion(state, activeFormat) {
     const question = getInputValue('question_input');
     const theme = getNodeSelectedText('select_theme');
     const isAnswer = getNodeChecked('checkboxTrue');
@@ -87,6 +160,8 @@ function eventClickCloseQuestion() {
     setNodeChecked('radioXML');
     setNodeChecked('radioYAML');
     setWindowLocationHref('#close');
+    addNodeClass('create_question', 'button-custom__item--disabled');
+    setNodeDisable('create_question',true);
 }
 
 function eventClickFilterFormat(state, activeFormat) {
@@ -113,9 +188,9 @@ function eventClickFilterFormat(state, activeFormat) {
             setValueLocalStorage('fileFormat', 'YAML')
             addQuestionsBlock(state.objYAML, 'YAML');
             break;
-        case 'all':
-            activeFormat.fileFormat = 'all';
-            setValueLocalStorage('fileFormat', 'all')
+        case 'ALL':
+            activeFormat.fileFormat = 'ALL';
+            setValueLocalStorage('fileFormat', 'ALL')
             let allData = [];
             allData = addArrayAndFormat(state.objJSON['01'], allData, 'JSON');
             allData = addArrayAndFormat(state.objXML['questions']['block'], allData, 'XML');
@@ -149,7 +224,7 @@ function eventClickFilterTheme(state, activeFormat) {
     activeFormat.currentTheme = themeFilter;
     setValueLocalStorage('currentTheme', themeFilter)
     let filteredArray = [];
-    if (themeFilter === 'all') {
+    if (themeFilter === 'ALL') {
         eventClickFilterFormat(state, activeFormat);
         return;
     }
@@ -174,7 +249,7 @@ function eventClickFilterTheme(state, activeFormat) {
             filteredArray = filteredArray.filter((elem) => elem['theme'] === themeFilter);
             addQuestionsBlock(filteredArray, 'YAML');
             break;
-        case 'all':
+        case 'ALL':
             let allData = [];
             allData = addArrayAndFormat(state.objJSON['01'], allData, 'JSON');
             allData = addArrayAndFormat(state.objXML['questions']['block'], allData, 'XML');
@@ -245,7 +320,7 @@ function deleteByIdFromFormat(state, id, fileFormat) {
             deleteFromYAML(state, id)
             break;
     }
-    eventClickFilterFormat(state,{fileFormat:fileFormat});
+    eventClickFilterFormat(state, {fileFormat: fileFormat});
 }
 
 function removeClassFormChild() {
