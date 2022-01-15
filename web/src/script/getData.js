@@ -1,38 +1,49 @@
-function getDataJSON(state,urlJSON,activeFormat) {
-    fetch(urlJSON)
-        .then((res) => {
-            return res.json()
-        }).then((data) => {
-        state.objJSON = data;
-        eventClickFilterFormat(state, activeFormat);
+function getDataJSON(state, urlJSON, activeFormat) {
+    return new Promise((resolve, reject) => {
+        fetch(urlJSON)
+            .then((res) => {
+                return res.json()
+            }).then((data) => {
+            state.objJSON = data;
+            resolve();
+        })
     })
 }
 
-function getDataXML(state,urlXML) {
-    fetch(urlXML)
-        .then((res) => {
-            return res.text()
-        }).then((data) => {
-        state.objXML = parseXML(data);
+function getDataXML(state, urlXML) {
+    return new Promise((resolve, reject) => {
+        fetch(urlXML)
+            .then((res) => {
+                return res.text()
+            }).then((data) => {
+            state.objXML = parseXML(data);
+            resolve();
+        })
     })
 }
 
-function getDataCSV(state,urlCSV) {
-    fetch(urlCSV)
-        .then((res) => {
-            return res.text()
-        }).then((data) => {
-        state.objCSV = parseCSV(data);
+function getDataCSV(state, urlCSV) {
+    return new Promise((resolve, reject) => {
+        fetch(urlCSV)
+            .then((res) => {
+                return res.text()
+            }).then((data) => {
+            state.objCSV = parseCSV(data);
+            resolve();
+        })
     })
 }
 
 
-function getDataYAML(state,urlYAML) {
-    fetch(urlYAML)
-        .then((res) => {
-            return res.text()
-        }).then((data) => {
-        state.objYAML = parseYAML(data);
+function getDataYAML(state, urlYAML) {
+    return new Promise((resolve, reject) => {
+        fetch(urlYAML)
+            .then((res) => {
+                return res.text()
+            }).then((data) => {
+            state.objYAML = parseYAML(data);
+            resolve();
+        })
     })
 }
 

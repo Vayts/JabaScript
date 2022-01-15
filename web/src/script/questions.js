@@ -14,10 +14,14 @@ function initQuestions() {
         objYAML: []
     }
 
-    getDataYAML(stateAllFormat, urlYAML);
-    getDataCSV(stateAllFormat, urlCSV);
-    getDataXML(stateAllFormat, urlXML);
-    getDataJSON(stateAllFormat, urlJSON,activeFormat);
+    const a=getDataYAML(stateAllFormat, urlYAML);
+    const b= getDataCSV(stateAllFormat, urlCSV);
+    const c= getDataXML(stateAllFormat, urlXML);
+    const d= getDataJSON(stateAllFormat, urlJSON,activeFormat);
+    Promise.all([a,b,c,d]).then(() => {
+        console.log('values');
+        eventClickFilterTheme(stateAllFormat, activeFormat);
+    });
     // eventClickFilterFormat(stateAllFormat, activeFormat);
     addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat,activeFormat))
     addListener('close_module', 'click', eventClickCloseQuestion)
@@ -119,7 +123,7 @@ function eventClickCreateQuestion(state,activeFormat) {
         addToYAML(state, question, theme, isAnswer);
     }
     eventClickCloseQuestion();
-    eventClickFilterFormat(state,activeFormat);
+    eventClickFilterTheme(state,activeFormat);
 }
 
 function setWindowLocationHref(href) {
