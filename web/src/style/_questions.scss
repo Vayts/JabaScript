@@ -323,20 +323,41 @@
 
 .button-custom {
 
-  &__item {
-    width: 120px;
-    margin: auto 5px;
-    background-color: $main-color;
-    color: #ffffff;
-    font-family: inherit; /* наследует от родителя */
-    font-size: 1.5rem;
-    border: solid $main-color;
-    border-radius: 3px; /* скругление полей формы */
-    &--disabled {
-      background-color: $dark-main-color;
-      border: solid $dark-main-color;
-      color: #ffffff;
+  .button-custom {
+
+    &__item {
+      @include button;
+      padding: 10px 50px;
+      margin: 0 10px;
+
+      &:hover {
+        background-color: transparent;
+        color: $main-color;
+      }
+
+      &:first-child {
+        background-color: #e16363;
+        border: 2px solid #e16363;
+
+        &:hover {
+          background-color: transparent;
+          color: #e16363;
+        }
+      }
+
+      &--disabled {
+        background-color: $dark-main-color;
+        border: 2px solid $dark-main-color;
+        color: #ffffff;
+
+        &:hover {
+          background-color: $dark-main-color;
+          border: 2px solid $dark-main-color;
+          color: #ffffff;
+        }
+      }
     }
+
   }
 
 }

@@ -6,4 +6,6 @@
   letter-spacing: $spacing;
   transition: all 0.2s;
   cursor: pointer;
+  background-color: $main-color;
+  border: 2px solid $main-color;
 }

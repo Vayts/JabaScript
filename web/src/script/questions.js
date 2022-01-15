@@ -33,7 +33,6 @@ function initQuestions() {
     addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('question_input', 'change', eventChangeQuestionInput.bind(null, stateAllFormat, activeFormat))
-    addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat, activeFormat))
 }
 
 function eventChangeQuestionInput(stateAllFormat, activeFormat) {
