@@ -4,9 +4,9 @@ function parseXML(xmlText) {
     xmlText = xmlText.replace('</questions>', '');
     xmlText = xmlText.replace('</block>', '');
     xmlText = xmlText.replace('\r\n', '');
-    let arrayDataXML = xmlText.split('<block>');
+    const arrayDataXML = xmlText.split('<block>');
 
-    let result = {"questions": {"block": []}};
+    const resultObject = {"questions": {"block": []}};
     for (let index = 0; index < arrayDataXML.length; index++) {
         let currentRecord = {};
         arrayDataXML[index] = arrayDataXML[index].replace('<theme>', '');
@@ -29,55 +29,66 @@ function parseXML(xmlText) {
                 if (currentElementBeforeTripleSplit.length > 1) {
 
                     currentRecord['answer'] = currentElementBeforeTripleSplit[1].split('</answer>')[0].replace('\r\n', '').trim();
-                    result['questions']['block'].push(currentRecord);
+                    resultObject['questions']['block'].push(currentRecord);
                 }
             }
         }
         // arrayDataXML[index]=arrayDataXML[index].trim()
     }
-    return result;
+    return resultObject;
 }
 
-function parseCSV(csv) {
-    let result = [];
-    let lineCSV = csv.split('\r\n');
-    lineCSV.pop();
-    for (let i = 0; i < lineCSV.length; i++) {
-        lineCSV[i] = lineCSV[i].split(';');
+function parseCSV(csvText) {
+    const resultArray = [];
+    const arrayRecordCSV = csvText.split('\r\n');
+    if (arrayRecordCSV.length > 0 && arrayRecordCSV[arrayRecordCSV.length - 1].trim() === '') {
+        arrayRecordCSV.pop();
     }
-    for (let i = 1; i < lineCSV.length; i++) {
-        let tempResult = {};
-        for (let j = 0; j < lineCSV[i].length; j++) {
-            tempResult[lineCSV[0][j]] = lineCSV[i][j];
+    for (let i = 0; i < arrayRecordCSV.length; i++) {
+        arrayRecordCSV[i] = arrayRecordCSV[i].split(';');
+    }
+    for (let i = 1; i < arrayRecordCSV.length; i++) {
+        let currentRecord = {};
+        for (let j = 0; j < arrayRecordCSV[i].length; j++) {
+            currentRecord[arrayRecordCSV[0][j]] = arrayRecordCSV[i][j];
         }
-        result.push(tempResult);
+        resultArray.push(currentRecord);
     }
-    return result;
+    return resultArray;
 }
 
 
-function parseYAML(yaml) {
-    let result = [];
-    let tempResult = {};
-    let lineYAML = yaml.split('\r\n');
-    lineYAML.pop();
-    let key = 0;
-    for (let i = 0; i < lineYAML.length; i++) {
-        lineYAML[i] = lineYAML[i].split(':');
-        if (lineYAML[i][1] === '') {
-            if (key !== 0) {
-                result[key - 1] = tempResult;
+function parseYAML(yamlText) {
+    const resultArray = [];
+    let currentRecord = {};
+    const arrayRecordYAML = yamlText.split('\r\n');
+    if (arrayRecordYAML.length > 0 && arrayRecordYAML[arrayRecordYAML.length - 1].trim() === '') {
+        arrayRecordYAML.pop();
+    }
+    let currentIndexResult = 0;
+    for (let i = 0; i < arrayRecordYAML.length; i++) {
+        arrayRecordYAML[i] = arrayRecordYAML[i].split(':');
+
+        if (arrayRecordYAML[i][1] === '') {
+            //первый проход currentIndexResult=0
+            if (currentIndexResult !== 0) {
+                resultArray.push(currentRecord);
             }
-            result[key] = {};
-            tempResult = {};
-            key = key + 1;
+
+            currentRecord = {};
+            currentIndexResult++;
         } else {
-            if (lineYAML[i][1])
-                tempResult[lineYAML[i][0].trim()] = lineYAML[i][1].trim();
+
+            if (arrayRecordYAML[i][1]) {
+                const key =arrayRecordYAML[i][0].trim();
+                currentRecord[key] = arrayRecordYAML[i][1].trim();
+            }
         }
 
     }
-    if (key > 0)
-        result[key - 1] = tempResult;
-    return result;
+    if (currentIndexResult > 0) {
+
+        resultArray.push(currentRecord);
+    }
+    return resultArray;
 }
