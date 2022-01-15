@@ -28,15 +28,22 @@
     margin: 10px;
     overflow: auto;
     height: inherit;
+    padding: 0 20px;
 
     &--item {
-      height: fit-content;
+      //height: fit-content;
       padding: 10px;
-      margin: 5px;
-      border: 1px solid $main-color;
+      margin: 25px 5px;
       display: flex;
       justify-content: space-between;
       flex-direction: column;
+      box-shadow: 4px 4px 36px -10px rgba(34, 60, 80, 0.33);
+      border-radius: 10px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $sub-color;
+      }
     }
 
     &--right {
@@ -57,7 +64,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: $sub-color;
+      color: #888888;
     }
 
     &--delete {
@@ -111,7 +118,8 @@
   display: -webkit-box; /* Включаем флексбоксы */
   -webkit-box-orient: vertical; /* Вертикальная ориентация */
   overflow: hidden;
-  &:hover {;
+  transition: all 0.3s;
+  &:hover {
     -webkit-line-clamp:inherit;
   }
 }

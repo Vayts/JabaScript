@@ -1,4 +1,3 @@
-
 function getDataJSON(state,urlJSON,activeFormat) {
     fetch(urlJSON)
         .then((res) => {
@@ -34,5 +33,15 @@ function getDataYAML(state,urlYAML) {
             return res.text()
         }).then((data) => {
         state.objYAML = parseYAML(data);
+    })
+}
+
+function getDataDevelopers(state) {
+    fetch(`${state.url}/developers`)
+        .then((res) => {
+            return res.json()
+        }).then((data) => {
+        state.lastDeveloperData = data;
+        fillDevelopersData(state);
     })
 }

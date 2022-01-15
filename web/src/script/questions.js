@@ -1,51 +1,12 @@
-function addListener(id, eventType, callback) {
-    const node = document.getElementById(id);
-    if (node) {
-        node.addEventListener(eventType, callback);
-    }
-}
-
-
-function removeListener(id, eventType, callback) {
-    const node = document.getElementById(id);
-    if (node) {
-        node.removeEventListener(eventType, callback);
-    }
-}
-
-function setValueLocalStorage(key, value) {
-    localStorage.setItem(key, value);
-}
-
-function getValueLocalStorage(key) {
-    if (localStorage.hasOwnProperty(key)) {
-        return localStorage[key]
-    }
-    return false;
-}
-
-eventLoadPage();
-
-function eventLoadPage() {
+function initQuestions() {
     const urlJSON = 'http://localhost:3050/questions.json';
     const urlXML = 'http://localhost:3050/questions.xml';
     const urlCSV = 'http://localhost:3050/questions.csv';
     const urlYAML = 'http://localhost:3050/questions.yaml';
+
     let activeFormat = {fileFormat: 'JSON', currentTheme: 'all'};
-    const localeStorageValueFileFormat = getValueLocalStorage('fileFormat');
-    if (typeof localeStorageValueFileFormat === 'boolean') {
-        setValueLocalStorage('fileFormat', 'JSON')
-    } else {
-        activeFormat.fileFormat = localeStorageValueFileFormat;
-        setNodeSelectedText('select_format',['CSV','JSON','XML','YAML','all'].indexOf(activeFormat.fileFormat)+1);
-    }
-    const localeStorageValue = getValueLocalStorage('currentTheme');
-    if (typeof localeStorageValue === 'boolean') {
-        setValueLocalStorage('currentTheme', 'all')
-    } else {
-        activeFormat.currentTheme = localeStorageValue;
-        setNodeSelectedText('select_theme_filter',['One theme','Two theme','Three theme','Four theme','all'].indexOf(activeFormat.currentTheme)+1);
-    }
+    initLocalStorage(activeFormat)
+
     let stateAllFormat = {
         objJSON: null,
         objXML: null,
@@ -69,19 +30,24 @@ function eventLoadPage() {
     addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
 }
 
-
 //////////
 
-function createElement(tagName, className, text) {
-    let newNode = document.createElement(tagName);
-    if (newNode) {
-        newNode.innerText = text;
-        newNode.className += className;
-        return newNode;
+function initLocalStorage(activeFormat) {
+    const localeStorageValueFileFormat = getValueLocalStorage('fileFormat');
+    if (typeof localeStorageValueFileFormat === 'boolean') {
+        setValueLocalStorage('fileFormat', 'JSON')
+    } else {
+        activeFormat.fileFormat = localeStorageValueFileFormat;
+        setNodeSelectedText('select_format',['CSV','JSON','XML','YAML','all'].indexOf(activeFormat.fileFormat)+1);
     }
-    return null;
+    const localeStorageValue = getValueLocalStorage('currentTheme');
+    if (typeof localeStorageValue === 'boolean') {
+        setValueLocalStorage('currentTheme', 'all')
+    } else {
+        activeFormat.currentTheme = localeStorageValue;
+        setNodeSelectedText('select_theme_filter',['One theme','Two theme','Three theme','Four theme','all'].indexOf(activeFormat.currentTheme)+1);
+    }
 }
-
 
 function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = true) {
     let listQuestionsDiv = document.getElementById("list-questions-add");
@@ -131,56 +97,8 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
     listQuestionsDiv.appendChild(documentFragment);
 }
 
-function getNodeValue(id) {
-    const node = document.getElementById(id);
-    if (node) {
-        return node.value;
-    }
-    return '';
-}
-
-function setNodeValue(id, value = '') {
-    const node = document.getElementById(id);
-    if (node) {
-        return node.value = value;
-    }
-    return false;
-}
-
-function getNodeChecked(id) {
-    const node = document.getElementById(id);
-    if (node) {
-        return node.checked;
-    }
-    return false;
-}
-
-function setNodeChecked(id, checked = false) {
-    const node = document.getElementById(id);
-    if (node) {
-        return node.checked = checked;
-    }
-    return false;
-}
-
-function getNodeSelectedText(id) {
-    const node = document.getElementById(id);
-    if (node) {
-        return node.options[node.selectedIndex].text;
-    }
-    return '';
-}
-
-function setNodeSelectedText(id, selectIndex) {
-    const node = document.getElementById(id);
-    if (node) {
-        return node.selectedIndex = selectIndex;
-    }
-    return '';
-}
-
 function eventClickCreateQuestion(state,activeFormat) {
-    const question = getNodeValue('question_input');
+    const question = getInputValue('question_input');
     const theme = getNodeSelectedText('select_theme');
     const isAnswer = getNodeChecked('checkboxTrue');
     const checkedRadioCSV = getNodeChecked('radioCSV');
@@ -209,7 +127,7 @@ function setWindowLocationHref(href) {
 }
 
 function eventClickCloseQuestion() {
-    setNodeValue('question_input');
+    setInputValue('question_input');
     setNodeSelectedText('select_theme', 0);
     setNodeChecked('checkboxTrue', true);
     setNodeChecked('radioCSV');
@@ -221,7 +139,7 @@ function eventClickCloseQuestion() {
 
 function eventClickFilterFormat(state, activeFormat) {
     const formatFile = getNodeSelectedText('select_format');
-    let allFormat = [];
+
     switch (formatFile) {
         case 'JSON':
             activeFormat.fileFormat = 'JSON';

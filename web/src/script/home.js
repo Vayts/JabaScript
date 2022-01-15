@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', function(){
-    initHome()
+    initApp()
 })
 
-function initHome( ) {
+function initApp( ) {
+    initHome()
+    initQuestions()
+}
 
+function initHome() {
     let developersState = {
         url: 'http://localhost:3050',
         currentProfile: 0,
@@ -14,25 +18,7 @@ function initHome( ) {
     addListener('submit-developer-edit', 'click', checkDeveloperEdit.bind(null, developersState))
     addListener('edit-img-input', 'change', imgLoad.bind(null, developersState ))
 
-    loadDevelopersContent(developersState)
-}
-
-function addListener(id, eventType, cb) {
-    const node = document.getElementById(id)
-
-    if (node) {
-        node.addEventListener(eventType, cb)
-    }
-}
-
-function loadDevelopersContent(state) {
-    fetch(`${state.url}/developers`)
-        .then((res) => {
-            return res.json()
-        }).then((data) => {
-        state.lastDeveloperData = data;
-        fillDevelopersData(state);
-    })
+    getDataDevelopers(developersState)
 }
 
 function fillDevelopersData(state) {
@@ -145,7 +131,7 @@ function validateInputs(obj) {
         return false;
     }
 
-    if (obj.hobby.length > 170 || obj.hobby.length < 3) {
+    if (obj.hobby.length > 171 || obj.hobby.length < 3) {
         return false;
     }
     return true
@@ -162,66 +148,13 @@ function submitDevelopersEdit(state, arr) {
     }
 
     if (getFileFromInput('edit-img-input') !== '') {
-        uploadPhoto(state, getFileFromInput('edit-img-input'), false)
-        postDeveloperInfo(state)
+        postDataPhoto(state, getFileFromInput('edit-img-input'), false)
+        postDataDevelopers(state)
     } else {
-        postDeveloperInfo(state)
+        postDataDevelopers(state)
     }
 }
 
-function toggleDisabledClass(id) {
-    for (let i = 0; i < arguments.length; i++) {
-        const node = document.getElementById(arguments[i])
-
-        if (node) {
-            node.classList.toggle('disabled')
-        } else {
-            return false
-        }
-    }
-    return true
-}
-
-function setInputValue(id, value) {
-    const node = document.getElementById(id);
-
-    if (node) {
-        node.value = value;
-        return true;
-    }
-    return false;
-}
-
-function getInputValue(id) {
-    const node = document.getElementById(id);
-
-    if(node) {
-        return node.value;
-    }
-    return false;
-}
-
-function getFileFromInput(id) {
-    const node = document.getElementById(id);
-
-    if (node && node.type === 'file') {
-        if (node.value === '') {
-            return '';
-        }
-        return node.files[0];
-    }
-    return false;
-}
-
-function setBackgroundImage(id, value) {
-    const node = document.getElementById(id)
-
-    if (node) {
-        node.style.backgroundImage = value;
-        return true;
-    }
-    return false;
-}
 
 function cancelEdit() {
     toggleDisabledClass('developer-info-block', 'developer-edit-block')
@@ -238,7 +171,7 @@ function imgLoad(state) {
     }
 
     clearTempFiles();
-    uploadPhoto(state, getFileFromInput('edit-img-input'), true);
+    postDataPhoto(state, getFileFromInput('edit-img-input'), true);
     return true;
 }
 
@@ -250,49 +183,6 @@ function imgValidate(fileName) {
     }
 
     return false;
-}
-
-// Загрузка картинок во временную директорию или постоянную
-
-function uploadPhoto(state, value, temp) {
-    const stampPath = Date.now()
-    const formData = new FormData();
-    const name = value.name
-    const mimeType = name.slice(name.length - 4, name.length)
-    formData.append('file', value);
-
-    if (temp) {
-        fetch(`${state.url}/uploads/${stampPath}`, {
-            method: 'POST',
-            body: formData
-        }).then(() => {
-            setBackgroundImage('img-holder', `url(http://127.0.0.1:3050/temp/${stampPath}developerPhoto${mimeType}`)
-        })
-    } else {
-        state.lastDeveloperData[state.currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}developerPhoto${mimeType}`
-        fetch(`${state.url}/change-photo/${stampPath}`, {
-            method: 'POST',
-            body: formData
-        })
-    }
-}
-
-// Отправка обновленной информации на сервер
-
-function postDeveloperInfo(state) {
-    fetch(`${state.url}/developers-edit`, {
-        method: 'POST',
-        body: JSON.stringify(state.lastDeveloperData)
-    }).then(() => {
-        loadDevelopersContent(state)
-        toggleDisabledClass('developer-info-block', 'developer-edit-block')
-    })
-}
-
-// Очистка временной папки
-
-function clearTempFiles() {
-    fetch('http://localhost:3050/deleteTemp').then()
 }
 
 function createDeveloperCard(data) {
