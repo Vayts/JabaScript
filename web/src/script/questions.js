@@ -14,25 +14,24 @@ function initQuestions() {
         objYAML: []
     }
 
-    const a = getDataYAML(stateAllFormat, urlYAML);
-    const b = getDataCSV(stateAllFormat, urlCSV);
-    const c = getDataXML(stateAllFormat, urlXML);
-    const d = getDataJSON(stateAllFormat, urlJSON, activeFormat);
-    Promise.all([a, b, c, d]).then(() => {
-        console.log('values');
+    const promiseYAML = getDataYAML(stateAllFormat, urlYAML);
+    const promiseCSV = getDataCSV(stateAllFormat, urlCSV);
+    const promiseXML = getDataXML(stateAllFormat, urlXML);
+    const promiseJSON = getDataJSON(stateAllFormat, urlJSON, activeFormat);
+    Promise.all([promiseYAML, promiseCSV, promiseXML, promiseJSON]).then(() => {
         eventClickFilterTheme(stateAllFormat, activeFormat);
     });
-    // eventClickFilterFormat(stateAllFormat, activeFormat);
-    addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat,activeFormat))
+
+    addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat, activeFormat))
     addListener('close_module', 'click', eventClickCloseQuestion)
     addListener('list-questions-add', 'click', eventClickDeleteQuestion.bind(null, stateAllFormat))
-    addListener('list-questions-add', 'mouseover', eventMouseoverAddButtonDelete)
-    addListener('list-questions-add', 'mouseout', eventMouseoverAddButtonDelete)
     addListener('select_format', 'change', eventClickFilterFormat.bind(null, stateAllFormat, activeFormat))
     addListener('select_theme_filter', 'change', eventClickFilterTheme.bind(null, stateAllFormat, activeFormat))
     addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('question_input', 'change', eventChangeQuestionInput.bind(null, stateAllFormat, activeFormat))
+    addListener('closeAlert', 'click', ()=>{setWindowLocationHref('#close');})
+    addListener('cancel', 'click', ()=>{setWindowLocationHref('#close');})
 }
 
 function eventChangeQuestionInput(stateAllFormat, activeFormat) {
@@ -41,7 +40,7 @@ function eventChangeQuestionInput(stateAllFormat, activeFormat) {
         setNodeDisable('create_question');
     } else {
         addNodeClass('create_question', 'button-custom__item--disabled');
-        setNodeDisable('create_question',true);
+        setNodeDisable('create_question', true);
     }
 }
 
@@ -60,7 +59,7 @@ function initLocalStorage(activeFormat) {
         setValueLocalStorage('currentTheme', 'ALL')
     } else {
         activeFormat.currentTheme = localeStorageValue;
-        setNodeSelectedText('select_theme_filter', ['GIT', 'UNIT TESTING', 'CLOSURE', 'OOP','DATA STRUCTURES', 'ALL'].indexOf(activeFormat.currentTheme) + 1);
+        setNodeSelectedText('select_theme_filter', ['GIT', 'UNIT TESTING', 'CLOSURE', 'OOP', 'DATA STRUCTURES', 'ALL'].indexOf(activeFormat.currentTheme) + 1);
     }
 }
 
@@ -86,7 +85,7 @@ function eventClickCreateQuestion(state, activeFormat) {
         addToYAML(state, question, theme, isAnswer);
     }
     eventClickCloseQuestion();
-    eventClickFilterFormat(state,activeFormat);
+    eventClickFilterFormat(state, activeFormat);
 }
 
 function setWindowLocationHref(href) {
@@ -103,7 +102,7 @@ function eventClickCloseQuestion() {
     setNodeChecked('radioYAML');
     setWindowLocationHref('#close');
     addNodeClass('create_question', 'button-custom__item--disabled');
-    setNodeDisable('create_question',true);
+    setNodeDisable('create_question', true);
 }
 
 function eventClickFilterFormat(state, activeFormat) {
@@ -222,20 +221,9 @@ function eventConfirm(state, id, formatFile) {
     const clickConfirm = () => {
         setWindowLocationHref('#close');
         deleteByIdFromFormat(state, id, formatFile);
-        removeListener('confirm', 'click', clickConfirm)
-        removeListener('cancel', 'click', clickCancel)
-        removeListener('closeAlert', 'click', clickCancel)
     };
-    const clickCancel = () => {
-        setWindowLocationHref('#close');
-        removeListener('cancel', 'click', clickCancel)
-        removeListener('closeAlert', 'click', clickCancel)
-        removeListener('confirm', 'click', clickConfirm)
-    }
 
     addListener('confirm', 'click', clickConfirm)
-    addListener('cancel', 'click', clickCancel)
-    addListener('closeAlert', 'click', clickCancel)
 
 
 }
@@ -275,24 +263,3 @@ function removeClassFormChild() {
 }
 
 
-function eventMouseoverAddButtonDelete(event) {
-    if (!event.target.classList.contains('wrapper__text-block--item')) return;
-    if (event.type === 'mouseover') {
-        // console.log('mouseover', event)
-        removeClassFormChild();
-        event.target.firstChild.lastChild.classList.remove('delete__disabled');
-    } else if (event.type === 'mouseout') {
-        let rT = event.relatedTarget;
-        if (!rT) return;
-        while (!rT.classList.contains('wrapper__text-block--item') && rT.localName !== 'body') {
-            if (!rT) break;
-            if (rT.classList.contains('wrapper__text-block--item'))
-                return;
-            rT = rT.parentNode;
-        }
-        if (rT.localName === 'body') {
-            event.target.firstChild.lastChild.classList.add('delete__disabled')
-        }
-        // event.target.firstChild.lastChild.classList.add('delete__disabled');
-    }
-}
