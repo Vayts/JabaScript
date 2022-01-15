@@ -45,7 +45,6 @@ function createDeveloperCard(data) {
 }
 
 function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = true) {
-    console.log(objectDataQuestions)
     let listQuestionsDiv = document.getElementById("list-questions-add");
     let documentFragment = document.createDocumentFragment();
     if (isRemoveOldBlock) {
