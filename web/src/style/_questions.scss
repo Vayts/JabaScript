@@ -256,13 +256,13 @@
     text-shadow: 0 1px 0 #fff;
     opacity: 0.5;
     text-decoration: none;
+    cursor: pointer;
     /* свойства для кнопки "Закрыть" при нахождении её в фокусе или наведении */
   }
 
   &__close:focus, .close:hover {
     color: #000;
     text-decoration: none;
-    cursor: pointer;
     opacity: 0.75;
   }
 }
