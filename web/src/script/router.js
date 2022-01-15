@@ -15,22 +15,22 @@ function initRouter() {
 
 function homePage() {
     setValueLocalStorage('page', 'home')
-    removeClass('home-section', 'disabled')
-    addClass('questions-section', 'disabled')
-    addClass('about-section', 'disabled')
+    removeNodeClass('home-section', 'disabled')
+    addNodeClass('questions-section', 'disabled')
+    addNodeClass('about-section', 'disabled')
 }
 
 function questionPage() {
     setValueLocalStorage('page', 'question')
-    addClass('home-section', 'disabled')
-    removeClass('questions-section', 'disabled')
-    addClass('about-section', 'disabled')
+    addNodeClass('home-section', 'disabled')
+    removeNodeClass('questions-section', 'disabled')
+    addNodeClass('about-section', 'disabled')
 }
 function aboutPage() {
     setValueLocalStorage('page', 'about')
-    addClass('home-section', 'disabled')
-    addClass('questions-section', 'disabled')
-    removeClass('about-section', 'disabled')
+    addNodeClass('home-section', 'disabled')
+    addNodeClass('questions-section', 'disabled')
+    removeNodeClass('about-section', 'disabled')
 }
 
 function getPage(value) {
