@@ -107,7 +107,11 @@ function eventClickCloseQuestion() {
 
 function eventClickFilterFormat(state, activeFormat) {
     const formatFile = getNodeSelectedText('select_format');
-
+    activeFormat.fileFormat=formatFile;
+    if (activeFormat.currentTheme !== 'ALL') {
+        eventClickFilterTheme(state, activeFormat);
+        return;
+    }
     switch (formatFile) {
         case 'JSON':
             activeFormat.fileFormat = 'JSON';
