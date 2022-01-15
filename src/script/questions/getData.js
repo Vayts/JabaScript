@@ -1,39 +1,38 @@
 
-function getDataJSON() {
+function getDataJSON(state,urlJSON,activeFormat) {
     fetch(urlJSON)
         .then((res) => {
             return res.json()
         }).then((data) => {
-        objJSON = data;
-        addQuestionsBlock(objJSON['01'], 'JSON');
+        state.objJSON = data;
+        eventClickFilterFormat(state, activeFormat);
     })
 }
 
-function getDataXML() {
+function getDataXML(state,urlXML) {
     fetch(urlXML)
         .then((res) => {
-            console.log(res);
             return res.text()
         }).then((data) => {
-        objXML = parseXML(data);
+        state.objXML = parseXML(data);
     })
 }
 
-function getDataCSV() {
+function getDataCSV(state,urlCSV) {
     fetch(urlCSV)
         .then((res) => {
             return res.text()
         }).then((data) => {
-        objCSV = parseCSV(data);
+        state.objCSV = parseCSV(data);
     })
 }
 
 
-function getDataYAML() {
+function getDataYAML(state,urlYAML) {
     fetch(urlYAML)
         .then((res) => {
             return res.text()
         }).then((data) => {
-        objYAML = parseYAML(data);
+        state.objYAML = parseYAML(data);
     })
 }

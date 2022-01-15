@@ -4,7 +4,6 @@
 
 .wrapper {
   margin-top: 30px;
-  border: 1px solid $main-color;
   padding: 10px;
   height: 79%;
 
@@ -12,6 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-left: 15px;
 
     &--select {
       display: flex;
@@ -26,7 +26,6 @@
 
   &__text-block {
     margin: 10px;
-    border: 1px solid $main-color;
     overflow: auto;
     height: inherit;
 
@@ -105,6 +104,16 @@
 }
 .coming-soon {
   text-align: center;
+}
+.record-text{
+  font-size: 2rem;
+  -webkit-line-clamp: 2; /* Число отображаемых строк */
+  display: -webkit-box; /* Включаем флексбоксы */
+  -webkit-box-orient: vertical; /* Вертикальная ориентация */
+  overflow: hidden;
+  &:hover {;
+    -webkit-line-clamp:inherit;
+  }
 }
 
 /*Модальное окно*/

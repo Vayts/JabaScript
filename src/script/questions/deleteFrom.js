@@ -1,9 +1,9 @@
 
-function deleteFromJSON(objJSON, id) {
-    objJSON['01'].forEach((item, i) => {
+function deleteFromJSON(state, id) {
+    state.objJSON['01'].forEach((item, i) => {
         if (String(item['id']) === String(id)) {
-            objJSON['01'].splice(i, 1);
-            postDataJSON(objJSON);
+            state.objJSON['01'].splice(i, 1);
+            postDataJSON(state,'http://localhost:3050/questions.json');
             return true;
         }
     })
@@ -11,33 +11,33 @@ function deleteFromJSON(objJSON, id) {
 }
 
 
-function deleteFromXML(objXML, id) {
-    objXML['questions']['block'].forEach((item, i) => {
+function deleteFromXML(state, id) {
+    state.objXML['questions']['block'].forEach((item, i) => {
         if (String(item['id']) === String(id)) {
-            objXML['questions']['block'].splice(i, 1);
-            postDataXML(objXML);
+            state.objXML['questions']['block'].splice(i, 1);
+            postDataXML(state,'http://localhost:3050/questions.xml');
             return true;
         }
     })
     return false;
 }
 
-function deleteFromCSV(objCSV, id) {
-    objCSV.forEach((item, i) => {
+function deleteFromCSV(state, id) {
+    state.objCSV.forEach((item, i) => {
         if (String(item['id']) === String(id)) {
-            objCSV.splice(i, 1);
-            postDataCSV(objCSV);
+            state.objCSV.splice(i, 1);
+            postDataCSV(state,'http://localhost:3050/questions.csv');
             return true;
         }
     })
     return false;
 }
 
-function deleteFromYAML(objYAML, id) {
-    objYAML.forEach((item, i) => {
+function deleteFromYAML(state, id) {
+    state.objYAML.forEach((item, i) => {
         if (String(item['id']) === String(id)) {
-            objYAML.splice(i, 1);
-            postDataYAML(objYAML);
+            state.objYAML.splice(i, 1);
+            postDataYAML(state,'http://localhost:3050/questions.yaml');
             return true;
         }
     })
