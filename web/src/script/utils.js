@@ -157,24 +157,6 @@ function clearTempFiles() {
     })
 }
 
-function removeClass(id, classValue) {
-    const node = document.getElementById(id)
-    if (node) {
-        node.classList.remove(classValue)
-        return true;
-    }
-    return false;
-}
-
-function addClass(id, classValue) {
-    const node = document.getElementById(id)
-    if (node) {
-        node.classList.add(classValue)
-        return true;
-    }
-    return false;
-}
-
 //removeIf(production)
 module.exports = {
     setBackgroundImage,
@@ -192,7 +174,5 @@ module.exports = {
     setNodeSelectedText,
     setValueLocalStorage,
     getValueLocalStorage,
-    addClass,
-    removeClass
 }
 //endRemoveIf(production)
