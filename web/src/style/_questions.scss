@@ -109,8 +109,10 @@
 }
 .delete {
   &__disabled {
-    opacity: -1;
-    pointer-events: none;
+    display: none;
+  }
+  .wrapper__text-block--item:hover &__disabled{
+    display: block;
   }
 }
 .coming-soon {
