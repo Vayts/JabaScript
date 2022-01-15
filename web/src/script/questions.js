@@ -65,63 +65,6 @@ function initLocalStorage(activeFormat) {
     }
 }
 
-function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = true) {
-    let listQuestionsDiv = document.getElementById("list-questions-add");
-    let documentFragment = document.createDocumentFragment();
-    if (isRemoveOldBlock) {
-        while (listQuestionsDiv.firstChild) {
-            listQuestionsDiv.removeChild(listQuestionsDiv.firstChild);
-        }
-    }
-    if (objectDataQuestions != null && (objectDataQuestions.length !== 0)) {
-        for (let i = 0; i < objectDataQuestions.length; i++) {
-            const recordTheme = objectDataQuestions[i]["theme"] || objectDataQuestions[i]['item']["theme"];
-            const recordQuestion = objectDataQuestions[i]["question"] || objectDataQuestions[i]['item']["question"];
-            const recordQuestionsPart = recordQuestion.length > 150 ? recordQuestion.slice(0, 130) + '...' : recordQuestion;
-            const recordAnswer = objectDataQuestions[i]["answer"] === undefined ? objectDataQuestions[i]['item']["answer"] : objectDataQuestions[i]["answer"];
-            const recordId = objectDataQuestions[i]['id'] || objectDataQuestions[i]['item']['id'];
-            const fileFormat = formatFile || objectDataQuestions[i]['fileFormat'];
-            let blockQuestionBlockElement;
-            if (recordQuestion.length > 150) {
-                blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item height-200px', '');
-            } else {
-
-                blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
-            }
-
-            const blockTheme = createElement("h4", '', `${recordTheme}`);
-            const blockQuestionFull = createElement("h2", 'record-text record-text__full', `${recordQuestion}`);
-            const blockQuestionPart = createElement("h2", 'record-text record-text__part', `${recordQuestionsPart}`);
-            const blockAnswer = createElement("h4", '', `Answer - ${recordAnswer}`);
-            const blockDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(recordId)).toLocaleDateString()} ${new Date(Number(recordId)).toLocaleTimeString()}`);
-            const blockClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
-            const blockFormat = createElement("div", '', fileFormat);
-            const leftWrapper = createElement('div', 'wrapper__text-block--left', '');
-            const bottomWrapper = createElement('div', 'wrapper__text-block--bottom', '');
-            const topWrapper = createElement('div', 'wrapper__text-block--top', '');
-
-
-            leftWrapper.appendChild(blockQuestionFull);
-            leftWrapper.appendChild(blockQuestionPart);
-            leftWrapper.appendChild(blockAnswer);
-            leftWrapper.appendChild(blockTheme);
-            bottomWrapper.appendChild(blockDate);
-            bottomWrapper.appendChild(blockFormat);
-            topWrapper.appendChild(leftWrapper);
-            topWrapper.appendChild(blockClose);
-            blockQuestionBlockElement.appendChild(topWrapper);
-            blockQuestionBlockElement.appendChild(bottomWrapper);
-
-            blockQuestionBlockElement.setAttribute('valueId', recordId)
-            documentFragment.appendChild(blockQuestionBlockElement);
-        }
-    } else {
-        const blockTheme = createElement("h2", 'coming-soon', 'There are no questions');
-        documentFragment.appendChild(blockTheme);
-    }
-    listQuestionsDiv.appendChild(documentFragment);
-}
-
 function eventClickCreateQuestion(state, activeFormat) {
     const question = getInputValue('question_input');
     const theme = getNodeSelectedText('select_theme');
