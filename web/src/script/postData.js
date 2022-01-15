@@ -1,3 +1,6 @@
+//removeIf(production)
+const {serialiseCSV, serialiseXML, serialiseYAML} = require('../script/serialise')
+//endRemoveIf(production)
 
 function postDataJSON(state,urlJSON) {
     fetch(urlJSON + '-add', {
@@ -62,5 +65,5 @@ function postDataPhoto(state, value, temp) {
     }
 }
 //removeIf(production)
-module.exports = {postDataPhoto, postDataDevelopers}
+module.exports = {postDataPhoto, postDataDevelopers,postDataXML,postDataJSON,postDataCSV,postDataYAML}
 //endRemoveIf(production)
