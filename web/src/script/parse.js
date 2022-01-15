@@ -41,14 +41,16 @@ function parseXML(xmlText) {
 function parseCSV(csvText) {
     const resultArray = [];
     const arrayRecordCSV = csvText.split('\r\n');
-    for (let i=arrayRecordCSV.length-1;i>=0;i--) {
+    for (let i = arrayRecordCSV.length - 1; i >= 0; i--) {
         if (arrayRecordCSV[i].trim() === '') {
             arrayRecordCSV.pop();
         } else {
             break;
         }
     }
-    for (let i = 0; i < arrayRecordCSV.length; i++) {
+    if (arrayRecordCSV.length > 0)
+        arrayRecordCSV[0] = arrayRecordCSV[0].split(';');
+    for (let i = 1; i < arrayRecordCSV.length; i++) {
         arrayRecordCSV[i] = arrayRecordCSV[i].split(';');
         let currentRecord = {};
 
@@ -65,7 +67,7 @@ function parseYAML(yamlText) {
     const resultArray = [];
     let currentRecord = {};
     const arrayRecordYAML = yamlText.split('\r\n');
-    for (let i=arrayRecordYAML.length-1;i>=0;i--) {
+    for (let i = arrayRecordYAML.length - 1; i >= 0; i--) {
         if (arrayRecordYAML[i].trim() === '') {
             arrayRecordYAML.pop();
         } else {
@@ -85,11 +87,9 @@ function parseYAML(yamlText) {
             currentRecord = {};
             currentIndexResult++;
         } else {
+            const key = arrayRecordYAML[i][0].trim();
+            currentRecord[key] = arrayRecordYAML[i][1].trim();
 
-            if (arrayRecordYAML[i][1]) {
-                const key = arrayRecordYAML[i][0].trim();
-                currentRecord[key] = arrayRecordYAML[i][1].trim();
-            }
         }
 
     }
@@ -99,3 +99,5 @@ function parseYAML(yamlText) {
     }
     return resultArray;
 }
+
+module.exports = {parseCSV, parseXML, parseYAML}
