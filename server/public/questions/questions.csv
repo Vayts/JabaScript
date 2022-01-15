@@ -1,6 +1,4 @@
 id;question;theme;answer
-1642203042034;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tristique, nunc sed lacinia feugiat, metus augue porta diam, vitae porttitor tellus magna eget tellus. Fusce a magna molestie, iaculis sapien ac, pellentesque dui. In hac habitasse platea dictum;Three theme;false
-1642244413593;1;One theme;true
-1642244475746;1;One theme;true
-1642244564490;111;Three theme;true
-1642246620328;11;One theme;true
+1642203042034;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam tristique, nunc sed lacinia feugiat, metus augue porta diam, vitae porttitor tellus magna eget tellus. Fusce a magna molestie, iaculis sapien ac, pellentesque dui. In hac habitasse platea dictum;CLOSURE;false
+1642244413593;1;GIT;true
+1642244475746;1;GIT;true

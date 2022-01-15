@@ -65,6 +65,7 @@
       justify-content: space-between;
       align-items: center;
       color: #888888;
+      user-select: none;
     }
 
     &--delete {
@@ -102,6 +103,9 @@
     }
   }
 
+}
+.height-200px {
+  height: 200px;
 }
 .delete {
   &__disabled {
