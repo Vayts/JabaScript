@@ -113,14 +113,18 @@
   text-align: center;
 }
 .record-text{
-  font-size: 2rem;
-  -webkit-line-clamp: 2; /* Число отображаемых строк */
-  display: -webkit-box; /* Включаем флексбоксы */
-  -webkit-box-orient: vertical; /* Вертикальная ориентация */
-  overflow: hidden;
-  transition: all 0.3s;
-  &:hover {
-    -webkit-line-clamp:inherit;
+  &__full {
+    display: none;
+  }
+  &__part {
+    display: block;
+  }
+
+  .wrapper__text-block--left:hover &__full{
+    display: block;
+  }
+  .wrapper__text-block--left:hover &__part{
+    display: none;
   }
 }
 
