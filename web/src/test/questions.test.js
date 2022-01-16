@@ -1,4 +1,4 @@
-const {eventConfirm,eventClickWithoutModal,initQuestions, eventChangeQuestionInput, initLocalStorage, eventClickCreateQuestion, eventClickFilterFormat, allDataSort, addArrayAndFormat,eventClickFilterTheme,deleteByIdFromFormat} = require('../script/questions')
+const {clickConfirm,eventClickDeleteQuestion, eventConfirm, eventClickWithoutModal, initQuestions, eventChangeQuestionInput, initLocalStorage, eventClickCreateQuestion, eventClickFilterFormat, allDataSort, addArrayAndFormat, eventClickFilterTheme, deleteByIdFromFormat} = require('../script/questions')
 
 jest.mock('../script/getData', () => {
     const originalModule = jest.requireActual('../script/getData');
@@ -49,7 +49,7 @@ jest.mock('../script/utils', () => {
         getValueLocalStorage: jest.fn(() => true)
             .mockReturnValueOnce('JSON')
             .mockReturnValueOnce('JSON'),
-        getNodeChecked: jest.fn(() => true),
+        getNodeChecked: jest.fn(() => true).mockReturnValueOnce(false).mockReturnValueOnce(false).mockReturnValueOnce(false).mockReturnValueOnce(false).mockReturnValueOnce(false),
         getNodeSelectedText: jest.fn(() => 'JSON')
             .mockReturnValueOnce('JSON')
             .mockReturnValueOnce('JSON')
@@ -92,6 +92,14 @@ describe('initLocalStorage', () => {
 })
 
 describe('eventClickCreateQuestion', () => {
+    test('eventClickCreateQuestion', () => {
+        expect(eventClickCreateQuestion({
+            objJSON: {'01': []},
+            objXML: {'questions': {'block': []}},
+            objCSV: [],
+            objYAML: []
+        }, {fileFormat: 'JSON', currentTheme: 'ALL'})).toBeUndefined()
+    })
     test('eventClickCreateQuestion', () => {
         expect(eventClickCreateQuestion({
             objJSON: {'01': []},
@@ -255,26 +263,43 @@ describe('eventClickFilterTheme', () => {
     })
 })
 
-describe('eventClickWithoutModal',()=>{
-    test('eventClickWithoutModal',()=>{
-        expect(eventClickWithoutModal('',{target:{classList: {contains:()=>true},localName:''}})).toBeUndefined();
+describe('eventClickWithoutModal', () => {
+    test('eventClickWithoutModal', () => {
+        expect(eventClickWithoutModal('', {
+            target: {
+                classList: {contains: () => true},
+                localName: ''
+            }
+        })).toBeUndefined();
     })
-    test('eventClickWithoutModal while',()=>{
-        expect(eventClickWithoutModal('',{target:{classList: {contains:()=>false},localName:'',parentNode:{classList: {contains:()=>true},localName:''}}})).toBeUndefined();
+    test('eventClickWithoutModal while', () => {
+        expect(eventClickWithoutModal('', {
+            target: {
+                classList: {contains: () => false},
+                localName: '',
+                parentNode: {classList: {contains: () => true}, localName: ''}
+            }
+        })).toBeUndefined();
     })
-    test('eventClickWithoutModal if',()=>{
-        expect(eventClickWithoutModal('',{target:{classList: {contains:()=>false},localName:'',parentNode:{classList: {contains:()=>false},localName:'body'}}})).toBeUndefined();
+    test('eventClickWithoutModal if', () => {
+        expect(eventClickWithoutModal('', {
+            target: {
+                classList: {contains: () => false},
+                localName: '',
+                parentNode: {classList: {contains: () => false}, localName: 'body'}
+            }
+        })).toBeUndefined();
     })
 })
 
-describe('eventConfirm',()=>{
-    test('eventConfirm',()=>{
+describe('eventConfirm', () => {
+    test('eventConfirm', () => {
         expect(eventConfirm()).toBeUndefined()
     })
 })
 
-describe('deleteByIdFromFormat',()=>{
-    test('CSV',()=>{
+describe('deleteByIdFromFormat', () => {
+    test('CSV', () => {
         expect(deleteByIdFromFormat({
             objJSON: {'01': []},
             objXML: {'questions': {'block': []}},
@@ -290,9 +315,9 @@ describe('deleteByIdFromFormat',()=>{
                 answer: 'true'
             }],
             objYAML: []
-        }, 1642244413593,'CSV')).toBeUndefined();
+        }, 1642244413593, 'CSV')).toBeUndefined();
     })
-    test('JSON',()=>{
+    test('JSON', () => {
         expect(deleteByIdFromFormat({
             objJSON: {'01': []},
             objXML: {'questions': {'block': []}},
@@ -308,9 +333,9 @@ describe('deleteByIdFromFormat',()=>{
                 answer: 'true'
             }],
             objYAML: []
-        }, 1642244413593,'JSON')).toBeUndefined();
+        }, 1642244413593, 'JSON')).toBeUndefined();
     })
-    test('XML',()=>{
+    test('XML', () => {
         expect(deleteByIdFromFormat({
             objJSON: {'01': []},
             objXML: {'questions': {'block': []}},
@@ -326,9 +351,9 @@ describe('deleteByIdFromFormat',()=>{
                 answer: 'true'
             }],
             objYAML: []
-        }, 1642244413593,'XML')).toBeUndefined();
+        }, 1642244413593, 'XML')).toBeUndefined();
     })
-    test('YAML',()=>{
+    test('YAML', () => {
         expect(deleteByIdFromFormat({
             objJSON: {'01': []},
             objXML: {'questions': {'block': []}},
@@ -344,6 +369,45 @@ describe('deleteByIdFromFormat',()=>{
                 answer: 'true'
             }],
             objYAML: []
-        }, 1642244413593,'YAML')).toBeUndefined();
+        }, 1642244413593, 'YAML')).toBeUndefined();
+    })
+})
+
+describe('eventClickDeleteQuestion', () => {
+    test('eventClickDeleteQuestion', () => {
+        expect(eventClickDeleteQuestion({}, {
+            target: {
+                classList: {
+                    contains() {
+                        return false
+                    }
+                }
+            }
+        })).toBeUndefined()
+    })
+    test('eventClickDeleteQuestion', () => {
+        expect(eventClickDeleteQuestion({}, {
+            target: {
+                classList: {
+                    contains() {
+                        return true
+                    }
+                }, parentNode: {
+                    parentNode:
+                        {
+                            lastChild: {lastChild: {innerText: ''}},
+                            getAttribute() {
+                                return true;
+                            }
+                        }
+                }
+            }
+        })).toBeUndefined()
+    })
+})
+
+describe('clickConfirm',()=>{
+    test('clickConfirm',function () {
+        expect(clickConfirm({objCSV:[],objYAML:[],objJSON:{'01':[]},objXML:{questions:{block:[]}}}, 1,'CSV')).toBeUndefined()
     })
 })
