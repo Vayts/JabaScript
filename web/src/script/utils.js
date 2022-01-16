@@ -99,10 +99,10 @@ function getNodeChecked(id) {
     return false;
 }
 
-function setNodeDisable(id,disable=false) {
+function setNodeDisable(id, disable = false) {
     const node = document.getElementById(id);
     if (node) {
-        node.disabled=disable;
+        node.disabled = disable;
         return true;
     }
     return false;
@@ -174,5 +174,8 @@ module.exports = {
     setNodeSelectedText,
     setValueLocalStorage,
     getValueLocalStorage,
+    setNodeDisable,
+    removeNodeClass,
+    addNodeClass
 }
 //endRemoveIf(production)

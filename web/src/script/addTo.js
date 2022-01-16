@@ -1,3 +1,6 @@
+//removeIf(production)
+const {postDataCSV,postDataYAML,postDataXML,postDataJSON} = require('../script/postData')
+//endRemoveIf(production)
 
 function addToJSON(state,question, theme, answer) {
     state.objJSON['01'].push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
@@ -18,3 +21,8 @@ function addToYAML(state,question, theme, answer) {
     state.objYAML.push({'id': Date.now(), 'question': question, 'theme': theme, 'answer': answer});
     postDataYAML(state,'http://localhost:3050/questions.yaml');
 }
+
+
+//removeIf(production)
+module.exports = {addToJSON,addToCSV,addToXML,addToYAML}
+//endRemoveIf(production)

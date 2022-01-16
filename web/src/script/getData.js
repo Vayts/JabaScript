@@ -1,11 +1,15 @@
-function getDataJSON(state, urlJSON, activeFormat) {
+//removeIf(production)
+const {parseYAML,parseXML,parseCSV} = require('./parse')
+//endRemoveIf(production)
+
+function getDataJSON(state, urlJSON) {
     return new Promise((resolve, reject) => {
         fetch(urlJSON)
             .then((res) => {
                 return res.json()
             }).then((data) => {
             state.objJSON = data;
-            resolve();
+            resolve(true);
         })
     })
 }
@@ -17,7 +21,7 @@ function getDataXML(state, urlXML) {
                 return res.text()
             }).then((data) => {
             state.objXML = parseXML(data);
-            resolve();
+            resolve(true);
         })
     })
 }
@@ -28,8 +32,8 @@ function getDataCSV(state, urlCSV) {
             .then((res) => {
                 return res.text()
             }).then((data) => {
-            state.objCSV = parseCSV(data);
-            resolve();
+            state['objCSV'] = parseCSV(data);
+            resolve(true);
         })
     })
 }
@@ -42,7 +46,7 @@ function getDataYAML(state, urlYAML) {
                 return res.text()
             }).then((data) => {
             state.objYAML = parseYAML(data);
-            resolve();
+            resolve(true);
         })
     })
 }
@@ -57,5 +61,5 @@ function getDataDevelopers(state) {
     })
 }
 //removeIf(production)
-module.exports = {getDataDevelopers}
+module.exports = {getDataDevelopers, getDataCSV,getDataJSON,getDataXML,getDataYAML}
 //endRemoveIf(production)
