@@ -1,3 +1,30 @@
+//removeIf(production)
+const {
+    setBackgroundImage,
+    getInputValue,
+    setInputValue,
+    getFileFromInput,
+    clearTempFiles,
+    toggleDisabledClass,
+    addListener,
+    removeListener,
+    createElement,
+    getNodeChecked,
+    getNodeSelectedText,
+    setNodeChecked,
+    setNodeSelectedText,
+    setValueLocalStorage,
+    getValueLocalStorage,
+    setNodeDisable,
+    removeNodeClass,
+    addNodeClass
+} = require('./utils')
+const {getDataYAML, getDataXML, getDataJSON, getDataCSV} = require('./getData')
+const {addQuestionsBlock} = require('./сreateContent')
+const {addToJSON,addToCSV,addToXML,addToYAML} = require('./addTo')
+const {deleteFromXML,deleteFromJSON,deleteFromCSV,deleteFromYAML}=require('./deleteFrom')
+//endRemoveIf(production)
+
 function initQuestions() {
     const urlJSON = 'http://localhost:3050/questions.json';
     const urlXML = 'http://localhost:3050/questions.xml';
@@ -8,8 +35,8 @@ function initQuestions() {
     initLocalStorage(activeFormat)
 
     let stateAllFormat = {
-        objJSON: null,
-        objXML: null,
+        objJSON: {'01':[]},
+        objXML: {'questions':{'block':[]}},
         objCSV: [],
         objYAML: []
     }
@@ -20,7 +47,7 @@ function initQuestions() {
     const promiseJSON = getDataJSON(stateAllFormat, urlJSON, activeFormat);
     Promise.all([promiseYAML, promiseCSV, promiseXML, promiseJSON]).then(() => {
         eventClickFilterTheme(stateAllFormat, activeFormat);
-    });
+    }).catch();
 
     addListener('create_question', 'click', eventClickCreateQuestion.bind(null, stateAllFormat, activeFormat))
     addListener('close_module', 'click', eventClickCloseQuestion)
@@ -30,8 +57,12 @@ function initQuestions() {
     addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('question_input', 'change', eventChangeQuestionInput.bind(null, stateAllFormat, activeFormat))
-    addListener('closeAlert', 'click', ()=>{setWindowLocationHref('#close');})
-    addListener('cancel', 'click', ()=>{setWindowLocationHref('#close');})
+    addListener('closeAlert', 'click', () => {
+        setWindowLocationHref('#close');
+    })
+    addListener('cancel', 'click', () => {
+        setWindowLocationHref('#close');
+    })
 }
 
 function eventChangeQuestionInput(stateAllFormat, activeFormat) {
@@ -107,7 +138,7 @@ function eventClickCloseQuestion() {
 
 function eventClickFilterFormat(state, activeFormat) {
     const formatFile = getNodeSelectedText('select_format');
-    activeFormat.fileFormat=formatFile;
+    activeFormat.fileFormat = formatFile;
     if (activeFormat.currentTheme !== 'ALL') {
         eventClickFilterTheme(state, activeFormat);
         return;
@@ -257,13 +288,23 @@ function deleteByIdFromFormat(state, id, fileFormat) {
     eventClickFilterFormat(state, {fileFormat: fileFormat});
 }
 
-function removeClassFormChild() {
 
-    let list = document.getElementById('list-questions-add').childNodes;
-    list.forEach((item) => {
-        item.childNodes[0].childNodes[1].classList.add('delete__disabled');
-    })
+//removeIf(production)
+module.exports = {
+    initQuestions,
+    eventChangeQuestionInput,
+    initLocalStorage,
+    eventClickCreateQuestion,
+    eventClickFilterFormat,
+    allDataSort,
+    addArrayAndFormat,
+    eventClickFilterTheme,
+    eventClickWithoutModal,
+    eventConfirm,
+    deleteByIdFromFormat
 
 }
+//endRemoveIf(production)
+
 
 
