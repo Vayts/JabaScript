@@ -62,16 +62,16 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
             const fileFormat = formatFile || objectDataQuestions[i]['fileFormat'];
             let blockQuestionBlockElement;
             if (recordQuestion.length > 150) {
-                blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item height-200px', '');
+                blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item height-180px', '');
             } else {
 
                 blockQuestionBlockElement = createElement("section", 'wrapper__text-block--item', '');
             }
 
-            const blockTheme = createElement("h4", '', `${recordTheme}`);
-            const blockQuestionFull = createElement("h2", 'record-text record-text__full', `${recordQuestion}`);
-            const blockQuestionPart = createElement("h2", 'record-text record-text__part', `${recordQuestionsPart}`);
-            const blockAnswer = createElement("h4", '', `Answer - ${recordAnswer}`);
+            const blockTheme = createElement("h4", 'record-text__theme', `${recordTheme}`);
+            const blockQuestionFull = createElement("h2", 'record-text__question record-text__question__full', `${recordQuestion}`);
+            const blockQuestionPart = createElement("h2", 'record-text__question record-text__question__part', `${recordQuestionsPart}`);
+            const blockAnswer = createElement("h4", 'record-text__answer', `Answer - ${recordAnswer}`);
             const blockDate = createElement('p', 'wrapper__text-block--text', `${new Date(Number(recordId)).toLocaleDateString()} ${new Date(Number(recordId)).toLocaleTimeString()}`);
             const blockClose = createElement("a", 'wrapper__text-block--delete delete delete__disabled', '×');
             const blockFormat = createElement("div", '', fileFormat);

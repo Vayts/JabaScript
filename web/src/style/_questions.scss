@@ -80,10 +80,11 @@
       cursor: pointer;
 
 
-      &:hover{
-        color:$dark-main-color ;
+      &:hover {
+        color: $dark-main-color;
       }
     }
+
     &--text {
       margin: 0;
     }
@@ -105,35 +106,59 @@
   }
 
 }
-.height-200px {
-  height: 200px;
+
+.height-180px {
+  height: 180px;
 }
+
 .delete {
   &__disabled {
     display: none;
   }
-  .wrapper__text-block--item:hover &__disabled{
+
+  .wrapper__text-block--item:hover &__disabled {
     display: block;
   }
 }
+
 .coming-soon {
   text-align: center;
 }
-.record-text{
-  &__full {
-    display: none;
-  }
-  &__part {
-    display: block;
+
+.record-text {
+  &__question {
+    margin: 0;
+    padding: 10px 10px;
+
+    &__full {
+      display: none;
+    }
+
+    &__part {
+      display: block;
+    }
+
+    .wrapper__text-block--left:hover &__full {
+      display: block;
+    }
+
+    .wrapper__text-block--left:hover &__part {
+      display: none;
+    }
   }
 
-  .wrapper__text-block--left:hover &__full{
-    display: block;
+  &__theme {
+    margin: 0;
+    padding: 15px 10px;
+
   }
-  .wrapper__text-block--left:hover &__part{
-    display: none;
+
+  &__answer {
+    margin: 0;
+    padding: 5px 10px;
   }
 }
+
 
 /*Модальное окно*/
 .modal {
