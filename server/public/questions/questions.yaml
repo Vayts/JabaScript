@@ -1,10 +1,5 @@
- 0:
-id:1642258160656
-question:assd
-theme:GIT
-answer:true
-1:
-id:1642258284603
-question:sasas
-theme:GIT
-answer:true
+0:
+  id: 1642258284603
+  question: sasas
+  theme: GIT
+  answer: true
