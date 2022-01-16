@@ -100,3 +100,7 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
     }
     listQuestionsDiv.appendChild(documentFragment);
 }
+
+//removeIf(production)
+module.exports = {addQuestionsBlock}
+//endRemoveIf(production)
