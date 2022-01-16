@@ -1,0 +1,48 @@
+@media (max-width: 1900px) {
+  .container {
+    width: 1600px;
+  }
+
+  .developers-list {
+    &__item {
+      flex-basis: 22%;
+    }
+  }
+
+  .information__text{
+    font-size: 25px;
+  }
+
+}
+
+@media (max-width: 1600px) {
+  .container {
+    width: 1440px;
+  }
+
+  .developers-list {
+    &__item {
+      flex-basis: 26%;
+    }
+  }
+
+  .information__text{
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .container {
+    width: 1200px;
+  }
+  .developers-list {
+    &__item {
+      flex-basis: 30%;
+    }
+  }
+
+  .information__text{
+    font-size: 21px;
+  }
+
+}

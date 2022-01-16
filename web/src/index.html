@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JabaScript</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="style/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+<main>
+    <div class="container">
+        <div class="content">
+            <header class="main-header">
+                <div class="logo">
+                    <a class="logo__link" id="logo">
+                        <div class="logo__img-wrapper"><img class="logo__img" src="img/logo.png" alt="Logo"></div>
+                        <div class="logo__text-wrapper">
+                            <p class="logo__text logo__text_upper">Jaba</p>
+                            <p class="logo__text">script</p>
+                        </div>
+                    </a>
+                </div>
+                <nav class="navigation">
+                    <ul class="navigation-list">
+                        <li class="navigation-list__item"><a class="navigation-list__link" id="home">Home</a></li>
+                        <li class="navigation-list__item"><a class="navigation-list__link" id="questions">Questions</a></li>
+                        <li class="navigation-list__item"><a class="navigation-list__link" id="about">About</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <section id="home-section" class="content-section home-section">
+                <div class="home-section__developers" id="developer-info-block">
+                    <div class="section-title">
+                        <h1 class="section-title__text">Meet the team</h1>
+                    </div>
+                    <ul class="developers-list" id="developers-cards-list">
+                        <li class="developers-list__item"><div class="profile profile_empty"></div></li>
+                        <li class="developers-list__item"><div class="profile profile_empty"></div></li>
+                        <li class="developers-list__item"><div class="profile profile_empty"></div></li>
+                    </ul>
+                </div>
+                <div class="home-section__edit  disabled" id="developer-edit-block">
+                    <div class="section-title">
+                        <h1 class="section-title__text">Edit</h1>
+                    </div>
+                    <form class="edit-form" id="edit-form">
+                        <div class="edit-window">
+                            <div class="edit-window__column">
+                                    <label class="edit-window__label">Name:<input class="edit-window__input" id="name" type="text" minlength="4" maxlength="25"></label>
+                                    <label class="edit-window__label">Position:<input class="edit-window__input" id="position" type="text" minlength="4" maxlength="25"></label>
+                                    <label class="edit-window__label">Height:<input class="edit-window__input" id="height" type="number" min="100" max="200"></label>
+                                    <label class="edit-window__label">Age:<input class="edit-window__input" id="age" type="number" min="16" max="100"></label>
+                            </div>
+                            <div class="edit-window__column">
+                                <div class="edit-window__photo">
+                                    <div class="edit-window__img" id="img-holder"
+                                         style="background-image: url(img/developer1.jpg)">
+                                        <label class="edit-window__label">
+                                            <span class="edit-window__img-button">Change</span>
+                                            <input class="edit-window__img-input edit-window__input_hidden" id="edit-img-input" type="file">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="edit-window__column">
+                                    <label class="edit-window__label">Eye color:<input class="edit-window__input" id="eye-color" type="text" minlength="5" maxlength="30"></label>
+                                    <label class="edit-window__label">Experience:<input class="edit-window__input edit-window__input" id="exp" type="number" min="0" max="70"></label>
+                                    <label class="edit-window__label">Mother tongue:<input class="edit-window__input" id="mother-tongue" type="text" minlength="4" maxlength="20"></label>
+                                    <label class="edit-window__label">Place of birth:<input class="edit-window__input" id="place-of-birth" type="text" minlength="4" maxlength="25"></label>
+                            </div>
+                            <div class="edit-window__column edit-window__column_big">
+                                <label class="edit-window__label">Hobby<textarea class="edit-window__input edit-window__input_big" id="hobby" maxlength="170"></textarea></label>
+                            </div>
+                        </div>
+                        <div class="edit-buttons">
+                            <button type="button" id="cancel-developer-edit" class="edit-buttons__button edit-buttons__cancel">Cancel
+                            </button>
+                            <button type="button" id="submit-developer-edit" class="edit-buttons__button edit-buttons__submit">Confirm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div id="openError" class="modal">
+                    <div class="modal__dialog">
+                        <div class="modal__content">
+                            <div class="modal__header">
+                                <h3 class="modal__title">Error!</h3>
+                                <a title="Close" class="modal__close" id="closeError">×</a>
+                            </div>
+                            <div class="modal__body">
+                                <p>Invalid input data!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="questions-section" class="content-section questions-section disabled">
+                <div class="section-title">
+                    <h1 class="section-title__text">Questions</h1>
+                </div>
+                <main class="wrapper">
+                    <div class="wrapper__filter">
+                        <section class="wrapper__filter--select">
+                            <div class="wrapper__select select-custom">
+                                <select class="select select-custom__item" id="select_format">
+                                    <option class="select__option" disabled>Select file system</option>
+                                    <option class="select__option">CSV</option>
+                                    <option class="select__option" selected>JSON</option>
+                                    <option class="select__option">XML</option>
+                                    <option class="select__option">YAML</option>
+                                    <option class="select__option">ALL</option>
+                                </select>
+                            </div>
+
+                            <div class="wrapper__select select-custom">
+                                <select class="select select-custom__item" id="select_theme_filter">
+                                    <option class="select__option" disabled>Select questions theme</option>
+                                    <option>GIT</option>
+                                    <option>UNIT TESTING</option>
+                                    <option>CLOSURE</option>
+                                    <option>OOP</option>
+                                    <option>DATA STRUCTURES</option>
+                                    <option selected>ALL</option>
+                                </select>
+                            </div>
+
+                        </section>
+                        <a class="wrapper__href" href="#openModal"
+                           aria-label="Add">+</a>
+                        <!-- <button>+</button> -->
+                    </div>
+                    <article class="text-block wrapper__text-block scrollbar" id="list-questions-add">
+                        <section class="wrapper__text-block--item profile_empty"></section>
+                        <section class="wrapper__text-block--item profile_empty"></section>
+                        <section class="wrapper__text-block--item profile_empty"></section>
+                    </article>
+                </main>
+
+                <div id="openModal" class="modal">
+                    <div class="modal__dialog">
+                        <div class="modal__content">
+                            <div class="modal__header">
+                                <h3 class="modal__title">ADD QUESTION</h3>
+                                <a href="#close" title="Close" class="modal__close">×</a>
+                            </div>
+                            <div class="modal__body">
+                                <p>QUESTION:</p>
+                                <div class="modal__body--input input-custom">
+                                    <input class="input-custom__item" id="question_input" type="text" maxlength="255">
+                                </div>
+                                <p>THEME:</p>
+                                <div class="modal__body--input select-custom ">
+                                    <select class="modal__body--select select-custom__item" id="select_theme">
+                                        <option disabled>Select one theme</option>
+                                        <option selected>GIT</option>
+                                        <option>UNIT TESTING</option>
+                                        <option>CLOSURE</option>
+                                        <option>OOP</option>
+                                        <option>DATA STRUCTURES</option>
+                                    </select>
+                                </div>
+                                <div class="modal__body--answer">
+                                    <span>ANSWER:</span>
+                                    <input type="radio" class="custom-checkbox" id="checkboxTrue" name="answer"
+                                           value="True" checked>
+                                    <label for="checkboxTrue">True</label>
+                                    <input type="radio" class="custom-checkbox" id="checkboxFalse" name="answer"
+                                           value="False">
+                                    <label for="checkboxFalse">False</label>
+                                </div>
+                                <p>FORMAT:</p>
+                                <div class="modal__body--format">
+                                    <input class="custom-radio" type="checkbox" id="radioCSV"
+                                           value="CSV">
+                                    <label for="radioCSV">CSV</label>
+                                    <input class="custom-radio" type="checkbox" id="radioJSON"
+                                           value="JSON" checked>
+                                    <label for="radioJSON">JSON</label>
+                                    <input class="custom-radio" type="checkbox" id="radioXML"
+                                           value="XML">
+                                    <label for="radioXML">XML</label>
+                                    <input class="custom-radio" type="checkbox" id="radioYAML"
+                                           value="YAML">
+                                    <label for="radioYAML">YAML</label>
+                                </div>
+                                <div class="modal__body--button button-custom">
+                                    <button class="button-custom__item" id="close_module" type="button">CANCEL
+                                    </button>
+                                    <!--                                     -->
+                                    <button class="button-custom__item button-custom__item--disabled" id="create_question" type="button" disabled>
+                                        CREATE
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="openAlert" class="modal">
+                    <div class="modal__dialog">
+                        <div class="modal__content">
+                            <div class="modal__header">
+                                <h3 class="modal__title">Are you sure you want to delete this question?</h3>
+                                <a title="Close" class="modal__close" id="closeAlert">×</a>
+                            </div>
+                            <div class="modal__body">
+                                <div class="modal__body--button button-custom">
+                                    <button class="button-custom__item" id="cancel" type="button">CANCEL
+                                    </button>
+                                    <!--                                    button-custom__item--disabled -->
+                                    <button class="button-custom__item" id="confirm" type="button">
+                                        CONFIRM
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="about-section" class="content-section about-section disabled">
+                <div class="section-title">
+                    <h1 class="section-title__text">About</h1>
+                </div>
+                <div class="section__content">
+                    <div class="information">
+                        <div class="information__text">The project was created by three novice programmers who
+                            tried very hard and spent a lot of time and effort. This project is a test of developers'
+                            knowledge with the help of tests. All tasks in this project have been completed and tested.
+                        </div>
+                        <div class="information__text">
+                            The project works with formats such as: <a href="">CSV</a>, <a href="">JSON</a>,
+                            <a href="">XML</a> and <a href="">YAML</a>, and is implemented using
+                            technologies such as <a href="">CSS</a>, <a href="">JavaScript</a>, <a href="">HTML</a> and others.
+                        </div>
+                    </div>
+                    <div class="qr">
+                        <a href="https://github.com/Vayts/JabaScript"><img src="img/qr-code.png" alt="qrCode" class="qr__img"></a>
+                        <div class="qr__name">GitHub</div>
+                    </div>
+                </div>
+                <div class="section__animation">
+                    <div class="animation-title">Worked on the project:</div>
+                    <div class="animation-text">
+                        <div class="typing-demo">
+                            Alexander Shevchenko, Yuliia Lykhatska, Anatolii Vasyliuk, <strike>Maria Semchenko</strike>.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+<script src="script/index.js"></script>
+</body>
+</html>
