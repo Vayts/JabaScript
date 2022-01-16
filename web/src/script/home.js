@@ -50,11 +50,15 @@ function collectInputsValue(state) {
         placeOfBirth: getInputValue('place-of-birth'),
         hobby: getInputValue('hobby')
     }
+    if (checkCopy(state, obj)) {
+        return false
+    }
     checkEditError(state, obj)
     return obj;
 }
 
 function checkEditError(state, obj) {
+
     if (validateInputs(obj)) {
         fillState(state, Object.values(obj))
         return true
@@ -67,6 +71,7 @@ function checkEditError(state, obj) {
 function validateInputs(obj) {
     const reg = /^[a-zA-Z\s\-]*$/
     const regExt = /^[a-zA-Z\s\-.,:\/]*$/
+
 
     if (obj.name.length > 25 || obj.name.length < 4 || !obj.name.match(reg)) {
         return false;
@@ -103,7 +108,20 @@ function validateInputs(obj) {
     if (obj.hobby.length > 171 || obj.hobby.length < 3) {
         return false;
     }
+
     return true
+}
+
+function checkCopy(state, obj) {
+    let currentInfo = Object.values(state.lastDeveloperData[state.currentProfile])
+    currentInfo = currentInfo.slice(1, currentInfo.length).toString()
+    let stringifyObj = Object.values(obj).toString()
+
+    if (getFileFromInput('edit-img-input') === '' && currentInfo === stringifyObj) {
+        cancelEdit()
+        return true
+    }
+    return false
 }
 
 function fillState(state, arr) {
