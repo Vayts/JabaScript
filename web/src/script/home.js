@@ -2,6 +2,7 @@
 const {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, addEventDevelopers, fillDevelopersData} = require('../script/utils')
 const {getDataDevelopers} = require('../script/getData')
 const {postDataPhoto, postDataDevelopers} = require('../script/postData')
+const {eventClickWithoutModal} = require("./questions");
 //endRemoveIf(production)
 
 
@@ -15,7 +16,10 @@ function initHome() {
     addListener('cancel-developer-edit', 'click', cancelEdit)
     addListener('submit-developer-edit', 'click', collectInputsValue.bind(null, developersState))
     addListener('edit-img-input', 'change', imgLoad.bind(null, developersState ))
-
+    addListener('openError', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
+    addListener('closeError', 'click', () => {
+        setWindowLocationHref('#close');
+    })
     getDataDevelopers(developersState)
 }
 
@@ -55,7 +59,7 @@ function checkEditError(state, obj) {
         fillState(state, Object.values(obj))
         return true
     } else {
-        alert('Invalid input data')
+        setWindowLocationHref('#openError');
         return false;
     }
 }
@@ -137,7 +141,7 @@ function imgLoad(state) {
 
     const image =getFileFromInput('edit-img-input');
     if (!validateImg(image.name)) {
-        alert('Ты всё сломал');
+        setWindowLocationHref('#openError');
         setInputValue('edit-img-input', '')
         return false;
     }
