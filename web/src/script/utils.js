@@ -152,7 +152,7 @@ function removeNodeClass(id, className) {
 }
 
 function clearTempFiles() {
-    fetch('http://localhost:3050/deleteTemp').then(() => {
+    fetch('http://localhost:3050/delete-temp').then(() => {
         return true;
     })
 }
