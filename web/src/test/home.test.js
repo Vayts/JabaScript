@@ -1,5 +1,4 @@
-const {validateImg, validateInputs, fillState,checkEditError} = require('../script/home')
-const {parseXML} = require("../script/parse");
+const {validateImg, validateInputs, fillState,checkEditError, imgLoad, collectInputsValue, startPostProcess, startEdit} = require('../script/home')
 
 jest.mock('../script/utils.js', () => {
     const originalModule = jest.requireActual('../script/utils.js');
@@ -9,7 +8,7 @@ jest.mock('../script/utils.js', () => {
         __esModule: true,
         ...originalModule,
 
-        getInputValue: jest.fn(() => true),
+        getInputValue: jest.fn(() => ''),
         setInputValue: jest.fn(() => true),
         addListener: jest.fn(() => true),
         removeListener: jest.fn(() => true),
@@ -459,6 +458,67 @@ describe('test function validateInputs',()=>{
             hobby: "ne"
         })).toEqual(false);
     })
-
 })
 
+describe('ImgLoad', () => {
+    const state = {
+        currentProfile: 0,
+        lastDeveloperData: [{
+            photo: "http://127.0.0.1:3050/photo/1642239457247developerPhoto.jpg",
+            name: "Nikita Bezdelnikov",
+            position: "Team Lead",
+            height: 189,
+            age: 39,
+            eyeColor: "Blue",
+            exp: 10,
+            motherTongue: "Russian",
+            placeOfBirth: "Horlivka",
+            hobby: "My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."
+        }]
+    }
+    test('ImgLoad with  empty Input File', () => {
+        expect(imgLoad(state)).toBe(false)
+    })
+})
+
+describe('startPostProcess', () => {
+    const state = {
+        currentProfile: 0,
+        lastDeveloperData: [{
+            photo: "http://127.0.0.1:3050/photo/1642239457247developerPhoto.jpg",
+            name: "Nikita Bezdelnikov",
+            position: "Team Lead",
+            height: 189,
+            age: 39,
+            eyeColor: "Blue",
+            exp: 10,
+            motherTongue: "Russian",
+            placeOfBirth: "Horlivka",
+            hobby: "My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."
+        }]
+    }
+    test('Post with empty file', () => {
+        expect(startPostProcess(state)).toEqual('Post without photo')
+    })
+})
+
+describe('startPostProcess', () => {
+    const state = {
+        currentProfile: 0,
+        lastDeveloperData: [{
+            photo: "http://127.0.0.1:3050/photo/1642239457247developerPhoto.jpg",
+            name: "Nikita Bezdelnikov",
+            position: "Team Lead",
+            height: 189,
+            age: 39,
+            eyeColor: "Blue",
+            exp: 10,
+            motherTongue: "Russian",
+            placeOfBirth: "Horlivka",
+            hobby: "My hobby is dancing, as it gives me joy and happiness. My hobby is dancing, as it gives me joy and happiness."
+        }]
+    }
+    test('Post with empty input file', () => {
+        expect(collectInputsValue(state)).toEqual({"age": 0, "exp": 0, "eyeColor": "", "height": 0, "hobby": "", "motherTongue": "", "name": "", "placeOfBirth": "", "position": ""})
+    })
+})
