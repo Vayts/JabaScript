@@ -2,7 +2,7 @@
 }
 
 .section__content{
-  margin: 30px 20px 0 20px;
+  margin: 1px 20px 0 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -23,10 +23,20 @@
   &__text{
     font-size: 27px;
     font-weight: 400;
-    line-height: 40px;
+    line-height: 45px;
     text-align: justify;
+    letter-spacing: 1px;
 
     margin-top: 30px;
+
+    a{
+      color: #918686;
+    }
+
+    a:hover{
+      border-bottom: 3px solid gray;
+      color: #f5a104;
+    }
   }
 }
 
@@ -42,6 +52,8 @@
     max-width: 200px;
     margin: 0 auto;
   }
+
+
 
   &__name {
     font-size: 40px;
@@ -77,6 +89,49 @@
 
 }
 
+.section__animation{
+  margin-top: 30px;
+  padding-top: 30px;
+ /* border-top: 3px solid #7b9e87;*/
+
+  .animation-title{
+    font-size: 27px;
+    text-align: center;
+  }
+
+  .animation-text{
+    margin-top: 15px;
+    height: 50px;
+    /*This part is important for centering*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .typing-demo {
+      width: 1050px;
+      animation: typing 3s steps(42), blink .5s step-end infinite alternate;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid;
+      font-family: monospace;
+      font-size: 25px;
+    }
+
+    @keyframes typing {
+      from {
+        width: 0
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent
+      }
+    }
+  }
+}
+
 @media (max-width:690px) {
   .qr__name {font-size: 20px;}
 }
+
