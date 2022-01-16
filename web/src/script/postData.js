@@ -1,5 +1,7 @@
 //removeIf(production)
 const {serialiseCSV, serialiseXML, serialiseYAML} = require('../script/serialise')
+const {toggleDisabledClass, setBackgroundImage} = require("./utils");
+const {getDataDevelopers} = require("./getData");
 //endRemoveIf(production)
 
 function postDataJSON(state,urlJSON) {
@@ -48,7 +50,6 @@ function postDataPhoto(state, value, temp) {
     const name = value.name
     const mimeType = name.slice(name.length - 4, name.length)
     formData.append('file', value);
-
     if (temp) {
         fetch(`${state.url}/uploads/${stampPath}`, {
             method: 'POST',
@@ -65,5 +66,5 @@ function postDataPhoto(state, value, temp) {
     }
 }
 //removeIf(production)
-module.exports = {postDataPhoto, postDataDevelopers,postDataXML,postDataJSON,postDataCSV,postDataYAML}
+module.exports = {postDataPhoto,postDataDevelopers,postDataXML,postDataJSON,postDataCSV,postDataYAML}
 //endRemoveIf(production)

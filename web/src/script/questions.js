@@ -301,8 +301,8 @@ module.exports = {
     eventClickFilterTheme,
     eventClickWithoutModal,
     eventConfirm,
-    deleteByIdFromFormat
-
+    deleteByIdFromFormat,
+    setWindowLocationHref
 }
 //endRemoveIf(production)
 

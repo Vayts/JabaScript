@@ -102,5 +102,5 @@ function addQuestionsBlock(objectDataQuestions, formatFile, isRemoveOldBlock = t
 }
 
 //removeIf(production)
-module.exports = {addQuestionsBlock}
+module.exports = {addQuestionsBlock, createDeveloperCard}
 //endRemoveIf(production)

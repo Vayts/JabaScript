@@ -2,7 +2,7 @@
 const {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, addEventDevelopers, fillDevelopersData} = require('../script/utils')
 const {getDataDevelopers} = require('../script/getData')
 const {postDataPhoto, postDataDevelopers} = require('../script/postData')
-const {eventClickWithoutModal} = require("./questions");
+const {eventClickWithoutModal, setWindowLocationHref} = require("./questions");
 //endRemoveIf(production)
 
 

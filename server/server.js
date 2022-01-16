@@ -1,4 +1,4 @@
-const fs = require('fs') // нодовский модуль для работы с файловой системой
+const fs = require('node:fs') // нодовский модуль для работы с файловой системой
 const CORS = require('cors') // решение корс политики
 const multer = require('multer') // легкая загрузка файлов на сервер
 const express = require("express") // для всего и сразу
@@ -50,8 +50,6 @@ app.post("/developers-edit", function (req,res) {
             fs.writeFile('server/public/developers/developers.json', developersData, function (err) {
                 if (err) {
                     throw err
-                } else {
-                    console.log('Перезаписано')
                 }
             })
         }
@@ -112,8 +110,6 @@ app.post("/questions.json-add", function (req,res) {
             fs.writeFile('server/public/questions/questions.json', questionsData, function (err) {
                 if (err) {
                     throw err
-                } else {
-                    console.log('Перезаписано')
                 }
             })
         }
@@ -126,7 +122,6 @@ app.get("/questions.xml", function (req, res) {
         if (error) {
             throw error
         } else {
-            console.log(data)
             res.end(data.toString())
         }
     })
@@ -142,8 +137,6 @@ app.post("/questions.xml-add", function (req,res) {
             fs.writeFile('server/public/questions/questions.xml', questionsData, function (err) {
                 if (err) {
                     throw err
-                } else {
-                    console.log('Перезаписано')
                 }
             })
         }
@@ -157,7 +150,6 @@ app.get("/questions.csv", function (req, res) {
         if (error) {
             throw error
         } else {
-            console.log(data)
             res.end(data.toString())
         }
     })
@@ -173,8 +165,6 @@ app.post("/questions.csv-add", function (req,res) {
             fs.writeFile('server/public/questions/questions.csv', questionsData, function (err) {
                 if (err) {
                     throw err
-                } else {
-                    console.log('Перезаписано')
                 }
             })
         }
@@ -188,7 +178,6 @@ app.get("/questions.yaml", function (req, res) {
         if (error) {
             throw error
         } else {
-            console.log(data)
             res.end(data.toString())
         }
     })
@@ -205,8 +194,6 @@ app.post("/questions.yaml-add", function (req,res) {
             fs.writeFile('server/public/questions/questions.yaml', questionsData, function (err) {
                 if (err) {
                     throw err
-                } else {
-                    console.log('Перезаписано')
                 }
             })
         }
