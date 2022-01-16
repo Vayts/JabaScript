@@ -21,8 +21,9 @@ const {
 } = require('./utils')
 const {getDataYAML, getDataXML, getDataJSON, getDataCSV} = require('./getData')
 const {addQuestionsBlock} = require('./сreateContent')
-const {addToJSON,addToCSV,addToXML,addToYAML} = require('./addTo')
-const {deleteFromXML,deleteFromJSON,deleteFromCSV,deleteFromYAML}=require('./deleteFrom')
+const {addToJSON, addToCSV, addToXML, addToYAML} = require('./addTo')
+const {deleteFromXML, deleteFromJSON, deleteFromCSV, deleteFromYAML} = require('./deleteFrom')
+
 //endRemoveIf(production)
 
 function initQuestions() {
@@ -35,8 +36,8 @@ function initQuestions() {
     initLocalStorage(activeFormat)
 
     let stateAllFormat = {
-        objJSON: {'01':[]},
-        objXML: {'questions':{'block':[]}},
+        objJSON: {'01': []},
+        objXML: {'questions': {'block': []}},
         objCSV: [],
         objYAML: []
     }
@@ -57,12 +58,9 @@ function initQuestions() {
     addListener('openAlert', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('openModal', 'click', eventClickWithoutModal.bind(null, 'modal__content'))
     addListener('question_input', 'change', eventChangeQuestionInput.bind(null, stateAllFormat, activeFormat))
-    addListener('closeAlert', 'click', () => {
-        setWindowLocationHref('#close');
-    })
-    addListener('cancel', 'click', () => {
-        setWindowLocationHref('#close');
-    })
+    addListener('closeAlert', 'click', setWindowLocationHref.bind(null, '#close'));
+    addListener('cancel', 'click', setWindowLocationHref.bind(null, '#close'));
+
 }
 
 function eventChangeQuestionInput(stateAllFormat, activeFormat) {
@@ -252,16 +250,14 @@ function eventClickWithoutModal(className, event) {
 
 function eventConfirm(state, id, formatFile) {
     setWindowLocationHref('#openAlert');
-
-    const clickConfirm = () => {
-        setWindowLocationHref('#close');
-        deleteByIdFromFormat(state, id, formatFile);
-    };
-
-    addListener('confirm', 'click', clickConfirm)
-
-
+    addListener('confirm', 'click', clickConfirm.bind(null, state, id, formatFile))
 }
+
+
+function clickConfirm(state, id, formatFile) {
+    setWindowLocationHref('#close');
+    deleteByIdFromFormat(state, id, formatFile);
+};
 
 function eventClickDeleteQuestion(state, event) {
     if (!event.target.classList.contains('delete')) return;
@@ -302,7 +298,9 @@ module.exports = {
     eventClickWithoutModal,
     eventConfirm,
     deleteByIdFromFormat,
-    setWindowLocationHref
+    setWindowLocationHref,
+    eventClickDeleteQuestion,
+    clickConfirm
 }
 //endRemoveIf(production)
 
