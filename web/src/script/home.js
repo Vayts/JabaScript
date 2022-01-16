@@ -72,7 +72,6 @@ function validateInputs(obj) {
     const reg = /^[a-zA-Z\s\-]*$/
     const regExt = /^[a-zA-Z\s\-.,:\/]*$/
 
-
     if (obj.name.length > 25 || obj.name.length < 4 || !obj.name.match(reg)) {
         return false;
     }
