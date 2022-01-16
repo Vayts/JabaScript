@@ -123,7 +123,7 @@ function setWindowLocationHref(href) {
 
 function eventClickCloseQuestion() {
     setInputValue('question_input');
-    setNodeSelectedText('select_theme', 0);
+    setNodeSelectedText('select_theme', 1);
     setNodeChecked('checkboxTrue', true);
     setNodeChecked('radioCSV');
     setNodeChecked('radioJSON', true);
