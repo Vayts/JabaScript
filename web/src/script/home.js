@@ -1,5 +1,5 @@
 //removeIf(production)
-const {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, removeListener, createElement, getNodeChecked, getNodeSelectedText, setNodeChecked, setNodeSelectedText, setValueLocalStorage, getValueLocalStorage, removeClass, addClass} = require('../script/utils')
+const {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, addEventDevelopers, fillDevelopersData} = require('../script/utils')
 const {getDataDevelopers} = require('../script/getData')
 const {postDataPhoto, postDataDevelopers} = require('../script/postData')
 //endRemoveIf(production)
@@ -19,44 +19,6 @@ function initHome() {
     getDataDevelopers(developersState)
 }
 
-function fillDevelopersData(state) {
-    const developersList = document.getElementById('developers-cards-list');
-
-    while (developersList.firstChild) {
-        developersList.removeChild(developersList.firstChild);
-    }
-
-    for (let i = 0; i < state.lastDeveloperData.length; i++) {
-        let developerCard = createDeveloperCard(state.lastDeveloperData[i]);
-        developersList.insertAdjacentHTML('beforeend', developerCard);
-    }
-
-    addEventDevelopers(state)
-}
-
-function addEventDevelopers(state) {
-    const developer = document.querySelectorAll('.profile');
-    const developerMoreButton = document.querySelectorAll('.info-buttons__more');
-    const developerEditButton = document.querySelectorAll('.info-buttons__edit')
-
-    for (let i = 0; i < developer.length; i++) {
-        developerMoreButton[i].onclick = () => {
-            developer[i].classList.toggle('active')
-            developerEditButton[i].classList.toggle('active')
-
-            if (developer[i].classList.contains('active')) {
-                developerMoreButton[i].innerText = 'Hide';
-            } else {
-                developerMoreButton[i].innerText = 'More';
-            }
-
-        }
-        developerEditButton[i].onclick = function () {
-            startEdit(i, state)
-        };
-    }
-}
-
 function startEdit(num, state) {
     const editInputs = document.querySelectorAll('.edit-window__input')
 
@@ -68,6 +30,7 @@ function startEdit(num, state) {
     for (let m = 1; m < data.length; m++) {
         editInputs[m - 1].value = data[m]
     }
+    return data
 }
 
 function collectInputsValue(state) {
@@ -84,6 +47,7 @@ function collectInputsValue(state) {
         hobby: getInputValue('hobby')
     }
     checkEditError(state, obj)
+    return obj;
 }
 
 function checkEditError(state, obj) {
@@ -198,5 +162,5 @@ function validateImg(fileName) {
 }
 
 //removeIf(production)
-module.exports = {validateInputs, validateImg, fillState, checkEditError}
+module.exports = {validateInputs, validateImg, fillState, checkEditError, imgLoad, collectInputsValue, startPostProcess, startEdit}
 //endRemoveIf(production)

@@ -157,6 +157,46 @@ function clearTempFiles() {
     })
 }
 
+
+function addEventDevelopers(state) {
+    const developer = document.querySelectorAll('.profile');
+    const developerMoreButton = document.querySelectorAll('.info-buttons__more');
+    const developerEditButton = document.querySelectorAll('.info-buttons__edit')
+
+    for (let i = 0; i < developer.length; i++) {
+        developerMoreButton[i].onclick = () => {
+            developer[i].classList.toggle('active')
+            developerEditButton[i].classList.toggle('active')
+
+            if (developer[i].classList.contains('active')) {
+                developerMoreButton[i].innerText = 'Hide';
+            } else {
+                developerMoreButton[i].innerText = 'More';
+            }
+
+        }
+        developerEditButton[i].onclick = function () {
+            startEdit(i, state)
+        };
+    }
+}
+
+
+function fillDevelopersData(state) {
+    const developersList = document.getElementById('developers-cards-list');
+
+    while (developersList.firstChild) {
+        developersList.removeChild(developersList.firstChild);
+    }
+
+    for (let i = 0; i < state.lastDeveloperData.length; i++) {
+        let developerCard = createDeveloperCard(state.lastDeveloperData[i]);
+        developersList.insertAdjacentHTML('beforeend', developerCard);
+    }
+
+    addEventDevelopers(state)
+}
+
 //removeIf(production)
 module.exports = {
     setBackgroundImage,
@@ -176,6 +216,8 @@ module.exports = {
     getValueLocalStorage,
     setNodeDisable,
     removeNodeClass,
-    addNodeClass
+    addNodeClass,
+    addEventDevelopers,
+    fillDevelopersData
 }
 //endRemoveIf(production)
