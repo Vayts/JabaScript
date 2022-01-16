@@ -1,4 +1,7 @@
-const {validateImg, validateInputs, fillState,checkEditError, imgLoad, collectInputsValue, startPostProcess, startEdit} = require('../script/home')
+const {initHome,validateImg, validateInputs, fillState,checkEditError, imgLoad, collectInputsValue, startPostProcess, startEdit,cancelEdit} = require('../script/home')
+global.alert= jest.fn(() =>
+    Promise.resolve(true)
+);
 
 jest.mock('../script/utils.js', () => {
     const originalModule = jest.requireActual('../script/utils.js');
@@ -12,7 +15,14 @@ jest.mock('../script/utils.js', () => {
         setInputValue: jest.fn(() => true),
         addListener: jest.fn(() => true),
         removeListener: jest.fn(() => true),
-        getFileFromInput: jest.fn(() => ''),
+        getFileFromInput: jest.fn('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockImplementationOnce(() => {return {name:'image.png'}})
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('')
+            .mockReturnValueOnce('dd'),
         toggleDisabledClass: jest.fn(() => true),
         setBackgroundImage: jest.fn(() => true),
         getValueLocalStorage: jest.fn(() => true),
@@ -331,7 +341,7 @@ describe('test function validateInputs',()=>{
             position: "Team Lead",
             height: 182,
             age: 23,
-            eyeColor: "red&blue",
+            eyeColor: "Blue",
             exp: 10,
             motherTongue: "Russian",
             placeOfBirth: "Horlivka",
@@ -479,6 +489,9 @@ describe('ImgLoad', () => {
     test('ImgLoad with  empty Input File', () => {
         expect(imgLoad(state)).toBe(false)
     })
+    test('ImgLoad with   Input File', () => {
+        expect(imgLoad(state)).toBe(true)
+    })
 })
 
 describe('startPostProcess', () => {
@@ -500,6 +513,9 @@ describe('startPostProcess', () => {
     test('Post with empty file', () => {
         expect(startPostProcess(state)).toEqual('Post without photo')
     })
+    test('Post with file', () => {
+        expect(startPostProcess(state)).toEqual('Post with photo')
+    })
 })
 
 describe('startPostProcess', () => {
@@ -520,5 +536,28 @@ describe('startPostProcess', () => {
     }
     test('Post with empty input file', () => {
         expect(collectInputsValue(state)).toEqual({"age": 0, "exp": 0, "eyeColor": "", "height": 0, "hobby": "", "motherTongue": "", "name": "", "placeOfBirth": "", "position": ""})
+    })
+})
+
+
+describe('initHome',()=>{
+    test('initHome',()=>{
+        expect(initHome()).toBeUndefined();
+    })
+})
+
+describe('startEdit',()=>{
+    test('startEdit',()=>{
+        expect(startEdit(0,{
+            url: 'http://localhost:3050',
+            currentProfile: 0,
+            lastDeveloperData: [{}]
+        })).toEqual([]);
+    })
+})
+
+describe('cancelEdit',()=>{
+    test('cancelEdit',()=>{
+        expect(cancelEdit()).toBeUndefined();
     })
 })

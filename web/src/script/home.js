@@ -135,7 +135,8 @@ function cancelEdit() {
 
 function imgLoad(state) {
 
-    if (!validateImg(getFileFromInput('edit-img-input').name)) {
+    const image =getFileFromInput('edit-img-input');
+    if (!validateImg(image.name)) {
         alert('Ты всё сломал');
         setInputValue('edit-img-input', '')
         return false;
@@ -162,5 +163,5 @@ function validateImg(fileName) {
 }
 
 //removeIf(production)
-module.exports = {validateInputs, validateImg, fillState, checkEditError, imgLoad, collectInputsValue, startPostProcess, startEdit}
+module.exports = {cancelEdit,initHome,validateInputs, validateImg, fillState, checkEditError, imgLoad, collectInputsValue, startPostProcess, startEdit}
 //endRemoveIf(production)
