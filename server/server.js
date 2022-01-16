@@ -79,8 +79,9 @@ app.post('/uploads*', upload.single('file'), function (req,res) {
     res.send(file)
 })
 
-app.get('/deleteTemp', () => {
+app.get('/deleteTemp', (req,res) => {
     fsExtra.emptydir('server/public/uploads')
+    res.end()
 })
 
 // Взлетаем
