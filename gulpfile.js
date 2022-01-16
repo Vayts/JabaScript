@@ -25,7 +25,7 @@ const paths = {
         js: './web/src/script/**/*.js',
         img: './web/src/img/**/*.{jpg,gif,png,ico}',
         font: './web/src/fonts/**/*.*',
-        html: './web/src/html/**/*.html'
+        html: './web/src/**/*.html'
     }
 }
 
