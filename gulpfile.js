@@ -5,12 +5,12 @@ const concat = require('gulp-concat');
 const removeCode = require('gulp-remove-code');
 
 const paths = {
-    clear: './dest/*',
+    clear: './dist/',
     dist: {
         css: './dist/style',
         js: './dist/script',
         img: './dist/img',
-        font: './dist/',
+        font: './dist/fonts',
         html: './dist'
     },
     src: {
@@ -18,7 +18,7 @@ const paths = {
         js: './web/src/script/**/*.js',
         img: './web/src/img/**/*.{jpg,gif,png,ico}',
         font: './web/src/fonts/**/*.*',
-        html: './web/src/html/**/*.html'
+        html: './web/src/**/*.html'
     },
     watch: {
         scss: './web/src/style/**/*.scss',
