@@ -50,12 +50,12 @@
 
   &__img{
     max-width: 200px;
-    transition: all 0.3s linear;
+    transition: all 0.1s linear;
   }
 
   &__img:hover{
-    max-width: 250px;
-    width: 250px;
+    max-width: 210px;
+    width: 210px;
     cursor: pointer;
   }
 
@@ -92,6 +92,48 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+  }
+}
+
+.section__animation{
+  margin-top: 30px;
+  padding-top: 30px;
+  /* border-top: 3px solid #7b9e87;*/
+
+  .animation-title{
+    font-size: 27px;
+    text-align: center;
+  }
+
+  .animation-text{
+    margin-top: 15px;
+    height: 50px;
+    /*This part is important for centering*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .typing-demo {
+      width: 1050px;
+      animation: typing 3s steps(42), blink .5s step-end infinite alternate;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid;
+      font-family: monospace;
+      font-size: 25px;
+    }
+
+    @keyframes typing {
+      from {
+        width: 0
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent
+      }
+    }
   }
 }
 
