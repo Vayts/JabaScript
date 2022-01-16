@@ -46,13 +46,20 @@
   flex-direction: column;
   justify-content: center;
 
-
-  &__img{
-    /*background: url("../img/qr-code.png");*/
-    max-width: 200px;
+  &__link{
     margin: 0 auto;
-  }
 
+    &-img{
+      max-width: 200px;
+      transition: all 0.1s ease-out;
+    }
+
+    &-img:hover{
+      max-width: 210px;
+      width: 210px;
+      cursor: pointer;
+    }
+  }
 
 
   &__name {
