@@ -88,7 +88,7 @@ function validateInputs(obj) {
         return false;
     }
 
-    if (obj.age - obj.exp < 16 || obj.exp < 0) {
+    if (obj.age - obj.exp < 16 || obj.exp <= 0) {
         return false;
     }
 

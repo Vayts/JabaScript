@@ -5,7 +5,7 @@ const concat = require('gulp-concat');
 const removeCode = require('gulp-remove-code');
 
 const paths = {
-    clear: './dist/',
+    clear: './dist/**/',
     dist: {
         css: './dist/style',
         js: './dist/script',
