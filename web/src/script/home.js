@@ -38,7 +38,6 @@ function startEdit(num, state) {
 }
 
 function collectInputsValue(state) {
-    clearTempFiles()
     const obj = {
         name: getInputValue('name'),
         position: getInputValue('position'),
@@ -156,7 +155,7 @@ function cancelEdit() {
 
 function imgLoad(state) {
 
-    const image =getFileFromInput('edit-img-input');
+    const image = getFileFromInput('edit-img-input');
     if (!validateImg(image.name)) {
         setWindowLocationHref('#openError');
         setInputValue('edit-img-input', '')
