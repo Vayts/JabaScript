@@ -39,16 +39,23 @@
 }
 
 .qr{
-  min-width: 370px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    min-width: 370px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  position: relative;
 
   a{
-  margin: 0 auto;
+    margin: 0 auto;
+    height: 220px;
+    width: 220px;
   }
 
   &__img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
     max-width: 200px;
     transition: all 0.1s linear;
   }
@@ -56,7 +63,6 @@
   &__img:hover{
     max-width: 210px;
     width: 210px;
-    cursor: pointer;
   }
 
 
@@ -112,6 +118,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &_strike {
+      text-decoration: line-through;
+    }
 
     .typing-demo {
       width: 1050px;
