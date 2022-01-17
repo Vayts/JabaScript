@@ -6,7 +6,7 @@ const {createElement}=require('./utils')
 function createDeveloperCard(data) {
     return '<li class="developers-list__item">' +
         '<div class="profile">' +
-        '<div class="profile__img" style="background-image: url(' + data.photo + ')"></div>' +
+        '<div class="profile__img-wrapper"><img class="profile__img" src="' + data.photo + '" alt="Developer Photo"></div>' +
         '<p class="profile__name">' + data.name + '</p>' +
         '<p class="profile__position">' + data.position + '</p>' +
         '<div class="profile__info">' +

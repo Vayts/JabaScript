@@ -24,7 +24,7 @@ jest.mock('../script/utils.js', () => {
             .mockReturnValueOnce('')
             .mockReturnValueOnce('dd'),
         toggleDisabledClass: jest.fn(() => true),
-        setBackgroundImage: jest.fn(() => true),
+        setSrcValue: jest.fn(() => true),
         getValueLocalStorage: jest.fn(() => true),
         createElement: jest.fn(() => true),
         getNodeChecked: jest.fn(() => true),

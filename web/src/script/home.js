@@ -1,8 +1,9 @@
 //removeIf(production)
-const {setBackgroundImage, getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener, addEventDevelopers, fillDevelopersData} = require('../script/utils')
+const {getInputValue, setInputValue, getFileFromInput, clearTempFiles, toggleDisabledClass, addListener} = require('../script/utils')
 const {getDataDevelopers} = require('../script/getData')
 const {postDataPhoto, postDataDevelopers} = require('../script/postData')
 const {eventClickWithoutModal, setWindowLocationHref} = require("./questions");
+const {setSrcValue} = require("./utils");
 //endRemoveIf(production)
 
 
@@ -30,7 +31,7 @@ function startEdit(num, state) {
 
     state.currentProfile = num;
     const data = Object.values(state.lastDeveloperData[num])
-    setBackgroundImage('img-holder', `url(${data[0]})`)
+    setSrcValue('img-holder', `${data[0]}`)
     for (let m = 1; m < data.length; m++) {
         editInputs[m - 1].value = data[m]
     }
@@ -91,7 +92,7 @@ function validateInputs(obj) {
         return false;
     }
 
-    if (obj.age - obj.exp < 16 || obj.exp <= 0) {
+    if (obj.age - obj.exp < 16 || obj.exp < 0) {
         return false;
     }
 
