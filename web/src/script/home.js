@@ -104,7 +104,7 @@ function validateInputs(obj) {
         return false;
     }
 
-    if (obj.hobby.length > 171 || obj.hobby.length < 3) {
+    if (obj.hobby.length > 170 || obj.hobby.length < 3) {
         return false;
     }
 
