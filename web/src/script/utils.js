@@ -42,11 +42,11 @@ function getFileFromInput(id) {
     return false;
 }
 
-function setBackgroundImage(id, value) {
+function setSrcValue(id, value) {
     const node = document.getElementById(id)
 
     if (node) {
-        node.style.backgroundImage = value;
+        node.src = value;
         return true;
     }
     return false;
@@ -199,7 +199,7 @@ function fillDevelopersData(state) {
 
 //removeIf(production)
 module.exports = {
-    setBackgroundImage,
+    setSrcValue,
     getInputValue,
     setInputValue,
     getFileFromInput,

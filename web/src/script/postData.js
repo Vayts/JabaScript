@@ -1,6 +1,6 @@
 //removeIf(production)
 const {serialiseCSV, serialiseXML, serialiseYAML} = require('../script/serialise')
-const {toggleDisabledClass, setBackgroundImage} = require("./utils");
+const {toggleDisabledClass, setSrcValue} = require("./utils");
 const {getDataDevelopers} = require("./getData");
 //endRemoveIf(production)
 
@@ -55,7 +55,7 @@ function postDataPhoto(state, value, temp) {
             method: 'POST',
             body: formData
         }).then(() => {
-            setBackgroundImage('img-holder', `url(http://127.0.0.1:3050/temp/${stampPath}developerPhoto${mimeType}`)
+            setSrcValue('img-holder', `http://127.0.0.1:3050/temp/${stampPath}developerPhoto${mimeType}`)
         })
     } else {
         state.lastDeveloperData[state.currentProfile].photo = `http://127.0.0.1:3050/photo/${stampPath}developerPhoto${mimeType}`
